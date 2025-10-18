@@ -9,6 +9,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_e
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_scan_two_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_save_preview_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/presentation/edit_medication_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/presentation/my_equipment_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/log_steps_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/presentation/log_activity_screen.dart';
@@ -141,8 +142,8 @@ final class Routes {
   static const String athletBottomNavigationBar = '/athletBottomNavigationBar';
   static const String addSessionScreen = '/addSessionScreen';
   static const String subscriptionTbiModeScreen = '/subscriptionTbiModeScreen';
-  static const String subscriptionAthletModeScreen =
-      '/subscriptionAthletModeScreen';
+  static const String subscriptionAthletModeScreen = '/subscriptionAthletModeScreen';
+  static const String editMedicationScreen = '/editMedicationScreen';
 }
 
 final class RouteGenerator {
@@ -713,6 +714,20 @@ final class RouteGenerator {
         } else {
           return CupertinoPageRoute(
               builder: (context) => SubscriptionAthletModeScreen());
+        }
+
+      case Routes.editMedicationScreen:
+        final args = settings.arguments as Map;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: EditMedicationScreen(
+                id: args['id'],
+              ), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => EditMedicationScreen(
+                id: args['id'],
+              ));
         }
 
       default:

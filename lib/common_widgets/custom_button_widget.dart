@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,15 +5,13 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
 class CustomButtonWidget extends StatelessWidget {
   final DecorationImage? image;
   final String text;
   final VoidCallback? onTap;
   final TextStyle? textStyle;
   final Widget? icon;
-
+  final Widget? child;
 
   const CustomButtonWidget({
     super.key,
@@ -23,6 +20,7 @@ class CustomButtonWidget extends StatelessWidget {
     this.image,
     this.textStyle,
     this.icon,
+    this.child,
   });
 
   @override
@@ -30,36 +28,35 @@ class CustomButtonWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.h,horizontal: 32.w),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 32.w),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28.r),
-          image:
-              image ??
+          image: image ??
               DecorationImage(
                 image: AssetImage(AppImages.buttonBackground),
                 fit: BoxFit.cover,
               ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon ?? SvgPicture.asset(''),
-            UIHelper.horizontalSpace(10.w),
-            Text(
-              text,
-              style:
-                  textStyle ??
-                  TextFontStyle.textStylePoppins.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
+        child: Center(
+          child: child ??
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  icon ?? SvgPicture.asset(''),
+                  UIHelper.horizontalSpace(10.w),
+                  Text(
+                    text,
+                    style: textStyle ??
+                        TextFontStyle.textStylePoppins.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
-            ),
-          ],
+                ],
+              ),
         ),
       ),
     );
   }
 }
-
-

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
-
-
 
 class CustomAcetaminophen extends StatelessWidget {
   const CustomAcetaminophen({
@@ -17,98 +12,83 @@ class CustomAcetaminophen extends StatelessWidget {
     required this.mg,
     required this.subtitle,
     required this.deleteIcon,
+    required this.onDelete,
+    this.onTap, // Optional onTap callback
+    this.id, // Optional id parameter
   });
 
-  final List<String> title;
-  final List<String> icon;
-  final List<String> mg;
-  final List<String> subtitle;
-  final List<String> deleteIcon;
+  final String title;
+  final String icon;
+  final String mg;
+  final String subtitle;
+  final String deleteIcon;
+  final VoidCallback onDelete;
+  final VoidCallback? onTap; // Made nullable to be optional
+  final String? id; // Made nullable to be optional
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 13.h),
-      decoration: ShapeDecoration(
-        color: AppColors.c181818,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-      ),
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: title.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(icon[index], height: 24.h),
-                    UIHelper.horizontalSpace(20.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                title[index],
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              UIHelper.horizontalSpace(30.w),
-                              Text(
-                                mg[index],
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpace(4.h),
-                          Text(
-                            subtitle[index],
-                            style: TextFontStyle.textStyle16w400c757575poppins
-                                .copyWith(fontSize: 12.sp),
-                          ),
-                        ],
+    return InkWell(
+      onTap: onTap, // Will work as is since onTap is nullable
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        child: Row(
+          children: [
+            SvgPicture.asset(icon, height: 24.h),
+            UIHelper.horizontalSpace(20.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-
-
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          debugPrint('Delete icon tapped at index $index');
-                        },
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Padding(
-                          padding: EdgeInsets.all(4.w),
-                          child: SvgPicture.asset(
-                            deleteIcon[index],
-                            height: 24.h,
-                          ),
+                      UIHelper.horizontalSpace(20.w),
+                      Text(
+                        mg,
+                        style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
+                    ],
+                  ),
+                  UIHelper.verticalSpace(4.h),
+                  Text(
+                    subtitle,
+                    style: TextFontStyle.textStyle16w400c757575poppins.copyWith(
+                      fontSize: 12.sp,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            UIHelper.horizontalSpace(10.w),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onDelete,
+                borderRadius: BorderRadius.circular(8.r),
+                child: Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: SvgPicture.asset(
+                    deleteIcon,
+                    height: 24.h,
+                  ),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

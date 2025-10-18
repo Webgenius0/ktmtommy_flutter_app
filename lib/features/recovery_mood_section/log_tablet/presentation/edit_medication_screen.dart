@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,8 +9,6 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
-import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/model/all_medication_model.dart';
-import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/custom_acetaminophen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/date_time.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/medication_details.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/water_intake.dart';
@@ -17,22 +16,22 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-import 'package:ktmtommy_apps/networks/api_acess.dart';
-import 'package:ktmtommy_apps/networks/endpoints.dart';
 
-class LogTabletScreen extends StatefulWidget {
-  const LogTabletScreen({super.key});
+import '../../../../networks/api_acess.dart';
+
+
+class EditMedicationScreen extends StatefulWidget {
+  final id;
+  const EditMedicationScreen({super.key, this.id});
 
   @override
-  State<LogTabletScreen> createState() => _LogTabletScreenState();
+  State<EditMedicationScreen> createState() => _EditMedicationScreenState();
 }
 
-class _LogTabletScreenState extends State<LogTabletScreen> {
-  // Form keys for validation
+class _EditMedicationScreenState extends State<EditMedicationScreen> {
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _medicationFormKey = GlobalKey<FormState>();
-
-  // Text controllers for input fields
   final TextEditingController notesController = TextEditingController();
   final TextEditingController medicationNameController = TextEditingController();
   final TextEditingController dosageController = TextEditingController();
@@ -43,97 +42,50 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
   // Loading state for form submission
   bool isLoading = false;
 
-  // Icons for UI
-  final String checkIcon = 'assets/icons/signureicon.svg';
-  final List<String> deleteIcon = [
-    'assets/icons/deleteicon.svg',
-    'assets/icons/deleteicon.svg',
-  ];
+  void _submitForm() {
+    // Validate both forms
+    if (_medicationFormKey.currentState!.validate() &&
+        _formKey.currentState!.validate()) {
+      NavigationService.navigateTo(Routes.recentMedicationScreen);
+    }
+  }
 
-  // State variables for wellness tracking
+  @override
+  void dispose() {
+    notesController.dispose();
+    medicationNameController.dispose();
+    dosageController.dispose();
+    super.dispose();
+  }
+
+
   bool isOn = false;
   bool isOf = false;
   int currentGlassCount = 0;
   bool isAMSelected = true;
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize with current date and time
-    _selectedDateTime = DateTime.now();
-    // Fetch all medications on screen initialization
-    getAllMedicationRxObj.getAllMedicationApi();
-  }
 
-  @override
-  void dispose() {
-    // Dispose controllers and streams to prevent memory leaks
-    notesController.dispose();
-    medicationNameController.dispose();
-    dosageController.dispose();
-    storeRxObj.dataFetcher.close();
-    super.dispose();
-  }
+  final List<String> icon = [
+    'assets/icons/signureicon.svg',
+    'assets/icons/signureicon.svg',
+  ];
 
-  // Show confirmation dialog for deletion
-  Future<bool?> _showDeleteConfirmationDialog(BuildContext context, String medicationName, String medicationId) async {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColors.c181818,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          title: Text(
-            'Delete Medication',
-            style: TextFontStyle.textStyle16w700primaryColor2PlusJakartaSans.copyWith(
-              color: AppColors.primaryColor,
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to delete $medicationName?',
-            style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-              color: AppColors.cFFFFFF,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Cancel deletion
-              },
-              child: Text(
-                'Cancel',
-                style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                  color: AppColors.cFFFFFF,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Confirm deletion
-              },
-              child: Text(
-                'Confirm',
-                style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                  color: AppColors.cCC1F28,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final List<String> title = ['Acetaminophen', 'Acetaminophen'];
+  final List<String> subtitle = ['Yesterday, 8:00 PM', 'Yesterday, 8:00 PM'];
+
+  final List<String> mg = ['500mg', '500mg'];
+
+  final List<String> deleteIcon = [
+    'assets/icons/deleteicon.svg',
+    'assets/icons/deleteicon.svg',
+  ];
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    log("===============Print Received ID: ${widget.id}");
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: SafeArea(
@@ -144,15 +96,14 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Appbar with back button and title
                 CustomAppbarWidget(
                   onTap: () {
-                    NavigationService.goBack();
+                    NavigationService.goBack;
                   },
-                  text: 'Log Tablet',
+                  text: 'Edit Log Tablet',
                 ),
+
                 UIHelper.verticalSpace(20.h),
-                // Medication Details Section
                 Text(
                   'Medication Details',
                   style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
@@ -160,11 +111,14 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+
                 UIHelper.verticalSpace(12.h),
+
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
                         // Medication name and dosage input
                         MedicationDetails(
@@ -333,7 +287,8 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                                 print('>>>>>>===========<<<<<');
 
                                 // Call API to save medication
-                                bool success = await storeRxObj.postStoreApi(
+                                bool success = await editMedicationRxObj.putEditMedicationPutApi(
+                                  id: widget.id.toString(),
                                   name: name,
                                   dosage: dosage,
                                   dosageUnit: dosageUnit,
@@ -361,123 +316,22 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                               }
                             }
                           },
-                          text: 'Log Now',
+                          text: 'Save',
                           child: isLoading
                               ? CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             strokeWidth: 3,
                           )
                               : Text(
-                            'Log Now',
+                            'Save',
                             style: TextFontStyle.textStylePoppins.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        UIHelper.verticalSpace(24.h),
-                        // Recent Medication Section
-                        Text(
-                          'Recent Medication',
-                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        UIHelper.verticalSpace(12.h),
-                        // Recent Medication List
-                        GestureDetector(
-                          onTap: () {
-                            NavigationService.navigateTo(Routes.recentMedicationScreen);
-                          },
-                          child: StreamBuilder(
-                            stream: getAllMedicationRxObj.dataFetcher,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                // Log error if fetching fails
-                                print('Error fetching medication data: ${snapshot.error}');
-                                return Center(child: Text('Error: ${snapshot.error}'));
-                              }
 
-                              final medication = snapshot.data?.data ?? [];
-                              if (medication.isEmpty) {
-                                return const SizedBox.shrink();
-                              }
 
-                              // Limit to first 2 medications
-                              final limitedMedication = medication.take(2).toList();
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: limitedMedication.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final item = limitedMedication[index];
-                                  // Track deletion state for individual item
-                                  bool isDeleting = false;
-
-                                  return StatefulBuilder(
-                                    builder: (context, setItemState) {
-                                      return CustomAcetaminophen(
-                                        title: item.name?.toString() ?? '',
-                                        icon: checkIcon,
-                                        mg: '${item.dosage ?? 0} ${item.dosageUnit ?? ''}',
-                                        subtitle: item.takenAt != null
-                                            ? DateFormat('yyyy-MM-dd HH:mm').format(item.takenAt!)
-                                            : 'No date available',
-                                        deleteIcon: index < deleteIcon.length ? deleteIcon[index] : 'assets/icons/default_delete_icon.svg',
-                                        onDelete: () async {
-                                          print('Initiating deletion for Medication ID: ${item.id}, Name: ${item.name}');
-                                          final shouldDelete = await _showDeleteConfirmationDialog(context, item.name ?? 'Unknown', item.id.toString());
-
-                                          if (shouldDelete != true) {
-                                            print('Deletion cancelled for Medication ID: ${item.id}');
-                                            return;
-                                          }
-
-                                          setItemState(() {
-                                            isDeleting = true;
-                                          });
-
-                                          final backupMedication = List.from(medication); // Backup the current list
-
-                                          // Optimistic UI update
-                                          setState(() {
-                                            medication.removeWhere((m) => m.id == item.id);
-                                          });
-
-                                          try {
-                                            bool success = await deleteMedicationRxObj.deleteMedicationApi(id: item.id.toString());
-                                            if (success) {
-                                              print('Successfully deleted Medication ID: ${item.id}');
-                                              ToastUtil.showShortToast('Medication deleted successfully');
-                                              await getAllMedicationRxObj.getAllMedicationApi();
-                                            } else {
-                                              throw Exception('Failed to delete medication');
-                                            }
-                                          } catch (error) {
-                                            print('Error deleting Medication ID: ${item.id}, Error: $error');
-                                            setState(() {
-                                              medication.clear();
-                                              medication.addAll(backupMedication.map((item) => item is Datum ? item : Datum.fromJson(item)));
-                                            });
-                                          } finally {
-                                            setItemState(() {
-                                              isDeleting = false;
-                                            });
-                                          }
-                                        },
-
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -490,3 +344,11 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+

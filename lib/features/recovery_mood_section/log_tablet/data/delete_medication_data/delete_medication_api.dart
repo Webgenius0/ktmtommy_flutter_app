@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../../../networks/dio/dio.dart';
 import '../../../../../networks/endpoints.dart';
 import '../../../../../networks/exception_handler/data_source.dart';
@@ -20,6 +21,7 @@ final class ServiceDeleteApi {
       Response response = await deleteHttp(Endpoints.deleteMedicationApi(id));
 
       if (response.statusCode == 200) {
+        EasyLoading.showSuccess('Medication deleted successfully 🎉');
         Map data = json.decode(json.encode(response.data));
         return data;
       } else {

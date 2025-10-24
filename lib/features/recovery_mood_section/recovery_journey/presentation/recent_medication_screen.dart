@@ -181,14 +181,13 @@ class _RecentMedicationScreenState extends State<RecentMedicationScreen> {
 
                               if (success) {
                                 // Log successful deletion
-                                print('Successfully deleted Medication ID: ${item.id}');
-                                ToastUtil.showShortToast('Medication deleted successfully');
+                                print('==========>>>>>>>Successfully deleted Medication ID: ${item.id}');
                                 // Refresh the list from API to ensure consistency
                                 await getAllMedicationRxObj.getAllMedicationApi();
                               } else {
                                 // Log failure and revert UI
-                                print('Failed to delete Medication ID: ${item.id}');
-                                ToastUtil.showShortToast('Failed to delete medication');
+                                print('==========>>>>>>>>>>>>Failed to delete Medication ID: ${item.id}');
+
                                 // Revert the optimistic update
                                 setState(() {
                                   // Note: This assumes the API call will refresh the list, so no manual revert is needed
@@ -198,8 +197,7 @@ class _RecentMedicationScreenState extends State<RecentMedicationScreen> {
                               }
                             } catch (error) {
                               // Log error and show toast
-                              print('Error deleting Medication ID: ${item.id}, Error: $error');
-                              ToastUtil.showShortToast('Error: $error');
+                              print('========++++++Error deleting Medication ID: ${item.id}, Error: $error');
                               // Refresh the list to restore original state
                               await getAllMedicationRxObj.getAllMedicationApi();
                             }

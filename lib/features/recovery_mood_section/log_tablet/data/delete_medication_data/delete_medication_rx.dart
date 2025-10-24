@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/delete_medication_data/delete_medication_api.dart';
-import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../../../networks/rx_base.dart';
 
@@ -25,7 +24,7 @@ final class DeleteMedicationRx extends RxResponseInt {
   @override
   handleSuccessWithReturn(data) {
     // Checking the response to determine if it's a follow or unfollow action
-    ToastUtil.showShortToast('Delete Success');
+
   }
 
   @override

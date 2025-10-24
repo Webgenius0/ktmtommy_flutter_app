@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -352,7 +353,8 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                                 }
                               } catch (e) {
                                 // Log error and show toast
-                                print('Error saving medication: $e');
+                                print('================>>>>>>>>>>Error saving medication: $e');
+
                                 ToastUtil.showShortToast("Failed to save medication. Please try again.");
                               } finally {
                                 setState(() {
@@ -452,13 +454,13 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                                             bool success = await deleteMedicationRxObj.deleteMedicationApi(id: item.id.toString());
                                             if (success) {
                                               print('Successfully deleted Medication ID: ${item.id}');
-                                              ToastUtil.showShortToast('Medication deleted successfully');
+                                              EasyLoading.showSuccess('Medication deleted successfully 🎉');
                                               await getAllMedicationRxObj.getAllMedicationApi();
                                             } else {
-                                              throw Exception('Failed to delete medication');
+                                              EasyLoading.showError('Failed to delete medication 😔');
                                             }
                                           } catch (error) {
-                                            print('Error deleting Medication ID: ${item.id}, Error: $error');
+                                            print('=============>>>>>>Error deleting Medication ID: ${item.id}, Error: $error');
                                             setState(() {
                                               medication.clear();
                                               medication.addAll(backupMedication.map((item) => item is Datum ? item : Datum.fromJson(item)));

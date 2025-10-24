@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/networks/dio/dio.dart';
 import 'package:ktmtommy_apps/networks/endpoints.dart';
@@ -40,7 +41,7 @@ final class StoreApi {
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));
-        ToastUtil.showShortToast('Successfully saved medication');
+        EasyLoading.showSuccess('Successfully saved medication! 🎉');
         print("=========>>>>>>>>>>>>Successfully saved medication");
         return data;
       } else {

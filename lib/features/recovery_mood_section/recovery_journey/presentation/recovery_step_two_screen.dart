@@ -6,6 +6,7 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/widget/custom_stepbar.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/custom_emotional-symptoms.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/custom_frequency.dart';
@@ -15,6 +16,8 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/wi
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+
+import '../../../../helpers/di.dart';
 
 class RecoveryStepTwoScreen extends StatefulWidget {
   const RecoveryStepTwoScreen({super.key});
@@ -295,6 +298,9 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                     CustomButtonWidget(
                       text: 'Next',
                       onTap: () {
+
+
+
                         // ✅ Log all selected values
                         log('==============================');
                         log('💪 Physical Symptom: $selectedSymptom');
@@ -303,6 +309,13 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                         log('⏱ Duration: $selectedDuration');
                         log('😔 Emotional Symptom: $selectedEmotional');
                         log('==============================');
+
+
+                        appData.write(kKeyPhysicalSymptom, selectedSymptom);
+                        appData.write(kKeySymptomLevel, sliderValue);
+                        appData.write(kKeyFrequency, selectedFrequency);
+                        appData.write(kKeyDuration, selectedDuration);
+                        appData.write(kKeyEmotionalSymptom, selectedEmotional);
 
                         // Then navigate to next step
                         NavigationService.navigateTo(

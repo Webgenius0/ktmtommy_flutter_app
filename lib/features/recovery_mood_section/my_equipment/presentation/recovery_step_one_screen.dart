@@ -383,12 +383,9 @@ class _RecoveryStepOneScreenState extends State<RecoveryStepOneScreen> {
                               log('==============================');
 
                               appData.write(kKeyInjuryName, selectedInjury);
-                              appData.write(
-                                  kKeyInjuryLevel, selectedInjuryLevel);
-                              appData.write(
-                                  kKeyInjuryDate, dateController.text);
-                              appData.write(
-                                  kKeyRecoveryStage, titles[selectedIndex]);
+                              appData.write(kKeyInjuryLevel, selectedInjuryLevel);
+                              appData.write(kKeyInjuryDate, dateController.text);
+                              appData.write(kKeyRecoveryStage, titles[selectedIndex]);
 
                               NavigationService.navigateTo(
                                 Routes.recoveryStepTwoScreen,

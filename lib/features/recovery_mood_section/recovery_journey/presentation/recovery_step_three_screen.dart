@@ -6,12 +6,14 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/widget/custom_stepbar.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/recovery_goal.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/short_time.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/slider_custom.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/weeks_dropdwon.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
@@ -263,12 +265,90 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
               CustomButtonWidget(
                 onTap: () {
                   // ✅ Log all selected values
+
+                  appData.write(kKRecoveryTimePeriod, selectedTimePeriod);
+                  appData.write(kKRecoveryGoal, selectedRecoveryGoal);
+                  appData.write(ProgressTimelines, sliderValue);
+                  appData.write(TargetDuration, selectedDuration);
+
+
+                  //===========sign_up_screen_data================//
+
+                  appData.read(kKeyuserFullName);
+                  appData.read(kKeyuserEmail);
+                  appData.read(kKeyuserPassword);
+
+
+                  //==============tell_us_about_screen_data==================//
+
+                  appData.read(kKeyuserAge);
+                  appData.read(kKeyuserGender);
+                  appData.read(kKeyuserReminderStartTime);
+                  appData.read(kKeyuserReminderEndTime);
+
+                  //===================recovery_step_one_screen=============//
+
+                  appData.read(kKeyInjuryName);
+                  appData.read(kKeyInjuryLevel);
+                  appData.read(kKeyInjuryDate);
+                  appData.read(kKeyRecoveryStage);
+
+                  //===================recoveryStepTwoScreen=================//
+                  appData.read(kKeyPhysicalSymptom);
+                  appData.read(kKeySymptomLevel);
+                  appData.read(kKeyFrequency);
+                  appData.read(kKeyDuration);
+                  appData.read(kKeyEmotionalSymptom);
+
+                 // ✅ Print all data to console
+
+
                   log('==============================');
-                  log('🕐 Recovery Time Period: $selectedTimePeriod');
-                  log('🎯 Recovery Goal: $selectedRecoveryGoal');
-                  log('📈 Progress Timeline: ${sliderValue.toStringAsFixed(2)} ($progressLabel)');
-                  log('📅 Target Duration: $selectedDuration');
+                  log('=======👤 USER INFO:===========');
+                  log('name: ${appData.read(kKeyuserFullName)}');
+                  log('email: ${appData.read(kKeyuserEmail)}');
+                  log('password: ${appData.read(kKeyuserPassword)}');
+
+
+                  log('------------------------------');
+                  log('=====📅 TELL US ABOUT INFO:======');
+                  log('age: ${appData.read(kKeyuserAge)}');
+                  log('gender: ${appData.read(kKeyuserGender)}');
+                  log('reminder_from: ${appData.read(kKeyuserReminderStartTime)}');
+                  log('reminder_to: ${appData.read(kKeyuserReminderEndTime)}');
+
+
+                  log('------------------------------');
+                  log('=======💪 RECOVERY STEP ONE:============');
+                  log('injury_name: ${appData.read(kKeyInjuryName)}');
+                  log('injury_level: ${appData.read(kKeyInjuryLevel)}');
+                  log('injury_date: ${appData.read(kKeyInjuryDate)}');
+                  log('current_recovery_stage: ${appData.read(kKeyRecoveryStage)}');
+
+                  log('------------------------------');
+                  log('======⚕️ RECOVERY STEP TWO:=============');
+                  log('physical_symptom: ${appData.read(kKeyPhysicalSymptom)}');
+                  log('physical_symptom_details: ${appData.read(kKeySymptomLevel)}');
+                  log('physical_symptom_frequency: ${appData.read(kKeyFrequency)}');
+                  log('physical_symptom_duration: ${appData.read(kKeyDuration)}');
+                  log('emotional_symptoms: ${appData.read(kKeyEmotionalSymptom)}');
+
+
+                  log('------------------------------');
+                  log('🕐 FINAL RECOVERY DATA:');
+                  log('🕐Recovery Time Period: $selectedTimePeriod');
+                  log('🎯Recovery Goal: $selectedRecoveryGoal');
+                  log('📈Progress Timeline: ${sliderValue.toStringAsFixed(2)}');
+                  log('📅Target Duration: $selectedDuration');
                   log('==============================');
+
+
+
+
+
+
+
+
 
                   // Navigate next
                   NavigationService.navigateTo(Routes.allSetScreen);

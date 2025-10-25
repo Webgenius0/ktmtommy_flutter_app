@@ -278,12 +278,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
                       appData.write(kKeyuserEmail, emailController.text);
                       appData.write(kKeyuserFullName, nameController.text);
-                      appData.write(
-                          kKeyuserPassword, confirmPasswordController.text);
+                      appData.write(kKeyuserPassword, confirmPasswordController.text);
 
                       log("======> User Full Name: ${appData.read(kKeyuserFullName)}");
                       log("======> User Email: ${appData.read(kKeyuserEmail)}");
                       log("======> User Password: ${appData.read(kKeyuserPassword)}");
+
+
+                      log('++++++++++++Full Name: ${appData.read(kKeyuserFullName)}');
+                      log('++++++++++Email: ${appData.read(kKeyuserEmail)}');
+                      log('++++++++++Password: ${appData.read(kKeyuserPassword)}');
+
+
                       NavigationService.navigateTo(Routes.tellUsAboutScreen);
                     }
                   },

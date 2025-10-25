@@ -22,6 +22,11 @@ class Endpoints {
   // * >>>>>>>>>>>>>>>>>>>>> auth and forget <<<<<<<<<<<<<<<<<<<<<<<
   static String login() => "/api/login";
 
+
+  ///========================Profile Section=============================///
+
+  static String getProfile() => "/api/profile";
+
   ///========================My Day Section ========================///
 
   static String storeMedicationApi() => "/api/medication/store";

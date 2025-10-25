@@ -66,6 +66,7 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -253,6 +254,12 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
                         appData.write(kKeyuserGender, selectedGender);
                         appData.write(kKeyuserReminderStartTime, startTime);
                         appData.write(kKeyuserReminderEndTime, endTime);
+
+                        log('=====📅 TELL US ABOUT INFO:======');
+                        log('+++++++++Age: ${appData.read(kKeyuserAge)}');
+                        log('++++++++Gender: ${appData.read(kKeyuserGender)}');
+                        log('+++++++++++Reminder Start Time: ${appData.read(kKeyuserReminderStartTime)}');
+                        log('++++++++++++Reminder End Time: ${appData.read(kKeyuserReminderEndTime)}');
 
                         // Then navigate to next screen
                         NavigationService.navigateTo(

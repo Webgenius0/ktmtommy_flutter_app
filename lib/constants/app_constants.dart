@@ -142,19 +142,34 @@ const String kKeyUserMobile = 'user_mobile';
 const String kKeyUserType = 'user_type';
 
 // * Recover user signup data
-const String kKeyuserEmail = 'user_email';
-const String kKeyuserPassword = 'user_password';
-const String kKeyuserFullName = 'user_name';
-const String kKeyuserAge = 'user_age';
-const String kKeyuserGender = 'user_gender';
-const String kKeyuserReminderStartTime = 'user_reminder_start_time';
-const String kKeyuserReminderEndTime = 'user_reminder_end_time';
+const String kKeyuserEmail = 'userEmail';
+const String kKeyuserPassword = 'userPassword';
+const String kKeyuserFullName = 'userFullName';
+const String kKeyuserAge = 'userAge';
+const String kKeyuserGender = 'userGender';
+const String kKeyuserReminderStartTime = 'userReminderStartTime';
+const String kKeyuserReminderEndTime = 'userReminderEndTime';
 
 // * Injury Details - Recovery Step One
-const String kKeyInjuryName = 'injury_name';
-const String kKeyInjuryLevel = 'injury_level';
-const String kKeyInjuryDate = 'injury_date';
-const String kKeyRecoveryStage = 'recovery_stage';
+const String kKeyInjuryName = 'InjuryName';
+const String kKeyInjuryLevel = 'InjuryLevel';
+const String kKeyInjuryDate = 'InjuryDate';
+const String kKeyRecoveryStage = 'RecoveryStage';
+
+// * Recovery Step Two
+
+const String kKeyPhysicalSymptom = 'PhysicalSymptom';
+const String kKeySymptomLevel = 'SymptomLevel';
+const String kKeyFrequency = 'Frequency';
+const String kKeyDuration = 'Duration';
+const String kKeyEmotionalSymptom = 'EmotionalSymptom';
+
+// * Recovery Step Three
+
+const String kKRecoveryTimePeriod = 'Recovery Tme Period';
+const String kKRecoveryGoal = 'Recovery Goal';
+const String ProgressTimelines = 'Progress Timeline';
+const String TargetDuration = 'TargetDuration';
 
 const List<String> kLanguagesKey = [
   kKeyEnglish,

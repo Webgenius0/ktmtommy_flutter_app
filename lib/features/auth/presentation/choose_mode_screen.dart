@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
@@ -8,6 +8,8 @@ import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import '../../../constants/app_constants.dart';
+import '../../../helpers/di.dart';
 
 
 
@@ -135,6 +137,7 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
                   ),
                   onTap: () {
                     if (selectedIndex == -1) {
+                      appData.write(kKeyUserType, selectedIndex.toString());
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -145,6 +148,8 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
                       );
                       return;
                     }
+
+                    log("======> User kKeyUserType: ${appData.read(kKeyUserType)}");
 
                     // Navigate based on selection
                     if (selectedIndex == 0) {

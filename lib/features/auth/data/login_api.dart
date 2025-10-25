@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import '../../../../networks/dio/dio.dart';
 import '../../../../networks/endpoints.dart';

@@ -12,9 +12,6 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
 class PersonalInformationSignUpScreen extends StatefulWidget {
   const PersonalInformationSignUpScreen({super.key});
 
@@ -70,10 +67,7 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                     style: TextFontStyle.textStyle14w400cD1D1D1poppins
                 ),
                 UIHelper.verticalSpace(24.h),
-// ===================== name ==========================//
-
-
-
+                // ===================== name ==========================//
                 //============================== email =====================//
                 UIHelper.verticalSpace(30.h),
                 CustomTextfield(

@@ -317,6 +317,15 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                         appData.write(kKeyDuration, selectedDuration);
                         appData.write(kKeyEmotionalSymptom, selectedEmotional);
 
+
+                        log('+++++++++Physical Symptom: ${appData.read(kKeyPhysicalSymptom)}');
+                        log('+++++++++Symptom Level (Slider): ${appData.read(kKeySymptomLevel)}');
+                        log('+++++++++Frequency: ${appData.read(kKeyFrequency)}');
+                        log('+++++++++Duration: ${appData.read(kKeyDuration)}');
+                        log('+++++++++Emotional Symptom: ${appData.read(kKeyEmotionalSymptom)}');
+
+
+
                         // Then navigate to next step
                         NavigationService.navigateTo(
                           Routes.recoveryStepThreeScreen,

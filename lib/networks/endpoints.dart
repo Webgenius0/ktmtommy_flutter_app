@@ -21,6 +21,7 @@ class Endpoints {
 
   // * >>>>>>>>>>>>>>>>>>>>> auth and forget <<<<<<<<<<<<<<<<<<<<<<<
   static String login() => "/api/login";
+  static String recoveryRegisterApi() => "/api/register";
 
 
   ///========================Profile Section=============================///

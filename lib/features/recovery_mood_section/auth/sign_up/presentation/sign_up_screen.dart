@@ -286,8 +286,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
                       log('++++++++++++Full Name: ${appData.read(kKeyuserFullName)}');
-                      log('++++++++++Email: ${appData.read(kKeyuserEmail)}');
-                      log('++++++++++Password: ${appData.read(kKeyuserPassword)}');
+                      log('++++++++++++Email: ${appData.read(kKeyuserEmail)}');
+                      log('++++++++++++Password: ${appData.read(kKeyuserPassword)}');
 
 
                       NavigationService.navigateTo(Routes.tellUsAboutScreen);

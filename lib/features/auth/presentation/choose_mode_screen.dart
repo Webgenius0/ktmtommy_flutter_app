@@ -56,7 +56,9 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
 
                 GestureDetector(
                   onTap: () {
+                    log("=========>>>>>>selectIndex:{$selectedIndex}");
                     setState(() {
+
                       selectedIndex = 0;
                     });
                   },
@@ -94,6 +96,7 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
 
                 GestureDetector(
                   onTap: () {
+                    log("=========>>>>>>//selectIndex:{$selectedIndex}");
                     setState(() {
                       selectedIndex = 1;
                     });
@@ -153,8 +156,10 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
 
                     // Navigate based on selection
                     if (selectedIndex == 0) {
+                      log("==========>>>>>>>go to signUpScreen");
                       NavigationService.navigateTo(Routes.signUpScreen);
                     } else {
+                      log("==========>>>>>>>go to personalInformationSignUpScreen");
                       NavigationService.navigateTo(Routes.personalInformationSignUpScreen);
                     }
                   },

@@ -239,28 +239,28 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
                   CustomButtonWidget(
                     text: 'Next',
                     onTap: () {
+                      log("============//=Next Button Clicked go to recoveryStepOneScreen");
+
                       if (_formKey.currentState?.validate() ?? false) {
                         // 🟢 Print all selected values
                         log('===========================');
-                        log('Age: ${ageController.text}');
+                        log('Age: $ageController');
                         log('Gender: $selectedGender');
-                        log('Reminder Time: $selectedTime');
                         log('Start Time: $startTime');
                         log('End Time: $endTime');
                         log('===========================');
 
                         // 📝 Save to local storage
-                        appData.write(kKeyuserAge, ageController.text);
+                        appData.write(kKeyuserAge, int.tryParse(ageController.text));
                         appData.write(kKeyuserGender, selectedGender);
                         appData.write(kKeyuserReminderStartTime, startTime);
                         appData.write(kKeyuserReminderEndTime, endTime);
 
-                        log('=====📅 TELL US ABOUT INFO:======');
-                        log('+++++++++Age: ${appData.read(kKeyuserAge)}');
+                        log('===== TELL US ABOUT INFO:======');
+                        log('+++++++++age: ${appData.read(kKeyuserAge)}');
                         log('++++++++Gender: ${appData.read(kKeyuserGender)}');
-                        log('+++++++++++Reminder Start Time: ${appData.read(kKeyuserReminderStartTime)}');
-                        log('++++++++++++Reminder End Time: ${appData.read(kKeyuserReminderEndTime)}');
-
+                        log('+++++++++++reminder_from: ${appData.read(kKeyuserReminderStartTime)}');
+                        log('++++++++++++reminder_to: ${appData.read(kKeyuserReminderEndTime)}');
                         // Then navigate to next screen
                         NavigationService.navigateTo(
                           Routes.recoveryStepOneScreen,

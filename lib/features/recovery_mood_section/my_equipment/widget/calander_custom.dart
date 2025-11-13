@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,18 +7,16 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 
-
-
-
-
 class CalanderCustom extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
+  final Function(DateTime)? onDateSelected; // নতুন কলব্যাক
 
   const CalanderCustom({
     super.key,
     required this.controller,
     required this.hintText,
+    this.onDateSelected,
   });
 
   @override
@@ -63,10 +60,15 @@ class _CalanderCustomState extends State<CalanderCustom> {
     );
 
     if (picked != null) {
-      final selectedDate = DateFormat('dd/MM/yyyy').format(picked);
+      // UI-তে দেখানোর জন্য: dd/MM/yyyy
+      final String displayDate = DateFormat('dd/MM/yyyy').format(picked);
+
       setState(() {
-        widget.controller.text = selectedDate;
+        widget.controller.text = displayDate;
       });
+
+      // বাইরে DateTime পাস করো
+      widget.onDateSelected?.call(picked);
     }
   }
 
@@ -77,7 +79,6 @@ class _CalanderCustomState extends State<CalanderCustom> {
       textAlign: TextAlign.start,
       ontap: _selectDate,
       controller: widget.controller,
-      // readOnly: true,
       borderRadius: 20.r,
       fillColor: AppColors.c2A2A2A,
       hintText: widget.hintText,
@@ -89,8 +90,7 @@ class _CalanderCustomState extends State<CalanderCustom> {
         scale: 0.50,
         child: SvgPicture.asset(
           AppIcons.calandericon,
-          height: 20,
-
+          height: 20.h,
         ),
       ),
     );

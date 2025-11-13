@@ -289,7 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       log('++++++++++++Email: ${appData.read(kKeyuserEmail)}');
                       log('++++++++++++Password: ${appData.read(kKeyuserPassword)}');
 
-
+                      log("==========>>>>>>>go to tellUsAboutScreen");
                       NavigationService.navigateTo(Routes.tellUsAboutScreen);
                     }
                   },

@@ -2,7 +2,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/rec
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/model/all_medication_model.dart';
 import 'package:rxdart/subjects.dart';
 
-const String baseUrl = "https://ktmtommy.softvencefsd.xyz";
+const String baseUrl = "https://admin.mybalancedayapp.com";
 
 final class NetworkConstants {
   NetworkConstants._();

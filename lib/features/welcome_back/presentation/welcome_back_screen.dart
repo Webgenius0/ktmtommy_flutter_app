@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -127,7 +129,12 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                     UIHelper.horizontalSpace(4.w),
 
                     GestureDetector(
-                      onTap: (){NavigationService.navigateTo(Routes.chooseModeScreen);},
+                      onTap: (){
+                        NavigationService.navigateTo(Routes.chooseModeScreen);
+                        log("=============Register now clicked go to chooseModeScreen ");
+
+
+                        },
                       child: Text(' Register now',style: TextFontStyle.textStyle14w400cF55216poppins.copyWith(
                         decoration: TextDecoration.underline,
                         decorationColor: Colors.red,

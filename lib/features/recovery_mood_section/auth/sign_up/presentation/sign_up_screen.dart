@@ -280,9 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       appData.write(kKeyuserFullName, nameController.text);
                       appData.write(kKeyuserPassword, confirmPasswordController.text);
 
-                      log("======> User Full Name: ${appData.read(kKeyuserFullName)}");
-                      log("======> User Email: ${appData.read(kKeyuserEmail)}");
-                      log("======> User Password: ${appData.read(kKeyuserPassword)}");
+
 
 
                       log('++++++++++++Full Name: ${appData.read(kKeyuserFullName)}');

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
@@ -49,7 +51,9 @@ class _WelcomeAtheleteScreenState extends State<WelcomeAtheleteScreen> {
               UIHelper.verticalSpace(300.h),
 
               CustomButtonWidget(
-                onTap: (){NavigationService.navigateTo(Routes.selectGoalScreen);},
+                onTap: (){
+                  log("==========>>>>>>>Lets Begin clicked go to selectGoalScreen");
+                  NavigationService.navigateTo(Routes.selectGoalScreen);},
                 textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                 image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
 

@@ -30,8 +30,8 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
   double sliderValue = 0.3;
   String selectedSymptom = 'Headaches';
   String? selectedFrequency;
-  String selectedDuration = '2-4 hour';
-  List<String> durationList = ['2-4 hour', '1-3 hour', '3-2 hour', '4-6 hour'];
+  String selectedDuration = '2-3'; // Default numerical value
+  List<String> durationList = ['1-2 hour','2-3 hour', '3-4 hour', '4-6 hour']; // Display values with "hour"
   String selectedEmotional = 'Emotional';
 
   @override
@@ -190,17 +190,18 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                               'Duration',
                               style: TextFontStyle.textStyle14w400cA3A3A3poppins
                                   .copyWith(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w500),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500),
                             ),
                             UIHelper.verticalSpace(12.h),
 
                             CustomDropdownMenu(
                               items: durationList,
-                              initialValue: selectedDuration,
+                              initialValue: '$selectedDuration hour', // Display with "hour"
                               onChanged: (value) {
                                 setState(() {
-                                  selectedDuration = value!;
+                                  // Store only the numerical part (e.g., "2-3" or "4-6")
+                                  selectedDuration = value!.replaceAll(' hour', '');
                                 });
                               },
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -245,7 +246,7 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                                 CustomEmotionalSymptoms(
                                   title: 'Irritability',
                                   isSelected:
-                                      selectedEmotional == 'Irritability',
+                                  selectedEmotional == 'Irritability',
                                   onTap: () {
                                     setState(() {
                                       selectedEmotional = 'Irritability';
@@ -278,7 +279,7 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                                 CustomEmotionalSymptoms(
                                   title: 'Mood Swings',
                                   isSelected:
-                                      selectedEmotional == 'Mood Swings',
+                                  selectedEmotional == 'Mood Swings',
                                   onTap: () {
                                     setState(() {
                                       selectedEmotional = 'Mood Swings';
@@ -298,35 +299,28 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                     CustomButtonWidget(
                       text: 'Next',
                       onTap: () {
-
-
-
-                        // ✅ Log all selected values
+                        // Log all selected values
                         log('==============================');
                         log('💪 Physical Symptom: $selectedSymptom');
                         log('📊 Symptom Level (Slider): ${sliderValue.toStringAsFixed(2)}');
                         log('🔁 Frequency: ${selectedFrequency ?? "Not selected"}');
-                        log('⏱ Duration: $selectedDuration');
+                        log('⏱ Duration: $selectedDuration'); // Logs "2-3" or "4-6"
                         log('😔 Emotional Symptom: $selectedEmotional');
                         log('==============================');
-
 
                         appData.write(kKeyPhysicalSymptom, selectedSymptom);
                         appData.write(kKeySymptomLevel, sliderValue);
                         appData.write(kKeyFrequency, selectedFrequency);
-                        appData.write(kKeyDuration, selectedDuration);
+                        appData.write(kKeyDuration, selectedDuration); // Stores "2-3" or "4-6"
                         appData.write(kKeyEmotionalSymptom, selectedEmotional);
 
-
-                        log('+++++++++Physical Symptom: ${appData.read(kKeyPhysicalSymptom)}');
-                        log('+++++++++Symptom Level (Slider): ${appData.read(kKeySymptomLevel)}');
+                        log('+++++++++physical_symptom_details: ${appData.read(kKeyPhysicalSymptom)}');
+                        log('+++++++++physical_symptom_frequency: ${appData.read(kKeySymptomLevel)}');
                         log('+++++++++Frequency: ${appData.read(kKeyFrequency)}');
-                        log('+++++++++Duration: ${appData.read(kKeyDuration)}');
+                        log('+++++++++Duration: ${appData.read(kKeyDuration)}'); // Logs "2-3" or "4-6"
                         log('+++++++++Emotional Symptom: ${appData.read(kKeyEmotionalSymptom)}');
 
-
-
-                        // Then navigate to next step
+                        // Navigate to next step
                         NavigationService.navigateTo(
                           Routes.recoveryStepThreeScreen,
                         );

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +9,9 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
@@ -266,6 +269,7 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                   text: 'CONTINUE',
                   onTap: () {
 
+
                     if (_formKey.currentState?.validate() ?? false) {
                       if (!_isChecked) {
                         setState(() {
@@ -274,6 +278,18 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                         );
                         return;
                       }
+                      appData.write(kKeyuserAthleteFullName,nameController.text);
+                      appData.write(kKeyuserAthleteEmail,emailController.text);
+                      appData.write(kKeyuserAthletePassword, confirmPasswordController.text);
+                      
+                      
+                      log("+++++++++++name:${appData.read(kKeyuserAthleteFullName)}");
+                      log("+++++++++++email:${appData.read(kKeyuserAthleteEmail)}");
+                      log("+++++++++++password:${appData.read(kKeyuserAthletePassword)}");
+
+
+                      log("==========>>>>>>>go to welcomeAtheleteScreen");
+
                       NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
                     }
                   },

@@ -1,21 +1,23 @@
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/age_widget.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_height.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_time.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_with.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/select_unselect_gender.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
+import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
-
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class PersonalizedScreen extends StatefulWidget {
   const PersonalizedScreen({super.key});
@@ -26,25 +28,26 @@ class PersonalizedScreen extends StatefulWidget {
 
 class _PersonalizedScreenState extends State<PersonalizedScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final TextEditingController ageController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
-  bool isSelectedHeight = false;
+  String heightUnit = 'cm';
   bool isSelectedWeight = false;
 
-  String selectedGender = 'Male';
+  String selectedGender = 'male';
   String? selectedTime;
   String? timeError;
 
   @override
   void dispose() {
+    ageController.dispose();
     heightController.dispose();
     weightController.dispose();
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     setState(() {
       timeError = null;
     });
@@ -57,13 +60,124 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
         return;
       }
 
+      // Map reminder time to specific ranges
+      Map<String, Map<String, String>> reminderTimes = {
+        'Morning': {'reminder_from': '06:00:00', 'reminder_to': '10:00:00'},
+        'Afternoon': {'reminder_from': '11:00:00', 'reminder_to': '17:00:00'},
+        'Evening': {'reminder_from': '18:00:00', 'reminder_to': '22:00:00'},
+      };
 
-      NavigationService.navigateTo(Routes.allSetPersonalInformationScreen);
+      // Map selected time to display format
+      Map<String, String> timeDisplay = {
+        'Morning': 'Morning 6 AM-10 AM',
+        'Afternoon': 'Afternoon 11 AM-5 PM',
+        'Evening': 'Evening 6 PM-10 PM',
+      };
+
+      // Get reminder time range
+      String reminderFrom = reminderTimes[selectedTime]!['reminder_from']!;
+      String reminderTo = reminderTimes[selectedTime]!['reminder_to']!;
+
+      // Parse age, height, and weight
+      int? age = int.tryParse(ageController.text);
+      double? height = double.tryParse(heightController.text);
+      double? weight = double.tryParse(weightController.text);
+
+      // Validate inputs
+      if (age == null || height == null || weight == null) {
+        ToastUtil.showShortToast("Please enter valid age, height, and weight");
+        return;
+      }
+
+      // Set default units
+      String heightUnitDefault = 'cm'; // Default to cm
+      String weightUnitDefault = isSelectedWeight ? 'lbs' : 'kg'; // Respect user selection, default to kg if not selected
+
+      // Format height and weight strings
+      String heightString = '$height $heightUnitDefault';
+      String weightString = '$weight $weightUnitDefault';
+
+      // Prepare the output map
+      Map<String, dynamic> output = {
+        'age': age,
+        'gender': selectedGender,
+        'height': height,
+        'height_unit': heightUnitDefault,
+        'height_string': heightString,
+        'weight': weight,
+        'weight_unit': weightUnitDefault,
+        'weight_string': weightString,
+        'reminder_from': reminderFrom,
+        'reminder_to': reminderTo,
+      };
+
+      // Save reminder time locally
+      appData.write(kKeyAthleteDailyReminder, timeDisplay[selectedTime!]);
+
+      // Logging for debug
+      log('age: ${output['age']}');
+      log('gender: ${output['gender']}');
+      log('height: ${output['height']}');
+      log('height_unit: ${output['height_unit']}');
+      log('weight: ${output['weight']}');
+      log('weight_unit: ${output['weight_unit']}');
+      log('reminder_from: ${output['reminder_from']}');
+      log('reminder_to: ${output['reminder_to']}');
+      log('AthleteDailyReminder: ${appData.read(kKeyAthleteDailyReminder)}');
+      log("Preferred Reminder time: ${timeDisplay[selectedTime]}");
+      log("Next Button clicked: go to allSetPersonalInformationScreen");
+
+      try {
+        bool success = await athleteAuthRegisterRxObj.registerAthleteUserApi(
+          name: appData.read(kKeyuserAthleteFullName) ?? 'Nahid',
+          email: appData.read(kKeyuserAthleteEmail) ?? 'example@domain.com',
+          password: appData.read(kKeyuserAthletePassword) ?? '12345678',
+          password_confirmation: appData.read(kKeyuserAthletePassword) ?? '12345678',
+          age: age,
+          gender: selectedGender,
+          user_mode: 'athlete',
+          goal: appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON',
+          sport: appData.read(kKeyAthleteSelectSport) ?? 'GYM',
+          experience_level: appData.read(kKeyAthleteExperiencelevel) ?? 'ADVANCED',
+          height: height,
+          height_unit: heightUnitDefault, // Use default cm
+          weight: weight,
+          weight_unit: weightUnitDefault, // Use default kg or lbs based on selection
+          reminder_from: reminderFrom,
+          reminder_to: reminderTo,
+        );
+
+        if (success) {
+          NavigationService.navigateTo(Routes.allSetPersonalInformationScreen);
+        } else {
+          log("================ Registration Failed. Try again.");
+        }
+      } catch (e) {
+        log("Error during registration: $e");
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Read the stored data
+    String? name = appData.read(kKeyuserAthleteFullName);
+    String? email = appData.read(kKeyuserAthleteEmail);
+    String? passWord = appData.read(kKeyuserAthletePassword);
+    String? goals = appData.read(kKeyAthleteSelectGoal);
+    String? sport = appData.read(kKeyAthleteSelectSport);
+    String? experienceLevel = appData.read(kKeyAthleteExperiencelevel);
+
+    // Log the data
+    log('++++++++++++===AthleteFullName: $name');
+    log('++++++++++++====AthleteEmail: $email');
+    log('++++++++++++====AthletePassword: $passWord');
+    log('++++++++++++====AthleteSelectGoal: $goals');
+    log('++++++++++++====AthleteSelectSport: $sport');
+    log('++++++++++++====AthleteExperiencelevel: $experienceLevel');
+
+
+
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -84,11 +198,10 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                 children: [
                   ArrowButtonAtheleteFlow(
                     onTap: () {
-                      NavigationService.goBack;
+                      NavigationService.goBack();
                     },
                   ),
                   UIHelper.verticalSpace(12.h),
-
                   Text(
                     'Tell us about you',
                     style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
@@ -96,27 +209,27 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                     ),
                   ),
                   UIHelper.verticalSpace(18.h),
-
                   StepBarSelectGoal(
                     currentStep: 3,
                     onTap: () {
-                      NavigationService.navigateTo(
-                          Routes.recoveryStepTwoScreen);
+                      NavigationService.navigateTo(Routes.recoveryStepTwoScreen);
                     },
                     onStepTap: (int index) {},
                   ),
                   UIHelper.verticalSpace(18.h),
-
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          CustomAge(
+                            controller: ageController,
+                          ),
+                          UIHelper.verticalSpace(12.h),
                           // Gender Select
                           Text(
                             'Select Gender',
-                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins
-                                .copyWith(
+                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                             ),
@@ -127,10 +240,10 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                               Expanded(
                                 child: SelectUnselectGender(
                                   text: 'Male',
-                                  isSelected: selectedGender == 'Male',
+                                  isSelected: selectedGender == 'male',
                                   onTap: () {
                                     setState(() {
-                                      selectedGender = 'Male';
+                                      selectedGender = 'male';
                                     });
                                   },
                                 ),
@@ -139,10 +252,10 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                               Expanded(
                                 child: SelectUnselectGender(
                                   text: 'Female',
-                                  isSelected: selectedGender == 'Female',
+                                  isSelected: selectedGender == 'female',
                                   onTap: () {
                                     setState(() {
-                                      selectedGender = 'Female';
+                                      selectedGender = 'female';
                                     });
                                   },
                                 ),
@@ -151,10 +264,10 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                               Expanded(
                                 child: SelectUnselectGender(
                                   text: 'Other',
-                                  isSelected: selectedGender == 'Other',
+                                  isSelected: selectedGender == 'other',
                                   onTap: () {
                                     setState(() {
-                                      selectedGender = 'Other';
+                                      selectedGender = 'other';
                                     });
                                   },
                                 ),
@@ -162,25 +275,18 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                             ],
                           ),
                           UIHelper.verticalSpace(24.h),
-
-  //==================================== Height ===================================//
-
+                          // Height
                           CustomHeight(
                             controller: heightController,
-                            isFtIn: isSelectedHeight,
+                            heightUnit: heightUnit,
                             onUnitChange: (val) {
                               setState(() {
-                                isSelectedHeight = val;
+                                heightUnit = val;
                               });
                             },
                           ),
-
                           UIHelper.verticalSpace(24.h),
-
-
-   //============================= With ============================================//
-
-
+                          // Weight
                           CustomWith(
                             controller: weightController,
                             isLbs: isSelectedWeight,
@@ -189,21 +295,27 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                                 isSelectedWeight = val;
                               });
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your weight';
+                              }
+                              double? weight = double.tryParse(value);
+                              if (weight == null || weight <= 0) {
+                                return 'Please enter a valid weight';
+                              }
+                              return null;
+                            },
                           ),
-
                           UIHelper.verticalSpace(24.h),
-
-   //========================================= Remender =================================//
+                          // Reminder
                           Text(
                             'Preferred reminder time',
-                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins
-                                .copyWith(
+                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           UIHelper.verticalSpace(12.h),
-
                           Row(
                             children: [
                               Expanded(
@@ -246,20 +358,15 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                               ),
                             ],
                           ),
-
-
                           if (timeError != null) ...[
                             UIHelper.verticalSpace(8.h),
                             Text(
                               timeError!,
-                              style: TextStyle(
-                                  color: Colors.red, fontSize: 14.sp),
+                              style: TextStyle(color: Colors.red, fontSize: 14.sp),
                             ),
                           ],
-
                           UIHelper.verticalSpace(38.h),
-
-    //============================= Submet button =================================//
+                          // Submit Button
                           CustomButtonWidget(
                             onTap: _submit,
                             textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,

@@ -140,10 +140,10 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
                       Expanded(
                         child: CustomSelectGender(
                           text: 'Male',
-                          isSelected: selectedGender == 'Male',
+                          isSelected: selectedGender == 'male',
                           onTap: () {
                             setState(() {
-                              selectedGender = 'Male';
+                              selectedGender = 'male';
                             });
                           },
                         ),
@@ -152,10 +152,10 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
                       Expanded(
                         child: CustomSelectGender(
                           text: 'Female',
-                          isSelected: selectedGender == 'Female',
+                          isSelected: selectedGender == 'female',
                           onTap: () {
                             setState(() {
-                              selectedGender = 'Female';
+                              selectedGender = 'female';
                             });
                           },
                         ),
@@ -164,10 +164,10 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
                       Expanded(
                         child: CustomSelectGender(
                           text: 'Other',
-                          isSelected: selectedGender == 'Other',
+                          isSelected: selectedGender == 'other',
                           onTap: () {
                             setState(() {
-                              selectedGender = 'Other';
+                              selectedGender = 'other';
                             });
                           },
                         ),
@@ -258,7 +258,7 @@ class _TellUsAboutScreenState extends State<TellUsAboutScreen> {
 
                         log('===== TELL US ABOUT INFO:======');
                         log('+++++++++age: ${appData.read(kKeyuserAge)}');
-                        log('++++++++Gender: ${appData.read(kKeyuserGender)}');
+                        log('++++++++gender: ${appData.read(kKeyuserGender)}');
                         log('+++++++++++reminder_from: ${appData.read(kKeyuserReminderStartTime)}');
                         log('++++++++++++reminder_to: ${appData.read(kKeyuserReminderEndTime)}');
                         // Then navigate to next screen

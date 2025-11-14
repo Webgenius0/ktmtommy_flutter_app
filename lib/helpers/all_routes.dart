@@ -109,22 +109,18 @@ final class Routes {
   static const String mealAnalyzeScreen = '/mealAnalyzeScreen';
   static const String logFoodScanTwoScreen = '/logFoodScanTwoScreen';
   static const String logFoodEmptyScreen = '/logFoodEmptyScreen';
-  static const String mealAnalyzeSavePreviewScreen =
-      '/mealAnalyzeSavePreviewScreen';
-  static const String personalInformationSignUpScreen =
-      '/personalInformationSignUpScreen';
+  static const String mealAnalyzeSavePreviewScreen = '/mealAnalyzeSavePreviewScreen';
+  static const String personalInformationSignUpScreen = '/personalInformationSignUpScreen';
   static const String welcomeAtheleteScreen = '/welcomeAtheleteScreen';
   static const String selectGoalScreen = '/selectGoalScreen';
   static const String selectSupportScreen = '/selectSupportScreen';
   static const String experienceLevelScreen = '/experienceLevelScreen';
   static const String personalizedScreen = '/personalizedScreen';
-  static const String allSetPersonalInformationScreen =
-      '/allSetPersonalInformationScreen';
+  static const String allSetPersonalInformationScreen = '/allSetPersonalInformationScreen';
 //===============
 
   static const String athletLogFoodEmptyScreen = '/athletLogFoodEmptyScreen';
-  static const String athletLogFoodScanOneScreen =
-      '/athletLogFoodScanOneScreen';
+  static const String athletLogFoodScanOneScreen = '/athletLogFoodScanOneScreen';
   static const String athletsMealScreen = '/athletsMealScreen';
   static const String athletMealAnalyzeScreen = '/athletMealAnalyzeScreen';
   static const String athletActivityScreen = '/athletActivityScreen';

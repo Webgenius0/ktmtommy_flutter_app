@@ -7,23 +7,45 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
 class CustomHeight extends StatelessWidget {
   final TextEditingController controller;
-  final bool isFtIn;
-  final Function(bool)? onUnitChange;
+  final String heightUnit; // cm, ft, or in
+  final Function(String)? onUnitChange;
 
   const CustomHeight({
     super.key,
     required this.controller,
-    this.isFtIn = false,
+    required this.heightUnit,
     this.onUnitChange,
   });
 
   @override
   Widget build(BuildContext context) {
+    String hintText;
+    String displayUnit;
+    String? Function(String?)? validator;
+
+    if (heightUnit == 'cm') {
+      hintText = 'Enter height (cm)';
+      displayUnit = 'cm';
+    } else if (heightUnit == 'ft') {
+      hintText = 'Enter height (ft)';
+      displayUnit = 'ft';
+    } else {
+      hintText = 'Enter height (in)';
+      displayUnit = 'in';
+    }
+
+    validator = (value) {
+      if (value == null || value.isEmpty) {
+        return "Please enter your height";
+      }
+      if (!RegExp(r'^\d*\.?\d*$').hasMatch(value)) {
+        return "Height must be a number";
+      }
+      return null;
+    };
+
     return Container(
       width: double.infinity,
       decoration: ShapeDecoration(
@@ -51,6 +73,7 @@ class CustomHeight extends StatelessWidget {
               ],
             ),
             UIHelper.verticalSpace(12.h),
+            // Height Input
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               decoration: BoxDecoration(
@@ -64,18 +87,10 @@ class CustomHeight extends StatelessWidget {
                       inputType: TextInputType.number,
                       controller: controller,
                       textAlign: TextAlign.start,
-                      hintText: 'Enter height',
+                      hintText: hintText,
                       hintTextSyle: TextFontStyle.textStyle16w400c757575poppins,
                       style: TextStyle(color: Colors.white),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your height";
-                        }
-                        if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return "Height must be a number";
-                        }
-                        return null;
-                      },
+                      validator: validator,
                     ),
                   ),
                   UIHelper.horizontalSpace(8.w),
@@ -86,7 +101,7 @@ class CustomHeight extends StatelessWidget {
                   ),
                   UIHelper.horizontalSpace(8.w),
                   Text(
-                    isFtIn ? 'ft/in' : 'cm',
+                    displayUnit,
                     style: TextFontStyle.textStyle16w400c757575poppins,
                   ),
                 ],
@@ -98,18 +113,27 @@ class CustomHeight extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      if (onUnitChange != null) onUnitChange!(false);
+                      if (onUnitChange != null) onUnitChange!('cm');
                     },
-                    child: _unitBox('cm', !isFtIn),
+                    child: _unitBox('cm', heightUnit == 'cm'),
                   ),
                 ),
                 UIHelper.horizontalSpace(16.w),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      if (onUnitChange != null) onUnitChange!(true);
+                      if (onUnitChange != null) onUnitChange!('ft');
                     },
-                    child: _unitBox('ft/in', isFtIn),
+                    child: _unitBox('ft', heightUnit == 'ft'),
+                  ),
+                ),
+                UIHelper.horizontalSpace(16.w),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      if (onUnitChange != null) onUnitChange!('in');
+                    },
+                    child: _unitBox('in', heightUnit == 'in'),
                   ),
                 ),
               ],

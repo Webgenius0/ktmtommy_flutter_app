@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,8 +8,10 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/widget/custom_your_all_set.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:lottie/lottie.dart';
@@ -27,6 +31,21 @@ class _AllSetPersonalInformationScreenState
     extends State<AllSetPersonalInformationScreen> {
   @override
   Widget build(BuildContext context) {
+
+    // Read the stored reminder time
+    String? dailyReminder = appData.read(kKeyAthleteDailyReminder);
+    String? name = appData.read(kKeyuserAthleteFullName);
+    String? goals = appData.read(kKeyAthleteSelectGoal);
+    // Log the reminder time
+    log('++++++++++++AthleteDailyReminder: $dailyReminder');
+    log('++++++++++++AthleteFullName: $name');
+    log('++++++++++++AthleteSelectGoal: $goals');
+    // Use a fallback value if dailyReminder is null
+    String reminderSubtitle = dailyReminder ?? 'Evening 6-10 PM';
+    String fullName = name ?? 'Alex Johnson';
+    String goalsName = goals ?? 'Alex Johnson';
+
+
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: Container(
@@ -81,7 +100,7 @@ class _AllSetPersonalInformationScreenState
                   children: [
                     CustomYourAllSet(
                       title: 'Name',
-                      subtitle: 'Alex Johnson',
+                      subtitle: fullName,
                       icon: SvgPicture.asset(
                         AppIcons.usernameicon,
                         height: 20.h,
@@ -95,7 +114,7 @@ class _AllSetPersonalInformationScreenState
 
                     CustomYourAllSet(
                       title: 'Goals',
-                      subtitle: 'Return to work(Part Time)',
+                      subtitle: goalsName,
                       icon: SvgPicture.asset(AppIcons.liteicon, height: 20.h, color: AppColors.orangeColor,),
                     ),
 
@@ -104,7 +123,7 @@ class _AllSetPersonalInformationScreenState
 
                     CustomYourAllSet(
                       title: 'Daily Reminder',
-                      subtitle: 'Evening 6-10 PM)',
+                      subtitle: reminderSubtitle,
                       icon: SvgPicture.asset(
                         AppIcons.notification,
                         height: 20.h, color: AppColors.orangeColor,

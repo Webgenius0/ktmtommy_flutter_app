@@ -144,11 +144,22 @@ const String kKeyUserType = 'user_type';
 // * Recover user signup data
 const String kKeyuserEmail = 'userEmail';
 const String kKeyuserPassword = 'userPassword';
+
 const String kKeyuserFullName = 'userFullName';
 const String kKeyuserAge = 'userAge';
 const String kKeyuserGender = 'userGender';
 const String kKeyuserReminderStartTime = 'userReminderStartTime';
 const String kKeyuserReminderEndTime = 'userReminderEndTime';
+
+//* Athlete User Section data
+const String kKeyuserAthleteFullName = 'userAthleteFullName';
+const String kKeyuserAthletePassword = 'userAthletePassword';
+const String kKeyuserAthleteEmail = 'userAthleteEmail';
+const String kKeyAthleteSelectGoal = 'athleteSelectGoal';
+const String kKeyAthleteSelectSport = 'athleteSelectGoalSport';
+const String kKeyAthleteExperiencelevel = 'athleteExperiencelevel';
+const String kKeyAthleteDailyReminder = 'athleteDailyReminder';
+
 
 // * Injury Details - Recovery Step One
 const String kKeyInjuryName = 'InjuryName';

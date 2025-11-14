@@ -1,13 +1,17 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/widget/custom_level_select.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
@@ -42,6 +46,17 @@ class _ExperienceLevelScreenState extends State<ExperienceLevelScreen> {
     setState(() {
       errorMessage = null;
     });
+
+    // Save only the selected Experiencelevel title as a string in appData
+    appData.write(kKeyAthleteExperiencelevel, title[selectedIndex!]);
+
+    // Print the selected Experiencelevel title
+    log("=========>>>>>>>>>>>>>>experience_level: ${title[selectedIndex!]}");
+
+    // Print the saved Experiencelevel from appData
+    log('++++++++++++experience_level: ${appData.read(kKeyAthleteExperiencelevel)}');
+    log("========>>>>>Next Button Clicked go to personalizedScreen ");
+
 
     NavigationService.navigateTo(Routes.personalizedScreen);
   }

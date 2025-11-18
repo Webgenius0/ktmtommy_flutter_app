@@ -19,21 +19,23 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 import '../../../../networks/api_acess.dart';
 
-
 class EditMedicationScreen extends StatefulWidget {
   final id;
-  const EditMedicationScreen({super.key, this.id});
+  final name;
+  final dosage;
+  const EditMedicationScreen(
+      {super.key, this.id, required this.name, this.dosage});
 
   @override
   State<EditMedicationScreen> createState() => _EditMedicationScreenState();
 }
 
 class _EditMedicationScreenState extends State<EditMedicationScreen> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _medicationFormKey = GlobalKey<FormState>();
   final TextEditingController notesController = TextEditingController();
-  final TextEditingController medicationNameController = TextEditingController();
+  final TextEditingController medicationNameController =
+      TextEditingController();
   final TextEditingController dosageController = TextEditingController();
 
   // Selected date and time for medication
@@ -58,12 +60,10 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
     super.dispose();
   }
 
-
   bool isOn = false;
   bool isOf = false;
   int currentGlassCount = 0;
   bool isAMSelected = true;
-
 
   final List<String> icon = [
     'assets/icons/signureicon.svg',
@@ -80,12 +80,11 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
     'assets/icons/deleteicon.svg',
   ];
 
-
-
-
   @override
   Widget build(BuildContext context) {
     log("===============Print Received ID: ${widget.id}");
+    log("===============Print Received Name: ${widget.name}");
+    log("===============Print Received Name: ${widget.dosage}");
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: SafeArea(
@@ -102,7 +101,6 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                   },
                   text: 'Edit Log Tablet',
                 ),
-
                 UIHelper.verticalSpace(20.h),
                 Text(
                   'Medication Details',
@@ -111,18 +109,17 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 UIHelper.verticalSpace(12.h),
-
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
                       children: [
                         // Medication name and dosage input
                         MedicationDetails(
+                          hintText: widget.name,
                           title: 'Medication Name',
+                          dosage: widget.dosage.toString(),
                           nameController: medicationNameController,
                           dosageController: dosageController,
                           formKey: _medicationFormKey,
@@ -135,7 +132,8 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                             UIHelper.horizontalSpace(8.w),
                             Text(
                               'Time Taken',
-                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                  .copyWith(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -159,7 +157,8 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                         // Wellness Tracking Section
                         Text(
                           'Wellness Tracking',
-                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                              .copyWith(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -181,11 +180,14 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                             children: [
                               // Upright Posture Switch
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Upright Posture',
-                                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                                    style: TextFontStyle
+                                        .textStyle24w600cFFFFFFpoppins
+                                        .copyWith(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -219,7 +221,8 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                         // Notes Section
                         Text(
                           'Notes',
-                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                              .copyWith(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -243,8 +246,11 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                                 borderColor: Colors.transparent,
                                 maxline: 3,
                                 fillColor: AppColors.c2A2A2A,
-                                hintText: 'Add notes about symptom or Side effect',
-                                hintTextSyle: TextFontStyle.textStyle16w400c757575poppins.copyWith(fontSize: 12.sp),
+                                hintText:
+                                    'Add notes about symptom or Side effect',
+                                hintTextSyle: TextFontStyle
+                                    .textStyle16w400c757575poppins
+                                    .copyWith(fontSize: 12.sp),
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -256,19 +262,24 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                           textStyle: TextFontStyle.textStylePoppins,
                           onTap: () async {
                             // Validate forms before submission
-                            if (_medicationFormKey.currentState!.validate() && _formKey.currentState!.validate()) {
+                            if (_medicationFormKey.currentState!.validate() &&
+                                _formKey.currentState!.validate()) {
                               setState(() {
                                 isLoading = true;
                               });
                               try {
                                 // Collect form data
                                 final name = medicationNameController.text;
-                                final dosage = double.tryParse(dosageController.text) ?? 0.0;
+                                final dosage =
+                                    double.tryParse(dosageController.text) ??
+                                        0.0;
                                 const dosageUnit = "mg";
                                 const isPrescribed = true;
                                 final takenAt = _selectedDateTime != null
-                                    ? DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDateTime!)
-                                    : DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                                    ? DateFormat('yyyy-MM-dd HH:mm:ss')
+                                        .format(_selectedDateTime!)
+                                    : DateFormat('yyyy-MM-dd HH:mm:ss')
+                                        .format(DateTime.now());
                                 final uprightPosture = isOf;
                                 final waterIntake = currentGlassCount > 0;
                                 final glassOfWater = currentGlassCount;
@@ -277,17 +288,23 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                                 // Log collected data for debugging
                                 print('>>>>>>===========<<<<<');
                                 print('===========>>>Medication Name: $name');
-                                print('===========>>>Dosage: $dosage $dosageUnit');
-                                print('===========>>>Is Prescribed: $isPrescribed');
+                                print(
+                                    '===========>>>Dosage: $dosage $dosageUnit');
+                                print(
+                                    '===========>>>Is Prescribed: $isPrescribed');
                                 print('===========>>>Taken At: $takenAt');
-                                print('===========>>>Upright Posture: $uprightPosture');
-                                print('===========>>>Water Intake: $waterIntake');
-                                print('===========>>>Glass of Water: $glassOfWater');
+                                print(
+                                    '===========>>>Upright Posture: $uprightPosture');
+                                print(
+                                    '===========>>>Water Intake: $waterIntake');
+                                print(
+                                    '===========>>>Glass of Water: $glassOfWater');
                                 print('===========>>>Notes: $notes');
                                 print('>>>>>>===========<<<<<');
 
                                 // Call API to save medication
-                                bool success = await editMedicationRxObj.putEditMedicationPutApi(
+                                bool success = await editMedicationRxObj
+                                    .putEditMedicationPutApi(
                                   id: widget.id.toString(),
                                   name: name,
                                   dosage: dosage,
@@ -302,13 +319,16 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
 
                                 if (success) {
                                   // Log success and navigate to recent medication screen
-                                  print('==========>>>>>>Success medication saved');
-                                  NavigationService.navigateTo(Routes.recentMedicationScreen);
+                                  print(
+                                      '==========>>>>>>Success medication saved');
+                                  NavigationService.navigateTo(
+                                      Routes.recentMedicationScreen);
                                 }
                               } catch (e) {
                                 // Log error and show toast
                                 print('Error saving medication: $e');
-                                ToastUtil.showShortToast("Failed to save medication. Please try again.");
+                                ToastUtil.showShortToast(
+                                    "Failed to save medication. Please try again.");
                               } finally {
                                 setState(() {
                                   isLoading = false;
@@ -319,19 +339,19 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                           text: 'Save',
                           child: isLoading
                               ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            strokeWidth: 3,
-                          )
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                  strokeWidth: 3,
+                                )
                               : Text(
-                            'Save',
-                            style: TextFontStyle.textStylePoppins.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                                  'Save',
+                                  style:
+                                      TextFontStyle.textStylePoppins.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                         ),
-
-
                       ],
                     ),
                   ),
@@ -344,11 +364,3 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-

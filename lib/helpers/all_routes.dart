@@ -718,11 +718,15 @@ final class RouteGenerator {
           return FadedTransitionRoute(
               widget: EditMedicationScreen(
                 id: args['id'],
+                name: args['name'],
+                dosage: args['dosage'],
               ), settings: settings);
         } else {
           return CupertinoPageRoute(
               builder: (context) => EditMedicationScreen(
                 id: args['id'],
+                name: args['id'],
+                dosage: args['dosage'],
               ));
         }
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,18 +7,18 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 
-
-
-
+typedef OnDateSelected = void Function(DateTime selectedDate);
 
 class LogActivityCalander extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
+  final OnDateSelected? onDateSelected;
 
   const LogActivityCalander({
     super.key,
     required this.controller,
     required this.hintText,
+    this.onDateSelected,
   });
 
   @override
@@ -63,10 +62,13 @@ class _LogActivityCalanderState extends State<LogActivityCalander> {
     );
 
     if (picked != null) {
-      final selectedDate = DateFormat('dd/MM/yyyy').format(picked);
+      final String displayDate = DateFormat('dd MMM yyyy').format(picked);
+
       setState(() {
-        widget.controller.text = selectedDate;
+        widget.controller.text = displayDate;
       });
+
+      widget.onDateSelected?.call(picked);
     }
   }
 
@@ -77,7 +79,6 @@ class _LogActivityCalanderState extends State<LogActivityCalander> {
       textAlign: TextAlign.start,
       ontap: _selectDate,
       controller: widget.controller,
-     // readOnly: true,
       borderRadius: 20.r,
       fillColor: AppColors.c2A2A2A,
       hintText: widget.hintText,
@@ -90,15 +91,8 @@ class _LogActivityCalanderState extends State<LogActivityCalander> {
         child: SvgPicture.asset(
           AppIcons.calandericon,
           height: 20,
-
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Enter activity type';
-        }
-        return null;
-      },
     );
   }
 }

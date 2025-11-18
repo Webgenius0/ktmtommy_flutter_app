@@ -5,13 +5,16 @@ import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
-
-
-
-
 class CustomNotification extends StatefulWidget {
+  final Function(int minutes)? onMinutesSelected;
+
+
+  final int? initialMinutes;
+
   const CustomNotification({
     super.key,
+    this.onMinutesSelected,
+    this.initialMinutes,
   });
 
   @override
@@ -19,11 +22,24 @@ class CustomNotification extends StatefulWidget {
 }
 
 class _CustomNotificationState extends State<CustomNotification> {
-  List<String> durationList = ['10 minutes before', '1 minutes before', '20 minutes before', ];
 
-  late String selectedUnit = durationList[0];
+  final List<int> notificationMinutes = [10, 20, 30, 45, 60];
 
+  late int selectedMinutes;
 
+  @override
+  void initState() {
+    super.initState();
+    selectedMinutes = widget.initialMinutes ?? 10;
+
+    if (widget.initialMinutes != null && !notificationMinutes.contains(widget.initialMinutes)) {
+      selectedMinutes = 10;
+    }
+  }
+
+  String _formatDisplay(int minutes) {
+    return '$minutes minutes before';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,22 +51,26 @@ class _CustomNotificationState extends State<CustomNotification> {
           borderRadius: BorderRadius.circular(20.r),
         ),
       ),
-      child:
-
-
-      PopupMenuButton<String>(
-        color: Color(0xFF2A2A2A),
-        onSelected: (String value) {
+      child: PopupMenuButton<int>(
+        color: const Color(0xFF2A2A2A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        offset: const Offset(0, 50),
+        elevation: 4,
+        onSelected: (int value) {
           setState(() {
-            selectedUnit = value;
+            selectedMinutes = value;
           });
+
+          debugPrint('Notification set: $value minutes before');
+
+          widget.onMinutesSelected?.call(value);
         },
         itemBuilder: (BuildContext context) {
-          return durationList.map((String value) {
-            return PopupMenuItem<String>(
-              value: value,
+          return notificationMinutes.map((int minutes) {
+            return PopupMenuItem<int>(
+              value: minutes,
               child: Text(
-                value,
+                _formatDisplay(minutes),
                 style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
@@ -59,14 +79,11 @@ class _CustomNotificationState extends State<CustomNotification> {
             );
           }).toList();
         },
-        offset: Offset(30, 40),
-        elevation: 2,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              selectedUnit,
-              maxLines: 1,
+              _formatDisplay(selectedMinutes),
               style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -76,7 +93,6 @@ class _CustomNotificationState extends State<CustomNotification> {
           ],
         ),
       ),
-
     );
   }
 }

@@ -35,6 +35,16 @@ class Endpoints {
   static String deleteMedicationApi(dynamic  id) => "/api/medication/delete/$id";
   static String editMedicationApi(dynamic  id) => "/api//medication/update/$id";
 
+  ///=====================Log Steps Api Section ===========================///
+  static String storeStepsApiPost() => "/api/step/store";
+  static String allRecentGetApi() => "/api/step";
+  static String deleteRecentStepApi(dynamic  id) => "/api/step/delete/$id";
+
+  ///==================Log Activity Api Section===============================//
+  static String storeActivityApiPost() => "/api/activity/store";
+  static String allActivityApi() => "/api/activity";
+  static String deleteActivityApi(dynamic  id) => "/api/activity/delete/$id";
+
 }
 
 final class PaymentGateway {

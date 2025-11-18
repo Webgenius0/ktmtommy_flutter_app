@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,12 +8,10 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
-
 class MedicationDetails extends StatefulWidget {
   final String title;
+  final String hintText;
+  final String dosage;
   final TextEditingController nameController;
   final TextEditingController dosageController;
   final GlobalKey<FormState> formKey;
@@ -22,6 +19,8 @@ class MedicationDetails extends StatefulWidget {
   const MedicationDetails({
     super.key,
     required this.title,
+    required this.hintText,
+    required this.dosage,
     required this.nameController,
     required this.dosageController,
     required this.formKey,
@@ -71,15 +70,14 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                   textAlign: TextAlign.start,
                   borderRadius: 20.r,
                   contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   fillColor: AppColors.c2A2A2A,
-                  hintText: 'Enter Medication Name',
-                  hintTextSyle: TextFontStyle
-                    .textStyle24w400cA3A3A3poppins
-                    .copyWith(
-                fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                ),
+                  hintText: widget.hintText,
+                  hintTextSyle:
+                      TextFontStyle.textStyle24w400cA3A3A3poppins.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Medication name is required';
@@ -104,12 +102,11 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       flex: 2,
                       child: CustomTextfield(
                         inputType: TextInputType.number,
-
                         controller: widget.dosageController,
                         textAlign: TextAlign.start,
                         borderRadius: 20.r,
                         fillColor: AppColors.c2A2A2A,
-                        hintText: 'Enter Dosage',
+                        hintText: widget.dosage,
                         hintTextSyle: TextFontStyle
                             .textStyle24w400cA3A3A3poppins
                             .copyWith(
@@ -132,7 +129,6 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       ),
                     ),
                     UIHelper.horizontalSpace(16.w),
-
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -202,7 +198,8 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                   children: [
                     Text(
                       'Prescribed',
-                      style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                      style:
+                          TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                       ),

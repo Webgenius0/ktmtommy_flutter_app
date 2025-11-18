@@ -66,7 +66,7 @@ class CustomAcetaminophen extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextFontStyle.textStyle16w400c757575poppins.copyWith(
-                      fontSize: 12.sp,
+                      fontSize: 12.sp,color: Colors.white
                     ),
                   ),
                 ],

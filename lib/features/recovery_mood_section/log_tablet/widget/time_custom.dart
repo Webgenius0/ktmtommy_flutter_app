@@ -5,14 +5,15 @@ import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
-
-
-
-
-
 class TimeCustom extends StatefulWidget {
-   const TimeCustom({
+  final Function(String time)? onTimeSelected;
+
+  final String? initialTime;
+
+  const TimeCustom({
     super.key,
+    this.onTimeSelected,
+    this.initialTime,
   });
 
   @override
@@ -20,64 +21,88 @@ class TimeCustom extends StatefulWidget {
 }
 
 class _TimeCustomState extends State<TimeCustom> {
-  List<String> durationList = ['3:30 PM', '1:20 PM', '12:30 PM', '2:30 PM', '8:10 PM'];
+  final List<String> durationList = [
+    '15:30:00',
+    '13:20:00',
+    '12:30:00',
+    '14:30:00',
+    '20:10:00',
+    '18:30:00',
+    '09:00:00',
+    '17:45:00',
+  ];
 
-  late String selectedUnit = durationList[0];
+  late String selectedUnit;
 
+  @override
+  void initState() {
+    super.initState();
+    selectedUnit = widget.initialTime ?? durationList[0];
+  }
 
+  String _formatTo12Hour(String time24) {
+    final parts = time24.split(':');
+    int hour = int.parse(parts[0]);
+    final minute = parts[1];
+    final period = hour >= 12 ? 'PM' : 'AM';
+    if (hour > 12) hour -= 12;
+    if (hour == 0) hour = 12;
+    return '$hour:$minute $period';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-        decoration: ShapeDecoration(
-          color: AppColors.c2A2A2A,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: ShapeDecoration(
+        color: AppColors.c2A2A2A,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
         ),
-        child:
+      ),
+      child: PopupMenuButton<String>(
+        color: const Color(0xFF2A2A2A),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        offset: const Offset(0, 50),
+        elevation: 4,
+        onSelected: (String value) {
+          setState(() {
+            selectedUnit = value;
+          });
 
+          debugPrint('=======>>>>>>>>Selected Time (24-hour): $value');
 
-        PopupMenuButton<String>(
-          color: Color(0xFF2A2A2A),
-          onSelected: (String value) {
-            setState(() {
-              selectedUnit = value;
-            });
-          },
-          itemBuilder: (BuildContext context) {
-            return durationList.map((String value) {
-              return PopupMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            }).toList();
-          },
-          offset: Offset(30, 40),
-          elevation: 2,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedUnit,
-                maxLines: 1,
+          widget.onTimeSelected?.call(value);
+        },
+        itemBuilder: (BuildContext context) {
+          return durationList.map((String value) {
+            return PopupMenuItem<String>(
+              value: value,
+              child: Text(
+                _formatTo12Hour(value),
                 style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SvgPicture.asset(AppIcons.timePopup, height: 18.h),
-            ],
-          ),
+            );
+          }).toList();
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _formatTo12Hour(selectedUnit),
+              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SvgPicture.asset(AppIcons.timePopup, height: 18.h),
+          ],
         ),
-
+      ),
     );
   }
 }

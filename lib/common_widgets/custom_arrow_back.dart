@@ -45,7 +45,7 @@ class CustomAppbarWidget extends StatelessWidget {
                   Text(
                     text!,
                     style: textStyle ?? TextFontStyle.textStylePoppins.copyWith(
-                      fontSize: 20.sp,fontWeight: FontWeight.w500,
+                      fontSize: 20.sp,fontWeight: FontWeight.w500,height: 0.h,
                     ),
                    // maxLines: 1,
                     overflow: TextOverflow.ellipsis,

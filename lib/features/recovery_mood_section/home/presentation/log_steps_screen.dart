@@ -208,19 +208,19 @@ class LogStepsScreen extends StatefulWidget {
 }
 
 class _LogStepsScreenState extends State<LogStepsScreen> {
-  final screenLoading = true.obs;
+  final recentStepsLoading = true.obs;
   final actionLoading = false.obs;
 
   @override
   void initState() {
-    loadRecentSteps();
     super.initState();
+    loadRecentSteps();
   }
 
   Future<void> loadRecentSteps() async {
-    screenLoading.value = true;
+    recentStepsLoading.value = true;
     await getRecentStepRxObj.getAllRecentStepsApi();
-    screenLoading.value = false;
+    recentStepsLoading.value = false;
   }
 
   @override
@@ -241,169 +241,144 @@ class _LogStepsScreenState extends State<LogStepsScreen> {
                   ),
                   UIHelper.verticalSpace(18.h),
 
+                  // New Record
+                  Text(
+                    'New Record',
+                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  UIHelper.verticalSpace(12.h),
+                  //
+                  NewRecord(
+                    title: "Select activity",
+                    initialWalkingType: "Brisk Walk",
+                    initialHours: 0,
+                    initialMinutes: 30,
+                    isLoading: false,
+                    onAddPressed: ({
+                      required activity,
+                      required hours,
+                      required minutes,
+                    }) async {
+                      actionLoading.value = true;
+
+                      try {
+                        await logStepsScreenRxObj.storeStepsPostApi(
+                          activity: activity,
+                          hours: hours,
+                          minutes: minutes,
+                        );
+
+                        Get.back();
+                        await loadRecentSteps();
+                      } catch (e) {
+                        log("Add Error: $e");
+                      } finally {
+                        actionLoading.value = false;
+                      }
+                    },
+                  ),
+                  UIHelper.verticalSpace(24.h),
+
+                  Text(
+                    'Recent Steps',
+                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  UIHelper.verticalSpace(12.h),
+
                   Expanded(
-                    child: Obx(
-                          () => screenLoading.value
-                          ? const Center(
-                        child: CircularProgressIndicator(color: AppColors.c87B842),
-                      )
-                          : SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'New Record',
-                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
+                    child: Obx(() => recentStepsLoading.value
+                        ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.c87B842,
+                      ),
+                    )
+                        : FutureBuilder<GetRecentStepModel>(
+                      future: getRecentStepRxObj.dataFetcher.first,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(color: AppColors.c87B842),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data!.data!.isEmpty) {
+                          return Center(
+                            child: Text(
+                              "No walking records yet",
+                              style: TextFontStyle.textStyle16w400c757575poppins.copyWith(fontSize: 14.sp),
+                            ),
+                          );
+                        }
+
+                        final stepsList = snapshot.data!.data!;
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: stepsList.length,
+                          separatorBuilder: (_, __) => UIHelper.verticalSpace(12.h),
+                          itemBuilder: (context, index) {
+                            final item = stepsList[index];
+
+                            String durationText = "";
+                            if (item.hours! > 0) durationText += "${item.hours}h ";
+                            if (item.minutes! > 0) durationText += "${item.minutes}m";
+                            if (durationText.isEmpty) durationText = "0m";
+
+                            return Container(
+                              decoration: ShapeDecoration(
+                                color: AppColors.c181818,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                               ),
-                            ),
-                            UIHelper.verticalSpace(12.h),
-
-                            /// ADD RECORD POPUP LOADER
-                            NewRecord(
-                              title: "Select activity",
-                              initialWalkingType: "Brisk Walk",
-                              initialHours: 0,
-                              initialMinutes: 30,
-
-
-                              isLoading: false,
-
-                              onAddPressed: ({
-                                required activity,
-                                required hours,
-                                required minutes,
-                              }) async {
-                                actionLoading.value = true;
-
-                                try {
-                                  await logStepsScreenRxObj.storeStepsPostApi(
-                                    activity: activity,
-                                    hours: hours,
-                                    minutes: minutes,
-                                  );
-
-                                  Get.back();
-
-                                  await loadRecentSteps();
-
-                                } catch (e) {
-                                  log("Add Error: $e");
-                                } finally {
-                                  actionLoading.value = false;
-                                }
-                              },
-                            ),
-
-                            UIHelper.verticalSpace(18.h),
-                            Text(
-                              'Recent Steps',
-                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            UIHelper.verticalSpace(12.h),
-
-                            FutureBuilder<GetRecentStepModel>(
-                              future: getRecentStepRxObj.dataFetcher.first,
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData || snapshot.data!.data!.isEmpty) {
-                                  return Center(
-                                    child: Text(
-                                      "No walking records yet",
-                                      style: TextFontStyle.textStyle16w400c757575poppins.copyWith(
-                                        fontSize: 14.sp,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 13.h),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(AppIcons.logSteps),
+                                    UIHelper.horizontalSpace(16.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${item.activity} • $durationText",
+                                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontSize: 16.sp),
+                                          ),
+                                          UIHelper.verticalSpace(4.h),
+                                          Text(
+                                            item.recordedAt ?? "",
+                                            style: TextFontStyle.textStyle16w400c757575poppins.copyWith(fontSize: 12.sp),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                }
-                                ///============Recent Steps Data================
-                                final stepsList = snapshot.data!.data!;
-                                return ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: stepsList.length,
-                                  separatorBuilder: (_, __) => UIHelper.verticalSpace(12.h),
-                                  itemBuilder: (context, index) {
-                                    final item = stepsList[index];
-
-                                    String durationText = "";
-                                    if (item.hours! > 0) {
-                                      durationText += "${item.hours}h ";
-                                    }
-                                    if (item.minutes! > 0) {
-                                      durationText += "${item.minutes}m";
-                                    }
-                                    if (durationText.isEmpty) durationText = "0m";
-
-                                    return Container(
-                                      decoration: ShapeDecoration(
-                                        color: AppColors.c181818,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12.r),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 13.h),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(AppIcons.logSteps),
-                                            UIHelper.horizontalSpace(16.w),
-
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${item.activity} • $durationText",
-                                                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                                      fontSize: 16.sp,
-                                                    ),
-                                                  ),
-                                                  UIHelper.verticalSpace(4.h),
-                                                  Text(
-                                                    item.recordedAt ?? "",
-                                                    style: TextFontStyle.textStyle16w400c757575poppins.copyWith(
-                                                      fontSize: 12.sp,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-
-                                            /// DELETE WITH LOADER
-                                            InkWell(
-                                              onTap: () async {
-                                                actionLoading.value = true; // center loader
-
-                                                try {
-                                                  await deleteStepsRxObj.deleteLogStepsApi(id: item.id.toString());
-
-                                                  await loadRecentSteps(); // reload
-                                                } catch (e) {
-                                                  Get.back();
-                                                  log("Delete Error: $e");
-                                                } finally {
-                                                  actionLoading.value = false; // loader off
-                                                }
-                                              },
-
-                                              child: SvgPicture.asset(AppIcons.deleteicon, height: 24.h),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        actionLoading.value = true;
+                                        try {
+                                          await deleteStepsRxObj.deleteLogStepsApi(id: item.id.toString());
+                                          await loadRecentSteps();
+                                        } catch (e) {
+                                          log("Delete Error: $e");
+                                        } finally {
+                                          actionLoading.value = false;
+                                        }
+                                      },
+                                      child: SvgPicture.asset(AppIcons.deleteicon, height: 24.h),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    )),
                   ),
                 ],
               ),
@@ -411,18 +386,15 @@ class _LogStepsScreenState extends State<LogStepsScreen> {
           ),
         ),
 
-        /// DELETE LOADER (CENTER)
+        ///Add/Delete
         Obx(() => actionLoading.value
             ? Container(
           color: Colors.black38,
           child: const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.c87B842,
-            ),
+            child: CircularProgressIndicator(color: AppColors.c87B842),
           ),
         )
             : const SizedBox.shrink()),
-
       ],
     );
   }

@@ -1,9 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -54,6 +57,10 @@ class _CustomMealState extends State<CustomMeal> {
 
   @override
   Widget build(BuildContext context) {
+    final foodName = appData.read(kKeyFoodName);
+    final totalCalories = appData.read(kKeyTotalCalories);
+    log('========>>>>>>>>>Food Name: ${appData.read(kKeyFoodName)}');
+    log('========>>>>>>>>>TotalCalories: ${appData.read(kKeyTotalCalories)}');
     return Container(
       height: 310.h,
       padding: EdgeInsets.all(16.w),
@@ -97,7 +104,7 @@ class _CustomMealState extends State<CustomMeal> {
               ),
               UIHelper.horizontalSpace(8.w),
               Text(
-                "Chicken Rice Bowl",
+                foodName,
                 style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                   fontWeight: FontWeight.w500,
                   fontSize: 18.sp,
@@ -113,7 +120,7 @@ class _CustomMealState extends State<CustomMeal> {
               Image.asset(AppImages.agunimage, height: 24.h),
               UIHelper.horizontalSpace(8.w),
               Text(
-                "620",
+                '$totalCalories',
                 style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w500,

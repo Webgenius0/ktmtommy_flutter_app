@@ -163,7 +163,7 @@ class _LogActivityScreenState extends State<LogActivityScreen> {
                         UIHelper.verticalSpace(24.h),
 
                         _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(color: AppColors.c87B842)
                             : CustomButtonWidget(
                           onTap: () async {
 
@@ -190,7 +190,7 @@ class _LogActivityScreenState extends State<LogActivityScreen> {
                               );
 
                               if (mounted) {
-                                log("==========>>>>>Add Activity Button Clicked");
+                                log("==========>>>>>Add Activity Button Clicked go to recentScreen");
                                 NavigationService.navigateTo(Routes.recentScreen);
                               }
                             } catch (e) {

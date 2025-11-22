@@ -161,47 +161,50 @@ class _NewRecordState extends State<NewRecord> {
             ),
 
             UIHelper.verticalSpace(18.h),
-
-            // ========== Add Record Button with Loading ==========
-            Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(12.r),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12.r),
-                splashColor:
-                    widget.isLoading ? Colors.transparent : AppColors.c87B842,
-                highlightColor: widget.isLoading
-                    ? Colors.transparent
-                    : AppColors.c87B842.withOpacity(0.3),
-                onTap: widget.isLoading
-                    ? null
-                    : () {
-                        widget.onAddPressed(
-                          activity: selectedWalkingType,
-                          hours: hours,
-                          minutes: minutes,
-                        );
-                      },
-                child: CustomButtonWidget(
-                  text: '',
-                  child: widget.isLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.8,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        )
-                      : const Text(
-                          'Add Record',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+            // ========== Add Record Button  ==========
+            SizedBox(
+              width: double.infinity,
+              height: 48.h,
+              child: Material(
+                color: AppColors.c87B842,
+                borderRadius: BorderRadius.circular(999.r),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(999.r),
+                  splashColor: widget.isLoading
+                      ? Colors.transparent
+                      : Colors.white.withOpacity(0.3),
+                  highlightColor: widget.isLoading
+                      ? Colors.transparent
+                      : Colors.white.withOpacity(0.15),
+                  onTap: widget.isLoading
+                      ? null
+                      : () {
+                    widget.onAddPressed(
+                      activity: selectedWalkingType,
+                      hours: hours,
+                      minutes: minutes,
+                    );
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: widget.isLoading
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.8,
+                        strokeCap: StrokeCap.round,
+                      ),
+                    )
+                        : Text(
+                      'Add Record',
+                      style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

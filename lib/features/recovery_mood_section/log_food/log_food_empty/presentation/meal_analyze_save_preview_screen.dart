@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,21 +12,18 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_e
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
-
-
 class MealAnalyzeSavePreviewScreen extends StatefulWidget {
   final String imagePath;
 
   const MealAnalyzeSavePreviewScreen({super.key, required this.imagePath});
   @override
-  State<MealAnalyzeSavePreviewScreen> createState() => _MealAnalyzeSavePreviewScreenState();
+  State<MealAnalyzeSavePreviewScreen> createState() =>
+      _MealAnalyzeSavePreviewScreenState();
 }
 
-class _MealAnalyzeSavePreviewScreenState extends State<MealAnalyzeSavePreviewScreen> {
-  final List<Map<String, dynamic>> nutrients = [
+class _MealAnalyzeSavePreviewScreenState
+    extends State<MealAnalyzeSavePreviewScreen> {
+  final List<Map<String, dynamic>> nutrients1 = [
     {
       "title": "Carbs",
       "percentage": "45%",
@@ -51,38 +47,22 @@ class _MealAnalyzeSavePreviewScreenState extends State<MealAnalyzeSavePreviewScr
     },
   ];
 
-  final List<Map<String,dynamic>> traleadingTitle = [
-
+  final List<Map<String, dynamic>> traleadingTitle = [
+    {"title": 'Brown rice', "value": '1 cup (185g)'},
     {
-      "title":'Brown rice' ,
-      "value":'1 cup (185g)'
-    },
-
-    {
-      "title":'Grilled chicken' ,
+      "title": 'Grilled chicken',
       "value": '4 oz (115g)',
     },
-
     {
-      "title":'Avocado',
+      "title": 'Avocado',
       "value": '½ (75g)',
     },
-
     {
-      "title":'Broccoli',
+      "title": 'Broccoli',
       "value": '½ cup (45g)',
     },
-
-    {
-      "title": 'Grilled carrots',
-      "value":'¼ cup (30g)'
-    }
-
-
-
+    {"title": 'Grilled carrots', "value": '¼ cup (30g)'}
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -94,122 +74,103 @@ class _MealAnalyzeSavePreviewScreenState extends State<MealAnalyzeSavePreviewScr
           child: Column(
             children: [
               CustomAppbarWidget(
-                onTap: () { NavigationService.goBack; },
+                onTap: () {
+                  NavigationService.goBack;
+                },
                 text: 'Meal Analyze',
                 subtitle: 'Snap your meal, get calorie estimates',
               ),
-
               UIHelper.verticalSpace(24.h),
-
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       CustomMeal(imagePath: widget.imagePath),
                       UIHelper.verticalSpace(24.h),
-                      ProgressCustom(nutrients: nutrients),
+                      ProgressCustom(nutrients: nutrients1),
                       UIHelper.verticalSpace(24.h),
                       NutritionFacts(text: 'Nutrition Facts'),
                       UIHelper.verticalSpace(24.h),
-
-
-
-
-
                       CustomBreakdown(traleadingTitle: traleadingTitle),
-
-
                       UIHelper.verticalSpace(24.h),
-
-
-
                       Container(
                         width: double.infinity,
                         decoration: ShapeDecoration(
                             color: const Color(0xFF181818),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                            )),child: Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 16.h,horizontal: 16.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-
-                              children: [
-                                SvgPicture.asset(AppIcons.whaticon,height: 20.h),
-                                UIHelper.horizontalSpace(8.w),
-                                Text(
-                                  'Nutritional Insights',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.50,
-                                  ),
-                                ),
-
-                              ],
-                            ),
-
-
-                            UIHelper.verticalSpace(16.h),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 2.w,
-                                  height: 55.w,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c87B842,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12.r),
-                                      bottomLeft: Radius.circular(12.r),
+                            )),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16.h, horizontal: 16.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppIcons.whaticon,
+                                      height: 20.h),
+                                  UIHelper.horizontalSpace(8.w),
+                                  Text(
+                                    'Nutritional Insights',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.50,
                                     ),
                                   ),
-                                ),
-                                UIHelper.horizontalSpace(7.w),
-                                Text(
-                                    'Good protein source - helps with muscle\nrecovery',
-                                    style: TextFontStyle.textStyle14w400cBABABApoppins
-                                ),
-                              ],
-                            ),
-                            UIHelper.verticalSpace(16.h),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 2.w,
-                                  height: 55.w,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c87B842,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12.r),
-                                      bottomLeft: Radius.circular(12.r),
+                                ],
+                              ),
+                              UIHelper.verticalSpace(16.h),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 2.w,
+                                    height: 55.w,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.c87B842,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12.r),
+                                        bottomLeft: Radius.circular(12.r),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                UIHelper.horizontalSpace(7.w),
-                                Text(
-                                    'Consider adding more vegetables for\nadditional fiber',
-                                    style: TextFontStyle.textStyle14w400cBABABApoppins
-                                ),
-                              ],
-                            ),
-
-
-
-                          ],
+                                  UIHelper.horizontalSpace(7.w),
+                                  Text(
+                                      'Good protein source - helps with muscle\nrecovery',
+                                      style: TextFontStyle
+                                          .textStyle14w400cBABABApoppins),
+                                ],
+                              ),
+                              UIHelper.verticalSpace(16.h),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 2.w,
+                                    height: 55.w,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.c87B842,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12.r),
+                                        bottomLeft: Radius.circular(12.r),
+                                      ),
+                                    ),
+                                  ),
+                                  UIHelper.horizontalSpace(7.w),
+                                  Text(
+                                      'Consider adding more vegetables for\nadditional fiber',
+                                      style: TextFontStyle
+                                          .textStyle14w400cBABABApoppins),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      ),
-
-
-
-
-
                     ],
                   ),
                 ),
@@ -221,11 +182,3 @@ class _MealAnalyzeSavePreviewScreenState extends State<MealAnalyzeSavePreviewScr
     );
   }
 }
-
-
-
-
-
-
-
-

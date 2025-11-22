@@ -61,7 +61,7 @@ class NutritionsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    'Carbs',
+                    'Carbss',
                     style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                         fontSize: 16.sp,fontWeight: FontWeight.w400
                     )

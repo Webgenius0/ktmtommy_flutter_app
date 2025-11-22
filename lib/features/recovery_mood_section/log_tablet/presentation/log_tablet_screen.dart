@@ -336,6 +336,7 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
 
                         ///============= Log Now Button=========================
                         CustomButtonWidget(
+                          isLoading: isLoading,
                           textStyle: TextFontStyle.textStylePoppins,
                           onTap: () async {
                             if (_medicationFormKey.currentState!.validate() &&
@@ -408,9 +409,7 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                           text: 'Log Now',
                           child: isLoading
                               ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                  strokeWidth: 3,
+                               color: AppColors.primaryColor,
                                 )
                               : Text(
                                   'Log Now',
@@ -446,7 +445,7 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(color: AppColors.c87B842,));
                               } else if (snapshot.hasError) {
                                 log('======>>>>>Error fetching medication data: ${snapshot.error}');
                                 return Center(

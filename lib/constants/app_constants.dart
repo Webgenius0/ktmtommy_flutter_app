@@ -89,6 +89,41 @@ const String kKeyIsLoggedIn = 'is_logged_in';
 const String kKeyAccessToken = 'access_token';
 const String kKeyResetToken = 'reset_token';
 
+//============== Food Scan Data Keys (Exact Postman Field Names) =====================
+const String kKeyIsFood             = "is_food";
+
+const String kKeyFoodName           = "food_name";
+const String kKeyTotalCalories      = "total_estimated_calories";
+
+const String kKeyCarbsPercentage    = "carbs_percentage";
+const String kKeyCarbsInGm          = "carbs_in_gm";
+const String kKeyProteinPercentage  = "protein_percentage";
+const String kKeyProteinInGm        = "protein_in_gm";
+const String kKeyFatPercentage      = "fat_percentage";
+const String kKeyFatInGm            = "fat_in_gm";
+
+const String kKeyProtein            = "protein";
+const String kKeyTotalCarbs         = "total_carbs";
+const String kKeyFiber              = "fiber";
+const String kKeySugar              = "sugar";
+const String kKeyTotalFat           = "total_fat";
+const String kKeySaturated          = "saturated";
+const String kKeySodium             = "sodium";
+const String kKeyPotassium          = "potassium";
+
+const String kKeyBun                = "bun";
+const String kKeyBeefPatties        = "beef patties";
+const String kKeyCheese             = "cheese";
+const String kKeyLettuce            = "lettuce";
+const String kKeyTomato             = "tomato";
+const String kKeyPickles            = "pickles";
+const String kKeyOnion              = "onion";
+const String kKeySauce              = "sauce";
+
+const String kKeyNutritionalInsights = "nutritional_insights";
+const String kKeyLastFoodScanResponse = "last_food_scan_response";
+
+
 const String userId = 'user_ID';
 const String kPhone = 'phone_number';
 const String kKeySelectedLocation = 'selected_location';

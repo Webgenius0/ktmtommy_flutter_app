@@ -45,6 +45,12 @@ class Endpoints {
   static String allActivityApi() => "/api/activity";
   static String deleteActivityApi(dynamic  id) => "/api/activity/delete/$id";
 
+  ///================Log Food Section Api=======================================
+
+  static String getAllFoodDataApi() => "/api/food";
+  static String pstFoodScanApi() => "/api/food/analyze";
+
+
 }
 
 final class PaymentGateway {

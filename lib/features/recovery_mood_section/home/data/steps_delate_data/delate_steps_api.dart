@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import '../../../../../networks/dio/dio.dart';
 import '../../../../../networks/endpoints.dart';
 import '../../../../../networks/exception_handler/data_source.dart';
@@ -22,6 +24,7 @@ final class DeleteStepsApi {
 
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Log Steps deleted successfully 🎉');
+        Get.back();
         Map data = json.decode(json.encode(response.data));
         return data;
       } else {

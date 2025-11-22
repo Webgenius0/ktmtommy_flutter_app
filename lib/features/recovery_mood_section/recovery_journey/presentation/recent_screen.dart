@@ -114,7 +114,7 @@ class _RecentScreenState extends State<RecentScreen> {
                   children: [
                     // Activity List
                     SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Column(
                         children: [
                           // Activities Container
@@ -215,14 +215,11 @@ class _RecentScreenState extends State<RecentScreen> {
 
                           // Add New Log Button
                           UIHelper.verticalSpace(25.h),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24.w),
-                            child: CustomButtonWidget(
-                              onTap: () => NavigationService.navigateTo(
-                                  Routes.logActivityScreen),
-                              icon: SvgPicture.asset(AppIcons.pluseadd),
-                              text: 'Add New Log',
-                            ),
+                          CustomButtonWidget(
+                            onTap: () => NavigationService.navigateTo(
+                                Routes.logActivityScreen),
+                            icon: SvgPicture.asset(AppIcons.pluseadd),
+                            text: 'Add New Log',
                           ),
                           UIHelper.verticalSpace(40.h),
                         ],

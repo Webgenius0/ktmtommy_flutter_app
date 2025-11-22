@@ -4,6 +4,9 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/log_steps_screen_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/steps_delate_data/delate_steps_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/model/get_recent_step_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_scan_post_api/food_scan_post_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/get_all_food_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/model/get_all_food_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/delete_medication_data/delete_medication_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/edit_medication_data/edit_madication_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log_activity_data/log_activity_rx.dart';
@@ -56,6 +59,11 @@ final GetRecentStepRx getRecentStepRxObj = GetRecentStepRx(
   dataFetcher: BehaviorSubject<GetRecentStepModel>(),
 );
 
+final GetAllFoodRx getAllFoodRxObj = GetAllFoodRx(
+  empty: GetAllFoodModel(),
+  dataFetcher: BehaviorSubject<GetAllFoodModel>(),
+);
+
 final GetRecentActivityLogRx getRecentActivityLogRx = GetRecentActivityLogRx(
   empty: GetRecentActivityModel(),
   dataFetcher: BehaviorSubject<GetRecentActivityModel>(),
@@ -67,6 +75,11 @@ DeleteMedicationRx deleteMedicationRxObj = DeleteMedicationRx(
 );
 
 DeleteActivityRx deleteActivityRxObj = DeleteActivityRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+FoodScanPostRx foodScanPostRxObj = FoodScanPostRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

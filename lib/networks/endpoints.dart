@@ -19,28 +19,28 @@ final class NetworkConstants {
 class Endpoints {
   Endpoints._();
 
-  // * >>>>>>>>>>>>>>>>>>>>> auth and forget <<<<<<<<<<<<<<<<<<<<<<<
+  /// >>>>>>>>>>>>>>>>>>>>> auth and forget <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   static String login() => "/api/login";
   static String recoveryRegisterApi() => "/api/register";
 
 
-  ///========================Profile Section=============================///
+  ///========================Profile Section====================================
 
   static String getProfile() => "/api/profile";
 
-  ///========================My Day Section ========================///
+  ///========================My Day Section ====================================
 
   static String storeMedicationApi() => "/api/medication/store";
   static String allMedicationApi() => "/api/medication";
   static String deleteMedicationApi(dynamic  id) => "/api/medication/delete/$id";
   static String editMedicationApi(dynamic  id) => "/api//medication/update/$id";
 
-  ///=====================Log Steps Api Section ===========================///
+  ///=====================Log Steps Api Section ================================
   static String storeStepsApiPost() => "/api/step/store";
   static String allRecentGetApi() => "/api/step";
   static String deleteRecentStepApi(dynamic  id) => "/api/step/delete/$id";
 
-  ///==================Log Activity Api Section===============================//
+  ///==================Log Activity Api Section=================================
   static String storeActivityApiPost() => "/api/activity/store";
   static String allActivityApi() => "/api/activity";
   static String deleteActivityApi(dynamic  id) => "/api/activity/delete/$id";
@@ -49,6 +49,7 @@ class Endpoints {
 
   static String getAllFoodDataApi() => "/api/food";
   static String pstFoodScanApi() => "/api/food/analyze";
+  static String postFoodStoreApi() => "/api/food/store";
 
 
 }

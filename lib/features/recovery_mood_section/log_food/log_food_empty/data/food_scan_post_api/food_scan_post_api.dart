@@ -31,7 +31,7 @@ final class FoodScanPostApi {
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));
-        ToastUtil.showShortToast("Profile updated successfully");
+        ToastUtil.showShortToast(" Food scan successful");
         return data;
       } else {
         throw DataSource.DEFAULT.getFailure();

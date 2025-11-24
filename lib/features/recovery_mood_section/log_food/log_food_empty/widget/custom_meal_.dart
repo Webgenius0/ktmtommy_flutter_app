@@ -103,13 +103,18 @@ class _CustomMealState extends State<CustomMeal> {
                 ),
               ),
               UIHelper.horizontalSpace(8.w),
-              Text(
-                foodName,
-                style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18.sp,
+              Flexible(
+                child: Text(
+                  foodName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18.sp,
+                  ),
                 ),
               ),
+
             ],
           ),
           UIHelper.verticalSpace(8.h),

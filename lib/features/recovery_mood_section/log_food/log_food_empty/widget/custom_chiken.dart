@@ -54,13 +54,17 @@ class CustomChiken extends StatelessWidget {
               )
                   : Image.asset(AppImages.retakeimage, height: 32.h),
               UIHelper.horizontalSpace(8.w),
-              Text(
+              Flexible(
+                child: Text(
                   text,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500
-                  )
-              )
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ],
           ),
           UIHelper.verticalSpace(18.h),

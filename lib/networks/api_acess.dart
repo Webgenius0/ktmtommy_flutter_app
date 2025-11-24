@@ -5,6 +5,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/steps_delate_data/delate_steps_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/model/get_recent_step_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_scan_post_api/food_scan_post_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_store_post_api/food_store_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/get_all_food_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/model/get_all_food_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/delete_medication_data/delete_medication_rx.dart';
@@ -90,6 +91,11 @@ DeleteStepsRx deleteStepsRxObj = DeleteStepsRx(
 );
 
 EditMedicationRx editMedicationRxObj = EditMedicationRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+FoodStoreRx foodStoreRxObj = FoodStoreRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

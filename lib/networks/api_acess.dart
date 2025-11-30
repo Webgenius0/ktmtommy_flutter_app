@@ -1,5 +1,6 @@
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/add_equipments_data/add_equipments_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/get_recent_step_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/log_steps_screen_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/steps_delate_data/delate_steps_rx.dart';
@@ -12,6 +13,8 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/del
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/edit_medication_data/edit_madication_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log_activity_data/log_activity_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log_tablet_screen_store_data/store_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/get_all_equipment_data/get_all_equipment_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/delete_activity_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/get_recent_activity_log_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/registration_data/registration_rx.dart';
@@ -98,4 +101,17 @@ EditMedicationRx editMedicationRxObj = EditMedicationRx(
 FoodStoreRx foodStoreRxObj = FoodStoreRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+AddEquipmentsRx addEquipmentsRxObj = AddEquipmentsRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+
+final GetAllEquipmentRx getAllEquipmentRxObj = GetAllEquipmentRx(
+  empty: GetAllEquipmentModel(),
+  dataFetcher: BehaviorSubject<GetAllEquipmentModel>(),
 );

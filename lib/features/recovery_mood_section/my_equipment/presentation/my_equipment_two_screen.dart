@@ -1,23 +1,21 @@
-
-import 'dart:io' show File;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
-import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/widget/items_widget.dart';
+import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/tbi_recovery.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
-
+import 'package:ktmtommy_apps/networks/api_acess.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MyEquipmentTwoScreen extends StatefulWidget {
-  final File? savedImageFile;
-
-  const MyEquipmentTwoScreen({Key? key, this.savedImageFile}) : super(key: key);
+  const MyEquipmentTwoScreen({super.key});
 
   @override
   State<MyEquipmentTwoScreen> createState() => _MyEquipmentTwoScreenState();
@@ -28,44 +26,22 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
   late TabController _tabController;
   final List<String> categories = ['All', 'Strength', 'Cardio', 'Flexibility'];
 
-  final List<String> image = [
-    'assets/images/dumbbleimage.png',
-    'assets/images/dumbbleimage.png',
-    'assets/images/dumbbleimage.png',
-    'assets/images/dumbbleimage.png',
-  ];
-
-  final List<String> title = [
-    'Dumbbells (5kg)',
-    'Stationary Bike',
-    'Yoga Mat',
-    'Dumbbells (5kg)',
-  ];
-
-  final List<String> subtitle = [
-    'Strength',
-    'Cardio',
-    'Flexibility',
-    'Strength',
-  ];
-
-  final List<String> icon = [
-    'assets/icons/strengthicon.svg',
-    'assets/icons/cardioicon.svg',
-    'assets/icons/flexibilityicon.svg',
-    'assets/icons/strengthicon.svg',
-  ];
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: categories.length, vsync: this);
+    getAllEquipmentRxObj.getAllEquipmentApi();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  List<Datum> filterEquipment(List<Datum> list, String category) {
+    if (category == 'All') return list;
+    return list.where((e) => e.type?.toLowerCase() == category.toLowerCase()).toList();
   }
 
   @override
@@ -75,123 +51,246 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
       body: SafeArea(
         child: Column(
           children: [
+            // Header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-              child: Column(
-                children: [
-                  TBIRecovery(title: 'My Equipment'),
-                ],
-              ),
+              child: TBIRecovery(title: 'My Equipment'),
             ),
-            UIHelper.verticalSpace(16.h),
-            Container(
-              color: AppColors.c181818,
-              child: TabBar(
-                dividerColor: Colors.transparent,
-                controller: _tabController,
-                indicatorColor: AppColors.c87B842,
-                indicatorWeight: 1.h,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white,
-                labelStyle: TextFontStyle.textStyle14w400c87B842poppins,
-                unselectedLabelStyle: TextFontStyle.textStyle14w400c87B842poppins,
-                tabs: categories.map((category) => Tab(text: category)).toList(),
-                isScrollable: false,
-              ),
-            ),
-            UIHelper.verticalSpace(35.h),
+
+            // Main Content
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  children: [
-                    ItemsWidget(),
-                    UIHelper.verticalSpace(35.h),
-                    ListView.builder(
-                      itemCount: title.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 16.h),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.c181818,
-                            borderRadius: BorderRadius.circular(20.r),
-                            border: Border.all(color: AppColors.c454545, width: 1.w),
+              child: StreamBuilder<GetAllEquipmentModel>(
+                stream: getAllEquipmentRxObj.dataFetcher,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.c87B842),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.wifi_off, color: Colors.grey, size: 60),
+                          UIHelper.verticalSpace(16.h),
+                          Text(
+                            'Connection failed',
+                            style: TextStyle(color: Colors.white70, fontSize: 16.sp),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 140.h,
+                          TextButton(
+                            onPressed: () => getAllEquipmentRxObj.getAllEquipmentApi(),
+                            child: const Text('Try Again', style: TextStyle(color: AppColors.c87B842)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final List<Datum> equipmentList = snapshot.data?.data ?? [];
+                  final bool hasEquipment = equipmentList.isNotEmpty;
+
+                  // Empty State
+                  if (!hasEquipment) {
+                    return Column(
+                      children: [
+                        UIHelper.verticalSpace(32.h),
+                        Image.asset(AppImages.copyImage, height: 196.h),
+                        UIHelper.verticalSpace(48.h),
+                        Text(
+                          'No Equipment Added Yet!',
+                          textAlign: TextAlign.center,
+                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        UIHelper.verticalSpace(12.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 40.w),
+                          child: Text(
+                            'Start tracking the tools you use for your recovery or training. Add equipment to personalize your experience.',
+                            textAlign: TextAlign.center,
+                            style: TextFontStyle.textStyle16w400c757575poppins.copyWith(fontSize: 14.sp),
+                          ),
+                        ),
+
+                        UIHelper.verticalSpace(32.h),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomButtonWidget(
+                            onTap: () {
+                             NavigationService.navigateTo(Routes.addEquipmentScreen).then((_) {
+                                getAllEquipmentRxObj.getAllEquipmentApi();
+                              });
+                            },
+                            text: 'Add Equipment',
+                          ),
+                        ),
+
+
+
+                        const Spacer(),
+                      ],
+                    );
+                  }
+
+                  // Data Available → TabBar + List
+                  return Column(
+                    children: [
+                      UIHelper.verticalSpace(16.h),
+
+                      // TabBar
+                      Container(
+                        color: AppColors.c181818,
+                        child: TabBar(
+                          controller: _tabController,
+                          indicatorColor: AppColors.c87B842,
+                          indicatorWeight: 2,
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.white60,
+                          labelStyle: TextFontStyle.textStyle14w400c87B842poppins,
+                          tabs: categories.map((e) => Tab(text: e)).toList(),
+                        ),
+                      ),
+
+                      UIHelper.verticalSpace(35.h),
+
+                      // TabBarView
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: categories.map((category) {
+                            final filtered = filterEquipment(equipmentList, category);
+
+                            if (filtered.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  'No $category equipment yet',
+                                  style: TextStyle(color: Colors.grey.shade500, fontSize: 16.sp),
+                                ),
+                              );
+                            }
+
+                            return ListView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              itemCount: filtered.length,
+                              itemBuilder: (context, index) {
+                                final item = filtered[index];
+
+                                return Container(
+                                  margin: EdgeInsets.only(bottom: 16.h),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20.r),
-                                      topRight: Radius.circular(20.r),
-                                    ),
-                                    image: DecorationImage(
-                                      image: widget.savedImageFile != null
-                                          ? FileImage(widget.savedImageFile!) as ImageProvider
-                                          : AssetImage(image[index]),
-                                      fit: BoxFit.cover,
+                                    color: AppColors.c181818,
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    border: Border.all(color: AppColors.c454545, width: 1.w),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Image from image_url (Full URL)
+                                        SizedBox(
+                                          height: 140.h,
+                                          width: double.infinity,
+                                          child: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                              ? CachedNetworkImage(
+                                            imageUrl: item.imageUrl!,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) => Container(
+                                              color: Colors.grey.shade800,
+                                              child: const Center(
+                                                child: CircularProgressIndicator(
+                                                  color: AppColors.c87B842,
+                                                  strokeWidth: 2,
+                                                ),
+                                              ),
+                                            ),
+                                            errorWidget: (context, url, error) => Image.asset(
+                                              AppImages.copyImage,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                              : Image.asset(AppImages.copyImage, fit: BoxFit.cover),
+                                        ),
+
+                                        Padding(
+                                          padding: EdgeInsets.all(16.w),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Name
+                                              Text(
+                                                item.name ?? 'No Name',
+                                                style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 18.sp,
+                                                ),
+                                              ),
+                                              UIHelper.verticalSpace(8.h),
+
+                                              // Type + Icon
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    _getIconForType(item.type),
+                                                    height: 22.h,
+                                                    color: AppColors.c87B842,
+                                                  ),
+                                                  UIHelper.horizontalSpace(8.w),
+                                                  Text(
+                                                    item.type ?? 'Others',
+                                                    style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
+                                                      fontSize: 16.sp,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                UIHelper.verticalSpace(12.h),
-                                Text(
-                                  title[index],
-                                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.sp,
-                                  ),
-                                ),
-                                UIHelper.verticalSpace(8.h),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      icon[index],
-                                      height: 24.h,
-                                    ),
-                                    UIHelper.horizontalSpace(8.w),
-                                    Text(
-                                      subtitle[index],
-                                      style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    UIHelper.verticalSpace(22.h),
-                  ],
-                ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
+
       floatingActionButton: Container(
-        padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
-        decoration: BoxDecoration(
-          color: AppColors.c87B842,
-          shape: BoxShape.circle,
-        ),
+        padding: EdgeInsets.all(6.w),
+        decoration: const BoxDecoration(color: AppColors.c87B842, shape: BoxShape.circle),
         child: IconButton(
-          icon: Icon(Icons.add, color: AppColors.c181818),
+          icon: const Icon(Icons.add, color: AppColors.c181818, size: 28),
           onPressed: () {
-            NavigationService.navigateTo(Routes.addEquipmentScreen);
+            NavigationService.navigateTo(Routes.addEquipmentScreen).then((_) {
+              getAllEquipmentRxObj.getAllEquipmentApi(); // Refresh after add
+            });
           },
         ),
       ),
     );
+  }
+
+  String _getIconForType(String? type) {
+    switch (type?.toLowerCase()) {
+      case 'strength':
+        return 'assets/icons/strengthicon.svg';
+      case 'cardio':
+        return 'assets/icons/cardioicon.svg';
+      case 'flexibility':
+        return 'assets/icons/flexibilityicon.svg';
+      default:
+        return 'assets/icons/othericon.svg';
+    }
   }
 }

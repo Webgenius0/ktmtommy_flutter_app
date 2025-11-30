@@ -1,11 +1,10 @@
-// ignore_for_file: depend_on_referenced_packages
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_scan_post_api/food_scan_post_api.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
-import 'package:ktmtommy_apps/helpers/di.dart';           // appData
-import 'package:ktmtommy_apps/constants/app_constants.dart'; // তোমার kKey... constants
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/networks/rx_base.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -16,7 +15,6 @@ final class FoodScanPostRx extends RxResponseInt<Map<String, dynamic>> {
 
   ValueStream get foodScanData => dataFetcher.stream;
 
-  /// Food scan API call + সব ডাটা appData এ সেভ + Stream এ পাঠানো
   Future<bool> postFoodScanApi({required File image}) async {
     try {
       final response = await api.foodScanApi(image: image);
@@ -60,7 +58,7 @@ final class FoodScanPostRx extends RxResponseInt<Map<String, dynamic>> {
     appData.write(kKeySodium, nutrition['sodium'] ?? '0mg');
     appData.write(kKeyPotassium, nutrition['potassium'] ?? '0mg');
 
-    // Ingredient Breakdown (যেভাবে তুমি চেয়েছিলে – শুধু last key name)
+    // Ingredient Breakdown ( last key name)
     final ingredients = data['ingredient_breakdown'] as Map<String, dynamic>;
     appData.write(kKeyBun, ingredients['bun'] ?? '0');
     appData.write(kKeyBeefPatties, ingredients['beef patties'] ?? '0');
@@ -71,19 +69,18 @@ final class FoodScanPostRx extends RxResponseInt<Map<String, dynamic>> {
     appData.write(kKeyOnion, ingredients['onion'] ?? '0');
     appData.write(kKeySauce, ingredients['sauce'] ?? '0');
 
-    // Insights + ফুল রেসপন্স
+    // Insights +
     appData.write(kKeyNutritionalInsights, data['nutritional_insights'] ?? []);
     appData.write(kKeyLastFoodScanResponse, response);
 
-    // Stream এ পাঠানো যাতে UI আপডেট হয়
     dataFetcher.sink.add(response);
 
-    // সব প্রিন্ট (ডিবাগিং এর জন্য সুন্দর করে)
+
     _printAllSavedData();
     log("All food scan data saved to GetStorage!");
   }
 
-  // ==================== সব ডাটা প্রিন্ট করা ====================
+  // ==================== all data ====================
   void _printAllSavedData() {
     log('============= FOOD SCAN RESULT =============');
     log('Is Food          : ${appData.read(kKeyIsFood)}');

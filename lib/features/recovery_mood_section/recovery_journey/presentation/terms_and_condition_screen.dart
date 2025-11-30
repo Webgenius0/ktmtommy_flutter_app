@@ -48,6 +48,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
 
 
  final List<String> subtitle = [
+
     'By using the My Balance Day app, you agree to be bound by these Terms and Conditions, as well as our Privacy Policy. If you do not agree, do not use the app.',
     'Users agree to use the app for personal, non-commercial purposes only. You are responsible for ensuring any data you enter is accurate.',
     'My Balance Day offers both monthly and annual subscription options. Subscriptions are billed through the App Store or Google Play. Cancellations must be managed through the platform used for purchase.',

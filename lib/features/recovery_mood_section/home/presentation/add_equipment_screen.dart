@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 import 'dart:io' show File;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +16,8 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/home/widget/custom_
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/widget/custom_dropdown.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 import '../../my_equipment/presentation/my_equipment_two_screen.dart';
-
 
 class AddEquipmentScreen extends StatefulWidget {
   const AddEquipmentScreen({super.key});
@@ -30,10 +30,10 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool _isSaving = false;
   File? pickedImageFile;
 
-  List<String> durationList = ['1', '2', '3', '4'];
+  List<String> durationList = ['Strength', 'Cardio', 'Flexibility'];
   String selectedUnit = 'Select equipment type';
 
   @override
@@ -54,8 +54,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
             key: _formKey,
             child: Column(
               children: [
-
-    ///========================   CustomAppbarWidget =================================//
+                ///========================   CustomAppbarWidget =================================//
                 CustomAppbarWidget(
                   onTap: () {
                     NavigationService.goBack;
@@ -64,7 +63,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 ),
                 UIHelper.verticalSpace(24.h),
 
-  ///==============================  Equipment  =========================================///
+                ///==============================  Equipment  =========================================///
                 Container(
                   width: double.infinity,
                   decoration: ShapeDecoration(
@@ -74,12 +73,12 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
-      ///=================================     Equipment ============================//
+                        ///=================================     Equipment ============================//
                         Text('Equipment Name',
                             style: TextFontStyle.textStylePoppins.copyWith(
                               color: AppColors.cA3A3A3,
@@ -93,8 +92,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                           fillColor: AppColors.c2A2A2A,
                           hintText: 'Enter equipment name',
                           hintTextSyle: TextFontStyle.textStylePoppins.copyWith(
-                            fontSize: 14.sp,color: AppColors.cA3A3A3
-                          ),
+                              fontSize: 14.sp, color: AppColors.cA3A3A3),
                           style: const TextStyle(color: Colors.white),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -108,14 +106,13 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                         ),
                         UIHelper.verticalSpace(18.h),
 
-    //==============================  Equipment ==========================//
+                        //==============================  Equipment ==========================//
                         Text('Equipment Type',
                             style: TextFontStyle.textStylePoppins.copyWith(
-                              fontSize: 14.sp,color: AppColors.cA3A3A3
-                            )),
+                                fontSize: 14.sp, color: AppColors.cA3A3A3)),
                         UIHelper.verticalSpace(4.h),
 
-///============================   CustomDropdown =========================================//
+                        ///============================   CustomDropdown =========================================//
 
                         CustomDropdown(
                           items: durationList,
@@ -130,10 +127,12 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
 
                         UIHelper.verticalSpace(18.h),
 
-    //================================ Notes ==================================//
-                        Text('Notes', style: TextFontStyle.textStylePoppins.copyWith(
-                          fontSize: 14.sp,color: AppColors.cA3A3A3,
-                        )),
+                        //================================ Notes ==================================//
+                        Text('Notes',
+                            style: TextFontStyle.textStylePoppins.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColors.cA3A3A3,
+                            )),
                         UIHelper.verticalSpace(4.h),
                         CustomTextfield(
                           maxline: 4,
@@ -143,18 +142,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                           fillColor: AppColors.c2A2A2A,
                           hintText: 'Add notes here',
                           hintTextSyle: TextFontStyle.textStylePoppins.copyWith(
-                            fontSize: 14.sp ,color:  AppColors.cA3A3A3,
+                            fontSize: 14.sp,
+                            color: AppColors.cA3A3A3,
                           ),
                           style: const TextStyle(color: Colors.white),
                         ),
                         UIHelper.verticalSpace(18.h),
 
-    ///=============================== Add Photo ==================================//
+                        ///=============================== Add Photo ==================================//
                         Text('Add Photo (Optional)',
                             style: TextFontStyle.textStylePoppins.copyWith(
-                              fontSize: 14.sp ,color:  AppColors.cA3A3A3,
-                            )
-                        ),
+                              fontSize: 14.sp,
+                              color: AppColors.cA3A3A3,
+                            )),
                         UIHelper.verticalSpace(4.h),
                         CustomDotted(
                           text: 'Click to Upload Back Side of Card',
@@ -172,27 +172,73 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 ),
                 UIHelper.verticalSpace(42.h),
 
-///============================== CustomButtonWidget ============================///
-                CustomButtonWidget(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
+                ///============================== CustomButtonWidget ============================///
+                if (_isSaving)
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.c87B842,
+                      strokeWidth: 5,
+                    ),
+                  )
+                else
+                  CustomButtonWidget(
+                    onTap: () async {
+                      if (_isSaving) return;
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => MyEquipmentTwoScreen(
-                            savedImageFile: pickedImageFile,
-                          ),
-                        ),
-                      );
-                      Get.offAll(() => BottomNavScreen(
-                        initialIndex: 2,
-                        savedImageFile: pickedImageFile,
-                      ));
-                    }
-                  },
-                  text: 'Save Equipment',
-                ),
+                      if (!_formKey.currentState!.validate()) return;
+
+                      setState(() {
+                        _isSaving = true;
+                      });
+
+                      log("=============>>>>>>>>>> Equipment Name: ${nameController.text.trim()}");
+                      log("================>>>>>>>>>> Equipment Type: $selectedUnit");
+                      log("===========>>>>>>>> Notes: ${notesController.text.trim()}");
+                      log("===========>>>>> Image File: ${pickedImageFile?.path ?? 'No image selected'}");
+
+                      try {
+                        bool isSuccess =
+                            await addEquipmentsRxObj.storeEquipmentsApi(
+                          image: pickedImageFile!,
+                          name: nameController.text.trim(),
+                          type: selectedUnit,
+                          note: notesController.text.trim(),
+                        );
+
+                        if (!mounted) return;
+
+                        if (isSuccess) {
+                          log("Equipment saved successfully!");
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MyEquipmentTwoScreen(
+
+                              ),
+                            ),
+                          );
+
+                          Get.offAll(() => BottomNavScreen(
+                                initialIndex: 2,
+
+                              ));
+                        } else {}
+                      } catch (e, stack) {
+                        log("============>>>>Error saving equipment: $e");
+                        log(stack.toString());
+
+                        if (mounted) {}
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            _isSaving = false;
+                          });
+                        }
+                      }
+                    },
+                    text: 'Save Equipment',
+                  ),
               ],
             ),
           ),
@@ -201,5 +247,3 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
     );
   }
 }
-
-

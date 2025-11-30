@@ -40,7 +40,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   List<Widget> get _screens => [
     HomeScreen(),
     ScheduleScreen(),
-    MyEquipmentTwoScreen(savedImageFile: widget.savedImageFile),
+    MyEquipmentTwoScreen(),
     TrainerScreen(),
     MyStoryScreen(),
   ];

@@ -52,6 +52,11 @@ class Endpoints {
   static String postFoodStoreApi() => "/api/food/store";
 
 
+  ///=================Add Equipments Section Api===============================
+  static String addEquipments() => "/api/equipment/store";
+  static String getAllEquipments() => "/api/equipment";
+
+
 }
 
 final class PaymentGateway {

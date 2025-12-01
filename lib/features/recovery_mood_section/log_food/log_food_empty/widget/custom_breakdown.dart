@@ -7,60 +7,27 @@ import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-class CustomBreakdown extends StatelessWidget {
-  const CustomBreakdown({super.key, required List<Map<String, dynamic>> traleadingTitle});
-
-  List<Map<String, String>> _getIngredientList() {
-    final List<Map<String, String>> ingredients = [];
-
-    final bun = appData.read(kKeyBun);
-    final beefPatties = appData.read(kKeyBeefPatties);
-    final cheese = appData.read(kKeyCheese);
-    final lettuce = appData.read(kKeyLettuce);
-    final tomato = appData.read(kKeyTomato);
-    final pickles = appData.read(kKeyPickles);
-    final onion = appData.read(kKeyOnion);
-    final sauce = appData.read(kKeySauce);
-
-
-
-    if (bun != null && bun.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Bun', 'value': bun.toString()});
-    }
-    if (beefPatties != null && beefPatties.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Beef Patties', 'value': beefPatties.toString()});
-    }
-    if (cheese != null && cheese.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Cheese', 'value': cheese.toString()});
-    }
-    if (lettuce != null && lettuce.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Lettuce', 'value': lettuce.toString()});
-    }
-    if (tomato != null && tomato.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Tomato', 'value': tomato.toString()});
-    }
-    if (pickles != null && pickles.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Pickles', 'value': pickles.toString()});
-    }
-    if (onion != null && onion.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Onion', 'value': onion.toString()});
-    }
-    if (sauce != null && sauce.toString().trim().isNotEmpty) {
-      ingredients.add({'title': 'Sauce', 'value': sauce.toString()});
-    }
-
-    developer.log('Ingredient list: $ingredients');
-
-    return ingredients;
-  }
+class CustomBreakdown extends StatefulWidget {
+  const CustomBreakdown(
+      {super.key, required List<Map<String, dynamic>> traleadingTitle});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, String>> ingredientList = _getIngredientList();
+  State<CustomBreakdown> createState() => _CustomBreakdownState();
+}
 
-    if (ingredientList.isEmpty) {
+class _CustomBreakdownState extends State<CustomBreakdown> {
+  @override
+  Widget build(BuildContext context) {
+    ///================Map List ================///
+    final Map<String, dynamic> rawData = appData.read(kKeyIngredients) ?? {};
+
+    if (rawData.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    final List<Map<String, String>> ingredientList = rawData.entries
+        .map((e) => {'title': e.key, 'value': e.value.toString()})
+        .toList();
 
     return Container(
       width: double.infinity,
@@ -82,7 +49,6 @@ class CustomBreakdown extends StatelessWidget {
             ),
           ),
           UIHelper.verticalSpace(12.h),
-
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -97,14 +63,16 @@ class CustomBreakdown extends StatelessWidget {
                     children: [
                       Text(
                         item['title']!,
-                        style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                        style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                            .copyWith(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       Text(
                         item['value']!,
-                        style: TextFontStyle.textStyle14w400c8C8C8Cpoppins.copyWith(
+                        style: TextFontStyle.textStyle14w400c8C8C8Cpoppins
+                            .copyWith(
                           fontSize: 14.sp,
                           color: const Color(0xFF8C8C8C),
                         ),

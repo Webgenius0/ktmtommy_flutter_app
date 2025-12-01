@@ -24,7 +24,7 @@ class MyEquipmentTwoScreen extends StatefulWidget {
 class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<String> categories = ['All', 'Strength', 'Cardio', 'Flexibility'];
+  final List<String> categories = ['All', 'Strength', 'Ca rdio', 'Flexibility'];
 
   @override
   void initState() {

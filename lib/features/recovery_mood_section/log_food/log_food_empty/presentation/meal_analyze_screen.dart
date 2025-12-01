@@ -62,7 +62,7 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
 
     insights = insights.take(2).toList();
 
-    // CustomBreakdown
+    ///============== CustomBreakdown=======================================
     traleadingTitle = insights.map((text) => {'title': text}).toList();
 
     if (mounted) setState(() {});
@@ -70,6 +70,9 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ingredientList = appData.read(kKeyIngredients);
+    log("=========>>>>>>>>ingredientList: $ingredientList");
+
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: SafeArea(
@@ -216,25 +219,16 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                                   log("File Path (for API): ${imageFile.path}");
                                   log("File Size: ${(await imageFile.length()) / 1024} KB");
 
-                                  final Map<String, dynamic>
-                                      ingredientBreakdown = {
-                                    "bun": appData.read(kKeyBun) ?? '0',
-                                    "beef patties":
-                                        appData.read(kKeyBeefPatties) ?? '0',
-                                    "cheese": appData.read(kKeyCheese) ?? '0',
-                                    "lettuce": appData.read(kKeyLettuce) ?? '0',
-                                    "tomato": appData.read(kKeyTomato) ?? '0',
-                                    "pickles": appData.read(kKeyPickles) ?? '0',
-                                    "onion": appData.read(kKeyOnion) ?? '0',
-                                    "sauce": appData.read(kKeySauce) ?? '0',
-                                  };
+                                  final Map<String, dynamic> ingredientMap =
+                                      Map<String, dynamic>.from(
+                                          appData.read(kKeyIngredients) ?? {});
 
                                   final List<dynamic> nutritionalInsightsList =
                                       appData.read(kKeyNutritionalInsights) ??
                                           [];
 
                                   final String ingredientBreakdownJson =
-                                      jsonEncode(ingredientBreakdown);
+                                      jsonEncode(ingredientMap);
                                   final String nutritionalInsightsJson =
                                       jsonEncode(nutritionalInsightsList);
 
@@ -254,7 +248,7 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                                     total_estimated_calories: appData
                                             .read(kKeyTotalCalories)
                                             ?.toString() ??
-                                        "0",
+                                        0,
                                     carbs_percentage:
                                         appData.read(kKeyCarbsPercentage) ??
                                             "0%",

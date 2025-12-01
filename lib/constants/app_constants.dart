@@ -90,38 +90,41 @@ const String kKeyAccessToken = 'access_token';
 const String kKeyResetToken = 'reset_token';
 
 //============== Food Scan Data Keys (Exact Postman Field Names) =====================
-const String kKeyIsFood             = "is_food";
+const dynamic kKeyIsFood             = "is_food";
 
-const String kKeyFoodName           = "food_name";
-const String kKeyTotalCalories      = "total_estimated_calories";
+const dynamic kKeyFoodName           = "food_name";
+const dynamic kKeyTotalCalories      = "total_estimated_calories";
 
-const String kKeyCarbsPercentage    = "carbs_percentage";
-const String kKeyCarbsInGm          = "carbs_in_gm";
-const String kKeyProteinPercentage  = "protein_percentage";
-const String kKeyProteinInGm        = "protein_in_gm";
-const String kKeyFatPercentage      = "fat_percentage";
-const String kKeyFatInGm            = "fat_in_gm";
+const dynamic kKeyCarbsPercentage    = "carbs_percentage";
+const dynamic kKeyCarbsInGm          = "carbs_in_gm";
+const dynamic kKeyProteinPercentage  = "protein_percentage";
+const dynamic kKeyProteinInGm        = "protein_in_gm";
+const dynamic kKeyFatPercentage      = "fat_percentage";
+const dynamic kKeyFatInGm            = "fat_in_gm";
 
-const String kKeyProtein            = "protein";
-const String kKeyTotalCarbs         = "total_carbs";
-const String kKeyFiber              = "fiber";
-const String kKeySugar              = "sugar";
-const String kKeyTotalFat           = "total_fat";
-const String kKeySaturated          = "saturated";
-const String kKeySodium             = "sodium";
-const String kKeyPotassium          = "potassium";
+const dynamic kKeyProtein            = "protein";
+const dynamic kKeyTotalCarbs         = "total_carbs";
+const dynamic kKeyFiber              = "fiber";
+const dynamic kKeySugar              = "sugar";
+const dynamic kKeyTotalFat           = "total_fat";
+const dynamic kKeySaturated          = "saturated";
+const dynamic kKeySodium             = "sodium";
+const dynamic kKeyPotassium          = "potassium";
 
-const String kKeyBun                = "bun";
-const String kKeyBeefPatties        = "beef patties";
-const String kKeyCheese             = "cheese";
-const String kKeyLettuce            = "lettuce";
-const String kKeyTomato             = "tomato";
-const String kKeyPickles            = "pickles";
-const String kKeyOnion              = "onion";
-const String kKeySauce              = "sauce";
+const dynamic kKeyBun                = "bun";
+const dynamic kKeyBeefPatties        = "beef patties";
+const dynamic kKeyCheese             = "cheese";
+const dynamic kKeyLettuce            = "lettuce";
+const dynamic kKeyTomato             = "tomato";
+const dynamic kKeyPickles            = "pickles";
+const dynamic kKeyOnion              = "onion";
+const dynamic kKeySauce              = "sauce";
 
-const String kKeyNutritionalInsights = "nutritional_insights";
-const String kKeyLastFoodScanResponse = "last_food_scan_response";
+
+const dynamic kKeyIngredients        = "full_ingredient_list";
+
+const dynamic kKeyNutritionalInsights = "nutritional_insights";
+const dynamic kKeyLastFoodScanResponse = "last_food_scan_response";
 
 
 const String userId = 'user_ID';

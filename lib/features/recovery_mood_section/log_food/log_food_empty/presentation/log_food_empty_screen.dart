@@ -136,6 +136,7 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
                     subtitle: 'Snap your meal, get calorie estimates',
                   ),
                   UIHelper.verticalSpace(32.h),
+
                   ///===========Image Section===================================
                   GestureDetector(
                     onTap: _isAnalyzing ? null : _showImageSourceOptions,
@@ -195,8 +196,10 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
 
                           return GestureDetector(
                             onTap: () {
-                              NavigationService.navigateTo(
-                                  Routes.mealAnalyzeSavePreviewScreen);
+                              log("===============Tapped on meal: ${meal.foodName}");
+                              log("============ Id ${meal.id}");
+                              // NavigationService.navigateTo(
+                              //     Routes.mealAnalyzeSavePreviewScreen);
                             },
                             child: Container(
                               width: double.infinity,

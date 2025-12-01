@@ -60,6 +60,7 @@ final class FoodScanPostRx extends RxResponseInt<Map<String, dynamic>> {
 
     // Ingredient Breakdown ( last key name)
     final ingredients = data['ingredient_breakdown'] as Map<String, dynamic>;
+    appData.write(kKeyIngredients, data['ingredient_breakdown']);
     appData.write(kKeyBun, ingredients['bun'] ?? '0');
     appData.write(kKeyBeefPatties, ingredients['beef patties'] ?? '0');
     appData.write(kKeyCheese, ingredients['cheese'] ?? '0');
@@ -74,7 +75,6 @@ final class FoodScanPostRx extends RxResponseInt<Map<String, dynamic>> {
     appData.write(kKeyLastFoodScanResponse, response);
 
     dataFetcher.sink.add(response);
-
 
     _printAllSavedData();
     log("All food scan data saved to GetStorage!");

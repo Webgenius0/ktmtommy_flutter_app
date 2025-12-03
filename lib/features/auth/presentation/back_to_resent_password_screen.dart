@@ -57,7 +57,7 @@ class _BackToResentPasswordScreenState extends State<BackToResentPasswordScreen>
               ),
               onTap: ()
               {
-                NavigationService.navigateTo(Routes.loginScreen);
+                NavigationService.navigateTo(Routes.logInRecoveryModeScreen);
               },
 
               text: 'BACK TO LOGIN'),

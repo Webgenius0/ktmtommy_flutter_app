@@ -15,12 +15,14 @@ class AppIcons {
   static const String accountActive = '$iconsRoute/account_active.svg';
   static const String account = '$iconsRoute/account.svg';
 
+
   //=================== Khusbu =============================//
 
 
 
   static const String crosIcon = '$iconsRoute/crosIcon.svg';
   static const String arrwleftIcon = '$iconsRoute/arrwleftIcon.svg';
+  static const String arrow_right = '$iconsRoute/arrow_right.svg';
   static const String mailIcon = '$iconsRoute/mailIcon.svg';
   static const String accessicon = '$iconsRoute/accessicon.svg';
   static const String visiblityicon = '$iconsRoute/visiblityicon.svg';
@@ -120,6 +122,18 @@ class AppIcons {
   static const String disclamericon = '$iconsRoute/disclamericon.svg';
   static const String mostpopularicon = '$iconsRoute/mostpopularicon.svg';
   static const String orangesigneture = '$iconsRoute/orangesigneture.svg';
+  static const String premium = '$iconsRoute/premium.svg';
+  static const String check_icon = '$iconsRoute/check_icon.svg';
+  static const String key = '$iconsRoute/key.svg';
+  static const String notification_icon = '$iconsRoute/notification_icon.svg';
+  static const String help_center = '$iconsRoute/help_center.svg';
+  static const String lock = '$iconsRoute/lock.svg';
+  static const String log_out = '$iconsRoute/log_out.svg';
+  static const String delete_icon = '$iconsRoute/delete_icon.svg';
+  static const String cammera = '$iconsRoute/cammera.svg';
+  static const String profile_icon = '$iconsRoute/profile_icon.svg';
+  static const String email_icon = '$iconsRoute/email_icon.svg';
+  static const String password_key = '$iconsRoute/password_key.svg';
 
 
 

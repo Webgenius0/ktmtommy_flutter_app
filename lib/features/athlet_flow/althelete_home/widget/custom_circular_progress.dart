@@ -7,15 +7,12 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:percent_indicator/flutter_percent_indicator.dart';
 
-
-
-
-
 class CustomCircularProgress extends StatelessWidget {
   final String title;
 
   const CustomCircularProgress({
-    super.key, required this.title,
+    super.key,
+    required this.title,
   });
 
   @override
@@ -32,12 +29,9 @@ class CustomCircularProgress extends StatelessWidget {
           borderRadius: BorderRadius.circular(18.r),
         ),
       ),
-      child:
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 16.w),
-        child:
-
-        Column(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -74,18 +68,20 @@ class CustomCircularProgress extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-
                   ],
                 ),
-                CircularPercentIndicator(
-                  reverse: true,
-                  circularStrokeCap:  CircularStrokeCap.round,
-                  backgroundColor: AppColors.c2F2F2F,
-                  radius: 52.0,
-                  lineWidth: 12.0,
-                  percent: 0.7,
-                  center: Text("73%",style: TextFontStyle.textStyle24w600cFFFFFFpoppins),
-                  progressColor: AppColors.orangeColor,
+                Expanded(
+                  child: CircularPercentIndicator(
+                    reverse: true,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    backgroundColor: AppColors.c2F2F2F,
+                    radius: 52.0,
+                    lineWidth: 12.0,
+                    percent: 0.7,
+                    center: Text("73%",
+                        style: TextFontStyle.textStyle24w600cFFFFFFpoppins),
+                    progressColor: AppColors.orangeColor,
+                  ),
                 ),
               ],
             ),

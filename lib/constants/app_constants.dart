@@ -178,6 +178,7 @@ const String kKeyUserID = 'user_id';
 const String kKeyUserEmail = 'user_email';
 const String kKeyUserMobile = 'user_mobile';
 const String kKeyUserType = 'user_type';
+const String kKeyUserLogInType = 'user_login_type';
 
 // * Recover user signup data
 const String kKeyuserEmail = 'userEmail';

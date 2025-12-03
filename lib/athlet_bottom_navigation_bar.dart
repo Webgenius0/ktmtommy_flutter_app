@@ -48,7 +48,7 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     backgroundColor: Colors.transparent,
+     backgroundColor: AppColors.c0B0A0B,
       body: _screens[_selectedIndex],
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: 15.h, left: 15.w, right: 15.w),
@@ -57,7 +57,7 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
           decoration: BoxDecoration(
             color: AppColors.c0B0A0B,
             borderRadius: BorderRadius.circular(80.r),
-            border: Border.all(color: AppColors.c8C8C8C,width: 1.w),
+            border: Border.all(color: AppColors.cD1D1D1,width: 0.8.w),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),

@@ -46,6 +46,16 @@ final class DioSingleton {
     );
     dio = Dio(options)..interceptors.add(Logger());
   }
+
+  void clearToken() {
+    // header Remove Authorization Token
+    dio.options.headers.remove(NetworkConstants.AUTHORIZATION);
+
+    if (kDebugMode) {
+      print("Dio token cleared (Authorization header removed)");
+    }
+  }
+
 }
 
 Future<Response> postHttp(String path, [dynamic data]) =>
@@ -62,3 +72,6 @@ Future<Response> getHttp(String path, [dynamic data]) =>
 Future<Response> deleteHttp(String path, [dynamic data]) =>
     DioSingleton.instance.dio
         .delete(path, data: data, cancelToken: DioSingleton.cancelToken);
+
+
+

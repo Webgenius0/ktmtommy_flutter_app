@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
+import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
@@ -144,8 +145,7 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
                         child: TabBar(
                           controller: _tabController,
                           indicatorColor: AppColors.c87B842,
-                          indicatorWeight: 2,
-                          labelColor: Colors.white,
+                          indicatorWeight: 2.w,
                           unselectedLabelColor: Colors.white60,
                           labelStyle: TextFontStyle.textStyle14w400c87B842poppins,
                           tabs: categories.map((e) => Tab(text: e)).toList(),
@@ -188,6 +188,7 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+
                                         // Image from image_url (Full URL)
                                         SizedBox(
                                           height: 140.h,
@@ -243,6 +244,8 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
                                                       fontSize: 16.sp,
                                                     ),
                                                   ),
+
+
                                                 ],
                                               ),
                                             ],

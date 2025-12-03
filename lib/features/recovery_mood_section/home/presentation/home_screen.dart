@@ -35,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   TBIRecovery(
                       onTap: () {
-                        NavigationService.navigateTo(Routes.settingScreen);
+
+                        NavigationService.navigateTo(Routes.myProfileSettingScreen);
                       },
                       title: 'My Balance Day'),
                 ],

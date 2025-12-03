@@ -219,18 +219,12 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                                   log("File Path (for API): ${imageFile.path}");
                                   log("File Size: ${(await imageFile.length()) / 1024} KB");
 
-                                  final Map<String, dynamic> ingredientMap =
-                                      Map<String, dynamic>.from(
-                                          appData.read(kKeyIngredients) ?? {});
+                                  final Map<String, dynamic> ingredientMap = Map<String, dynamic>.from(appData.read(kKeyIngredients) ?? {});
 
-                                  final List<dynamic> nutritionalInsightsList =
-                                      appData.read(kKeyNutritionalInsights) ??
-                                          [];
+                                  final List<dynamic> nutritionalInsightsList = appData.read(kKeyNutritionalInsights) ?? [];
 
-                                  final String ingredientBreakdownJson =
-                                      jsonEncode(ingredientMap);
-                                  final String nutritionalInsightsJson =
-                                      jsonEncode(nutritionalInsightsList);
+                                  final String ingredientBreakdownJson = jsonEncode(ingredientMap);
+                                  final String nutritionalInsightsJson = jsonEncode(nutritionalInsightsList);
 
                                   log("=====>>>ingredient_breakdown: $ingredientBreakdownJson");
                                   log("=====>>nutritional_insights: $nutritionalInsightsJson");
@@ -243,44 +237,25 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                                   ///============= API Call=====================
                                   await foodStoreRxObj.saveFoodRecord(
                                     image: imageFile,
-                                    food_name: appData.read(kKeyFoodName) ??
-                                        "Unknown Food",
-                                    total_estimated_calories: appData
-                                            .read(kKeyTotalCalories)
-                                            ?.toString() ??
-                                        0,
-                                    carbs_percentage:
-                                        appData.read(kKeyCarbsPercentage) ??
-                                            "0%",
-                                    carbs_in_gm:
-                                        appData.read(kKeyCarbsInGm) ?? "0g",
-                                    protein_percentage:
-                                        appData.read(kKeyProteinPercentage) ??
-                                            "0%",
-                                    protein_in_gm:
-                                        appData.read(kKeyProteinInGm) ?? "0g",
-                                    fat_percentage:
-                                        appData.read(kKeyFatPercentage) ?? "0%",
-                                    fat_in_gm:
-                                        appData.read(kKeyFatInGm) ?? "0g",
+                                    food_name: appData.read(kKeyFoodName) ?? "Unknown Food",
+                                    total_estimated_calories: appData.read(kKeyTotalCalories)?.toString() ?? 0,
+                                    carbs_percentage: appData.read(kKeyCarbsPercentage) ?? "0%",
+                                    carbs_in_gm: appData.read(kKeyCarbsInGm) ?? "0g",
+                                    protein_percentage: appData.read(kKeyProteinPercentage) ?? "0%",
+                                    protein_in_gm: appData.read(kKeyProteinInGm) ?? "0g",
+                                    fat_percentage: appData.read(kKeyFatPercentage) ?? "0%",
+                                    fat_in_gm: appData.read(kKeyFatInGm) ?? "0g",
                                     protein: appData.read(kKeyProtein) ?? "0g",
-                                    total_carbs:
-                                        appData.read(kKeyTotalCarbs) ?? "0g",
+                                    total_carbs: appData.read(kKeyTotalCarbs) ?? "0g",
                                     fiber: appData.read(kKeyFiber) ?? "0g",
                                     sugar: appData.read(kKeySugar) ?? "0g",
-                                    total_fat:
-                                        appData.read(kKeyTotalFat) ?? "0g",
-                                    saturated:
-                                        appData.read(kKeySaturated) ?? "0g",
+                                    total_fat: appData.read(kKeyTotalFat) ?? "0g",
+                                    saturated: appData.read(kKeySaturated) ?? "0g",
                                     sodium: appData.read(kKeySodium) ?? "0mg",
-                                    potassium:
-                                        appData.read(kKeyPotassium) ?? "0mg",
-                                    ingredient_breakdown:
-                                        ingredientBreakdownJson,
-                                    nutritional_insights:
-                                        nutritionalInsightsJson,
-                                    taken_at: currentDateTime,
-                                    notes: '',
+                                    potassium: appData.read(kKeyPotassium) ?? "0mg",
+                                    ingredient_breakdown: ingredientBreakdownJson,
+                                    nutritional_insights: nutritionalInsightsJson,
+                                    taken_at: currentDateTime, notes: '',
                                   );
 
                                   if (!mounted) return;

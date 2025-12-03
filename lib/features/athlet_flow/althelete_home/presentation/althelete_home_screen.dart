@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -45,7 +46,14 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24.w,),
             child: Column(
               children: [
-                CustomWeeksToGo(title: 'LET S GRIND, ALEX. NO EXCUSES TODAY.'),
+                CustomWeeksToGo(
+                  onProfileTap: () {
+                    NavigationService.navigateTo(Routes.myProfileSettingScreenAthlet);
+                    log("=============Profile Icon Click and go to myProfileSettingScreenAthlet");
+
+                  },
+                    profileImageAsset: AppImages.tomimage,
+                    title: 'LET S GRIND, ALEX. NO EXCUSES TODAY.'),
                 UIHelper.verticalSpace(18.h),
 
                 Expanded(

@@ -3,6 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:ktmtommy_apps/athlet_bottom_navigation_bar.dart';
 import 'package:ktmtommy_apps/bottom_nav_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/althelete_home_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/change_password_screen_athlet.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/edit_profile_screen_athlet.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/my_profile_setting_screen_athlet.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/notification_screen_athlet.dart';
+import 'package:ktmtommy_apps/features/log_in_selection_mode/log_in_selection_mode_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/add_equipment_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/home_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_empty_screen.dart';
@@ -14,6 +19,10 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/presen
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/log_steps_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/presentation/log_activity_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/presentation/log_tablet_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/screen/change_password_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/screen/edit_profile_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/screen/my_profile_setting_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/screen/notification_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/presentation/my_story_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/all_set_personal_information_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/athelete_shedule_screen.dart';
@@ -46,7 +55,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/presen
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/presentation/subscription_tbi_mode_screen.dart';
 import 'package:ktmtommy_apps/features/auth/presentation/back_to_resent_password_screen.dart';
 import 'package:ktmtommy_apps/features/auth/presentation/error_with_email_screen.dart';
-import 'package:ktmtommy_apps/features/auth/presentation/login_screen.dart';
+import 'package:ktmtommy_apps/features/auth/presentation/login_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/auth/presentation/reset_password_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:ktmtommy_apps/features/auth/presentation/verify_otp_screen.dart';
@@ -58,6 +67,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/pr
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/presentation/tell_us_about_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/presentation/terms_and_condition_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/presentation/trainer_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_log_in/log_in_recovery_mode_screen.dart';
 import 'package:ktmtommy_apps/features/welcome_back/presentation/welcome_back_screen.dart';
 import 'package:ktmtommy_apps/onboarding_screen.dart';
 import 'package:ktmtommy_apps/splash_screen.dart';
@@ -75,7 +85,8 @@ final class Routes {
 //================ Khusbu ===================//
 
   static const String splashScreen = '/splashScreen';
-  static const String loginScreen = '/loginScreen';
+  static const String loginScreenAthlet = '/loginScreenAthlet';
+  static const String logInRecoveryModeScreen = '/logInRecoveryModeScreen';
   static const String errorWithEmailScreen = '/errorWithEmailScreen';
   static const String sentOtpScreen = '/sentOtpScreen';
   static const String verifyOtpScreen = '/verifyOtpScreen';
@@ -140,6 +151,20 @@ final class Routes {
   static const String subscriptionTbiModeScreen = '/subscriptionTbiModeScreen';
   static const String subscriptionAthletModeScreen = '/subscriptionAthletModeScreen';
   static const String editMedicationScreen = '/editMedicationScreen';
+  static const String logInSelectionModeScreen = '/logInSelectionModeScreen';
+
+  ///=================Profile Section=====================================///
+  static const String myProfileSettingScreen = '/myProfileSettingScreen';
+  static const String editProfileScreen = '/editProfileScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
+  static const String notificationScreen = '/notificationScreen';
+
+  ///==============Athlet Profile Section=====================================///
+
+  static const String changePasswordScreenAthlet = '/changePasswordScreenAthlet';
+  static const String myProfileSettingScreenAthlet = '/myProfileSettingScreenAthlet';
+  static const String editProfileScreenAthlet = '/editProfileScreenAthlet';
+  static const String notificationScreenAthlet = '/notificationScreenAthlet';
 }
 
 final class RouteGenerator {
@@ -176,13 +201,22 @@ final class RouteGenerator {
       //         builder: (context) => BottomNavScreen());
       //   }
 
-      case Routes.loginScreen:
+      case Routes.loginScreenAthlet:
         if (Platform.isAndroid) {
           return FadedTransitionRoute(
-              widget: LoginScreen(), settings: settings);
+              widget: LoginScreenAthlet(), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => LoginScreen());
+          return CupertinoPageRoute(builder: (context) => LoginScreenAthlet());
         }
+
+      case Routes.logInRecoveryModeScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: LogInRecoveryModeScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => LogInRecoveryModeScreen());
+        }
+
 
       case Routes.errorWithEmailScreen:
         if (Platform.isAndroid) {
@@ -710,6 +744,89 @@ final class RouteGenerator {
         } else {
           return CupertinoPageRoute(
               builder: (context) => SubscriptionAthletModeScreen());
+        }
+
+      case Routes.logInSelectionModeScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: LogInSelectionModeScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => LogInSelectionModeScreen());
+        }
+
+      case Routes.myProfileSettingScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: MyProfileSettingScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => MyProfileSettingScreen());
+        }
+
+      case Routes.editProfileScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: EditProfileScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => EditProfileScreen());
+        }
+
+
+      case Routes.changePasswordScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: ChangePasswordScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => ChangePasswordScreen());
+        }
+
+      case Routes.notificationScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: NotificationScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => NotificationScreen());
+        }
+        ///==============Athlet Profile Section=====================================///
+
+      case Routes.changePasswordScreenAthlet:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: ChangePasswordScreenAthlet(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => ChangePasswordScreenAthlet());
+        }
+
+      case Routes.myProfileSettingScreenAthlet:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: MyProfileSettingScreenAthlet(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => MyProfileSettingScreenAthlet());
+        }
+
+      case Routes.editProfileScreenAthlet:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: EditProfileScreenAthlet(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => EditProfileScreenAthlet());
+        }
+
+      case Routes.notificationScreenAthlet:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: NotificationScreenAthlet(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => NotificationScreenAthlet());
         }
 
       case Routes.editMedicationScreen:

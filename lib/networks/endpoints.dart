@@ -27,6 +27,7 @@ class Endpoints {
   ///========================Profile Section====================================
 
   static String getProfile() => "/api/profile";
+  static String logout() => "/api/logout";
 
   ///========================My Day Section ====================================
 

@@ -140,7 +140,7 @@ class _LogFoodScanTwoScreenState extends State<LogFoodScanTwoScreen> {
 
       final takenAt = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
 
-      // নতুন উপায়: সরাসরি kKeyIngredients ম্যাপটা নিয়ে jsonEncode করছি
+      ///============= kKeyIngredients Map jsonEncode===========================
       final Map<String, dynamic> ingredientMap =
           Map<String, dynamic>.from(appData.read(kKeyIngredients) ?? {});
 
@@ -168,7 +168,7 @@ class _LogFoodScanTwoScreenState extends State<LogFoodScanTwoScreen> {
         saturated: appData.read(kKeySaturated) ?? "0g",
         sodium: appData.read(kKeySodium) ?? "0mg",
         potassium: appData.read(kKeyPotassium) ?? "0mg",
-        ingredient_breakdown: jsonEncode(ingredientMap), // এটাই এখন সঠিক
+        ingredient_breakdown: jsonEncode(ingredientMap),
         nutritional_insights: jsonEncode(insights),
         taken_at: takenAt,
         notes: _noteController.text.trim(),
@@ -285,10 +285,8 @@ class _LogFoodScanTwoScreenState extends State<LogFoodScanTwoScreen> {
 
                       _isSaving
                           ? const Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.c87B842))
-                          : CustomButtonWidget(
-                              text: 'Save Log', onTap: _saveLog),
+                              child: CircularProgressIndicator(color: AppColors.c87B842))
+                          : CustomButtonWidget(text: 'Save Log', onTap: _saveLog),
 
                       UIHelper.verticalSpace(30.h),
                     ],

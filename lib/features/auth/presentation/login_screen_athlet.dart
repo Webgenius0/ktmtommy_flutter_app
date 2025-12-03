@@ -8,19 +8,21 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:ktmtommy_apps/networks/api_acess.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreenAthlet extends StatefulWidget {
+  const LoginScreenAthlet({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginScreenAthlet> createState() => _LoginScreenAthletState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenAthletState extends State<LoginScreenAthlet> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -54,8 +56,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (success) {
       EasyLoading.showSuccess('Login Successful! 🎉');
+
+
+      /// =======Log in Mode Save the appdata =======
+      appData.write(kKeyIsLoggedIn, true);
+      appData.write(kKeyAccessToken, "dummy_token_or_real_from_api");
+      appData.write(kKeyUserLogInType, "athlete");
+
       await Future.delayed(const Duration(milliseconds: 500));
-      NavigationService.navigateTo(Routes.navigationScreen);
+      NavigationService.navigateTo(Routes.athletBottomNavigationBar);
     } else {
       EasyLoading.showError('Invalid email or password 😔');
     }

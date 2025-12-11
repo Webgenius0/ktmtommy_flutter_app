@@ -44,7 +44,6 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
 
     EasyLoading.show(status: 'Logging in...');
 
-    await Future.delayed(const Duration(seconds: 2)); // simulate API call
 
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -57,13 +56,6 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
     if (success) {
       EasyLoading.showSuccess('Login Successful! 🎉');
 
-
-      /// =======Log in Mode Save the appdata =======
-      appData.write(kKeyIsLoggedIn, true);
-      appData.write(kKeyAccessToken, "dummy_token_or_real_from_api");
-      appData.write(kKeyUserLogInType, "athlete");
-
-      await Future.delayed(const Duration(milliseconds: 500));
       NavigationService.navigateTo(Routes.athletBottomNavigationBar);
     } else {
       EasyLoading.showError('Invalid email or password 😔');

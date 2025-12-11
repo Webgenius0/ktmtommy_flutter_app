@@ -7,6 +7,7 @@ import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/edit_profile_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/my_profile_setting_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/notification_screen_athlet.dart';
+import 'package:ktmtommy_apps/features/chat/presentation/chat_screen.dart';
 import 'package:ktmtommy_apps/features/log_in_selection_mode/log_in_selection_mode_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/add_equipment_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/home_screen.dart';
@@ -165,6 +166,12 @@ final class Routes {
   static const String myProfileSettingScreenAthlet = '/myProfileSettingScreenAthlet';
   static const String editProfileScreenAthlet = '/editProfileScreenAthlet';
   static const String notificationScreenAthlet = '/notificationScreenAthlet';
+
+
+
+
+  ///>>>>>>>>>>>>>>>>>>. ai chat section >>>>>>>>>>>>>>>>>>>>>>>>>
+  static const String aiChatScreen = '/aiChatScreen';
 }
 
 final class RouteGenerator {
@@ -215,6 +222,15 @@ final class RouteGenerator {
               widget: LogInRecoveryModeScreen(), settings: settings);
         } else {
           return CupertinoPageRoute(builder: (context) => LogInRecoveryModeScreen());
+        }
+
+
+      case Routes.aiChatScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AiChatScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AiChatScreen());
         }
 
 

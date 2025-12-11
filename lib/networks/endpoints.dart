@@ -58,6 +58,15 @@ class Endpoints {
   static String getAllEquipments() => "/api/equipment";
 
 
+  ///>>>>>>>>>>>>>>>>>>> AI chat section >>>>>>>>>>>>>>>>>>>
+
+
+  static String sendMessageForAi() => "/api/ai-chat/send-message";
+  static String getChatList() => "/api/ai-chat/history";
+
+
+
+
 }
 
 final class PaymentGateway {

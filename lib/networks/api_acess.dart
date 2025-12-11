@@ -1,5 +1,8 @@
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
+import 'package:ktmtommy_apps/features/chat/data/rx_get_chat/rx.dart';
+import 'package:ktmtommy_apps/features/chat/data/send_chat_rx/rx.dart';
+import 'package:ktmtommy_apps/features/chat/model/chat_history.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/add_equipments_data/add_equipments_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/get_recent_step_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/log_steps_screen_rx.dart';
@@ -74,6 +77,11 @@ final GetRecentActivityLogRx getRecentActivityLogRx = GetRecentActivityLogRx(
   dataFetcher: BehaviorSubject<GetRecentActivityModel>(),
 );
 
+final GetChatMessageRx getChatMessageRx = GetChatMessageRx(
+  empty: AiChatHistoryDataModel(),
+  dataFetcher: BehaviorSubject<AiChatHistoryDataModel>(),
+);
+
 DeleteMedicationRx deleteMedicationRxObj = DeleteMedicationRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
@@ -108,6 +116,12 @@ FoodStoreRx foodStoreRxObj = FoodStoreRx(
 AddEquipmentsRx addEquipmentsRxObj = AddEquipmentsRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+SendMessageRx sendMessageRx = SendMessageRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(), chatHistoryRx: getChatMessageRx,
 );
 
 

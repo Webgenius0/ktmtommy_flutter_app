@@ -23,6 +23,7 @@ final class GetAllEquipmentRx extends RxResponseInt<GetAllEquipmentModel> {
   @override
   handleSuccessWithReturn(GetAllEquipmentModel data) {
 
+
     dataFetcher.sink.add(data);
     return data;
   }

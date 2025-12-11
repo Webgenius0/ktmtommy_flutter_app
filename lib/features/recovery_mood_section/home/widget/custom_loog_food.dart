@@ -43,7 +43,7 @@ class CustomLoogFood extends StatelessWidget {
               Row(
                 children: [
                   icon,
-                 UIHelper.horizontalSpace(65.h),
+                 UIHelper.horizontalSpace(60.h),
                  plusicon,
                 ],
               ),

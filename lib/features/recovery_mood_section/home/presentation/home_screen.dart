@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             UIHelper.verticalSpace(24.h),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.symmetric(horizontal: 22.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

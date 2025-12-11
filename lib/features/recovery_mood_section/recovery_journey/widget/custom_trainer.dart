@@ -110,7 +110,7 @@ class _CustomTrainerState extends State<CustomTrainer> {
                     Text(
                       widget.subtitle,
                       style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                        fontSize: 18.sp,
+                        fontSize: 14.sp,
                         fontStyle: FontStyle.italic,
                       ),
                     ),

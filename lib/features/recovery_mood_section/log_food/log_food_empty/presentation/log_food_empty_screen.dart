@@ -129,9 +129,7 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
                 children: [
                   ///============AppBar Section=================================
                   CustomAppbarWidget(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap:() =>  NavigationService.goBack,
                     text: 'Log Food',
                     subtitle: 'Snap your meal, get calorie estimates',
                   ),

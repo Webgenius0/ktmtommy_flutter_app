@@ -13,11 +13,11 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
 
-class CustomChiken extends StatelessWidget {
+class AthletCustomChiken extends StatelessWidget {
   final String text;
   final String? imagePath;
 
-  const CustomChiken({
+  const AthletCustomChiken({
     super.key,
     required this.text,
     this.imagePath,
@@ -74,12 +74,13 @@ class CustomChiken extends StatelessWidget {
               UIHelper.horizontalSpace(8.w),
               Text('$totalCalories', style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
                   fontSize: 20.sp,
-                  fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
+                color: AppColors.orangeColor,
               )),
               UIHelper.horizontalSpace(9.w),
               Text('estimated calories', style: TextFontStyle.textStyle16w400c757575poppins.copyWith(
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
               ))
             ],
           ),

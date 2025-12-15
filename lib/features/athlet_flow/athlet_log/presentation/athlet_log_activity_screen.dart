@@ -16,10 +16,6 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
-
 class AthletLogActivityScreen extends StatefulWidget {
   const AthletLogActivityScreen({super.key});
 
@@ -49,68 +45,68 @@ class _AthletLogActivityScreenState extends State<AthletLogActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(AppImages.restbacroundimage),fit: BoxFit.cover)
-        ),child:  SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              children: [
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage(AppImages.restbacroundimage),fit: BoxFit.cover)
+          ),child:  SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                children: [
 
 
-                //========================= Arrw Button ==================================//
+                  //========================= Arrw Button ==================================//
 
-                ArrowButtonAtheleteFlow(
-                  text: 'Log activity',
-                  onTap: () {
-                    NavigationService.goBack;
-                  },
-                ),
-                UIHelper.verticalSpace(24.h),
+                  ArrowButtonAtheleteFlow(
+                    text: 'Log activity',
+                    onTap: () {
+                      NavigationService.goBack;
+                    },
+                  ),
+                  UIHelper.verticalSpace(24.h),
 
-                //===============================
+                  //===============================
 
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding:  EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
-                          decoration: ShapeDecoration(
-                            color: AppColors.c181818,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-
-                              //========================================== Activity ============================//
-
-                              Text(
-                                  'Activity Name',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding:  EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
+                            decoration: ShapeDecoration(
+                              color: AppColors.c181818,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
-                              UIHelper.verticalSpace(4.h),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                //========================================== Activity ============================//
+
+                                Text(
+                                    'Activity Name',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
 
 
 //========================================= TextFormfield Activity Name ================================//
 
-                              CustomTextfield(
-                                controller: nameController,
-                                textAlign: TextAlign.start,
-                                isRead: true,
-                                style: TextStyle(color: Colors.white),
+                                CustomTextfield(
+                                  controller: nameController,
+                                  textAlign: TextAlign.start,
+                                  isRead: true,
+                                  style: TextStyle(color: Colors.white),
                                   hintText: 'Select Workout type',
                                   hintTextSyle: TextFontStyle.textStyle24w400cA3A3A3poppins.copyWith(
-                                    fontSize: 14.sp,fontWeight: FontWeight.w400
+                                      fontSize: 14.sp,fontWeight: FontWeight.w400
                                   ),
                                   fillColor: AppColors.c2A2A2A,
                                   borderRadius: 20.r,
@@ -139,129 +135,123 @@ class _AthletLogActivityScreenState extends State<AthletLogActivityScreen> {
                                       }).toList();
                                     },
                                   ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Enter activity type';
-                                  }
-                                  return null;
-                                },
-                                ontap: () {
-                                  final state = _formKey.currentState;
-                                  if (state != null) {
-                                    state.save();
-                                  }
-                                },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Enter activity type';
+                                    }
+                                    return null;
+                                  },
+                                  ontap: () {
+                                    final state = _formKey.currentState;
+                                    if (state != null) {
+                                      state.save();
+                                    }
+                                  },
 
-                              ),
-
-
-
-
-
-                              UIHelper.verticalSpace(18.h),
-
-                              //========================== text =============================//
-
-
-                              Text(
-                                  'Date',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
-                              ),
-                              UIHelper.verticalSpace(4.h),
-
-                              //================================= Calander =========================//
-
-
-                              CustomActivityCalander(
-                                controller: dateController,
-                                hintText: 'Select Date',
-                              ),
-                              UIHelper.verticalSpace(18.h),
+                                ),
 
 
 
 
-                              Text(
-                                  'Time',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
-                              ),
-                              UIHelper.verticalSpace(4.h),
 
-                              TimeCustom(),
-                              UIHelper.verticalSpace(18.h),
-                              Text(
-                                  'Duration',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
-                              ),
-                              UIHelper.verticalSpace(4.h),
-                              CustomDuration(),
-                              UIHelper.verticalSpace(18.h),
-                              Text(
-                                  'Notification',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
-                              ),
-                              UIHelper.verticalSpace(4.h),
+                                UIHelper.verticalSpace(18.h),
 
-                              CustomNotification(),
-                              UIHelper.verticalSpace(18.h),
-                              Text(
-                                  'Notes',
-                                  style:  TextFontStyle.textStyle14w400cA3A3A3poppins
-                              ),
-                              UIHelper.verticalSpace(4.h),
+                                //========================== text =============================//
 
-                              CustomTextfield(
-                                textAlign: TextAlign.start,
-                                maxline: 4,
-                                borderRadius: 20.r,
-                                fillColor: AppColors.c2A2A2A,
-                                hintText: 'Add notes here',
-                                hintTextSyle: TextFontStyle.textStyle14w400cA3A3A3poppins,
-                                style: TextStyle(color: AppColors.cFFFFFF),
-                              ),
-                              UIHelper.verticalSpace(18.h),
 
-                            ],
+                                Text(
+                                    'Date',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+
+                                //================================= Calander =========================//
+
+
+                                CustomActivityCalander(
+                                  controller: dateController,
+                                  hintText: 'Select Date',
+                                ),
+                                UIHelper.verticalSpace(18.h),
+
+
+
+
+                                Text(
+                                    'Time',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+
+                                TimeCustom(),
+                                UIHelper.verticalSpace(18.h),
+                                Text(
+                                    'Duration',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+                                CustomDuration(),
+                                UIHelper.verticalSpace(18.h),
+                                Text(
+                                    'Notification',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+
+                                CustomNotification(),
+                                UIHelper.verticalSpace(18.h),
+                                Text(
+                                    'Notes',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+
+                                CustomTextfield(
+                                  textAlign: TextAlign.start,
+                                  maxline: 4,
+                                  borderRadius: 20.r,
+                                  fillColor: AppColors.c2A2A2A,
+                                  hintText: 'Add notes here',
+                                  hintTextSyle: TextFontStyle.textStyle14w400cA3A3A3poppins,
+                                  style: TextStyle(color: AppColors.cFFFFFF),
+                                ),
+                                UIHelper.verticalSpace(18.h),
+
+                              ],
+                            ),
                           ),
-                        ),
 
 
-                        //================================ Button ==============================//
-                        UIHelper.verticalSpace(55),
+                          //================================ Button ==============================//
+                          UIHelper.verticalSpace(55),
 
 
-                        CustomButtonWidget(
-                            textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
-                            image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
-                            onTap: (){
-                              if (_formKey.currentState?.validate() ?? false) {
+                          CustomButtonWidget(
+                              textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
+                              image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
+                              onTap: (){
+                                if (_formKey.currentState?.validate() ?? false) {
                                   NavigationService.navigateTo(Routes.athletActivityScreen);
-                              }
+                                }
 
-                            },
-                            text: 'Add Workout')
+                              },
+                              text: 'Add Workout')
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-
-
-
-
-
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      )
+        )
 
 
     );
   }
 }
-
 
 

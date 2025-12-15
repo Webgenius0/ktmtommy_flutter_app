@@ -68,21 +68,21 @@ class ProgressCustom extends StatelessWidget {
         'percentage': '${proteinPercentage.toInt()}%',
         'grams': '${proteinGrams.toInt()}g',
         'progress': (proteinPercentage / 100).clamp(0.0, 1.0),
-        'color': const Color(0xFF6C63FF),
+        'color': AppColors.primaryColor,
       },
       {
         'title': 'Carbs',
         'percentage': '${carbsPercentage.toInt()}%',
         'grams': '${carbsGrams.toInt()}g',
         'progress': (carbsPercentage / 100).clamp(0.0, 1.0),
-        'color': const Color(0xFFFF9F43),
+        'color': AppColors.c87B842,
       },
       {
         'title': 'Fat',
         'percentage': '${fatPercentage.toInt()}%',
         'grams': '${fatGrams.toInt()}g',
         'progress': (fatPercentage / 100).clamp(0.0, 1.0),
-        'color': const Color(0xFF4CAF50),
+        'color': AppColors.cCC1F28,
       },
     ];
 

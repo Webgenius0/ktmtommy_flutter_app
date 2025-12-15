@@ -6,12 +6,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/widget/custo_retake.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-class CustomHoldSteady extends StatelessWidget {
-  const CustomHoldSteady({
+class AthletCustomHoldSteady extends StatelessWidget {
+  const AthletCustomHoldSteady({
     super.key,
     required this.imagePath,
     this.onRetake,
@@ -40,16 +41,16 @@ class CustomHoldSteady extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt, color: AppColors.c87B842),
-                title: const Text("Camera", style: TextStyle(color: AppColors.c87B842)),
+                leading: const Icon(Icons.camera_alt, color: AppColors.orangeColor),
+                title: const Text("Camera", style: TextStyle(color: AppColors.orangeColor)),
                 onTap: () {
                   Navigator.pop(ctx);
                   onRetake!(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo, color: AppColors.c87B842),
-                title: const Text("Gallery", style: TextStyle(color: AppColors.c87B842)),
+                leading: const Icon(Icons.photo, color: AppColors.orangeColor),
+                title: const Text("Gallery", style: TextStyle(color: AppColors.orangeColor)),
                 onTap: () {
                   Navigator.pop(ctx);
                   onRetake!(ImageSource.gallery);
@@ -100,7 +101,7 @@ class CustomHoldSteady extends StatelessWidget {
                 GestureDetector(
                   onTap: onRetake != null ? () => _showPickOptions(context) : null,
                   child: CustomRetake(
-                    borderColor: Border.all(color: AppColors.c87B842),
+                    borderColor: Border.all(color: AppColors.orangeColor),
                     color: AppColors.c181818,
                     text: 'Retake',
                   ),
@@ -119,19 +120,19 @@ class CustomHoldSteady extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => MealAnalyzeScreen(imagePath: imagePath),
+                          builder: (_) => AthletMealAnalyzeScreen(imagePath: imagePath),
                         ),
                       );
                     }
                   },
                   child: CustomRetake(
-                    color: AppColors.c87B842,
+                    color: AppColors.orangeColor,
                     textStyle: TextFontStyle
                         .textStyle20w700c000000poppins
                         .copyWith(
                       fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
                     ),
                     text: 'Analyze Now',
                   ),

@@ -6,9 +6,6 @@ import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
-
-
-
 class CustomAppbarWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final String? text;

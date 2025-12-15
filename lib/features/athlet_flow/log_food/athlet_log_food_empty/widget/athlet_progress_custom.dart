@@ -7,8 +7,8 @@ import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-class ProgressCustom extends StatelessWidget {
-  const ProgressCustom({super.key, required List<Map<String, dynamic>> nutrients});
+class AthletProgressCustom extends StatelessWidget {
+  const AthletProgressCustom({super.key, required List<Map<String, dynamic>> nutrients});
 
 
   double _parsePercentage(dynamic value) {
@@ -75,7 +75,7 @@ class ProgressCustom extends StatelessWidget {
         'percentage': '${carbsPercentage.toInt()}%',
         'grams': '${carbsGrams.toInt()}g',
         'progress': (carbsPercentage / 100).clamp(0.0, 1.0),
-        'color': AppColors.c87B842,
+        'color': AppColors.orangeColor,
       },
       {
         'title': 'Fat',

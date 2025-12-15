@@ -33,13 +33,14 @@ class CustomRetake extends StatelessWidget {
         decoration: BoxDecoration(
             color: color ?? AppColors.c181818,
             borderRadius: BorderRadius.circular(28.r),
-           border:borderColor?? Border.all(color: AppColors.c87B842,width: 2)
+           border:borderColor?? Border.all(color: AppColors.orangeColor,width: 2)
         ),
         child: Center(
           child: Text(
             text,
             style: textStyle ?? TextFontStyle.textStyle14w400c87B842poppins.copyWith(
-                fontWeight: FontWeight.w500
+                fontWeight: FontWeight.w500,
+              color: AppColors.primaryColor,
             ),
           ),
         ),

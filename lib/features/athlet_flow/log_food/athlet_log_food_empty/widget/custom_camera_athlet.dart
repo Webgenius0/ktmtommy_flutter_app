@@ -10,8 +10,8 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
 
-class CustomCamera extends StatelessWidget {
-  const CustomCamera({
+class CustomCameraAthlet extends StatelessWidget {
+  const CustomCameraAthlet({
     super.key,
     required this.imagePath,
     required this.onRetake,
@@ -35,16 +35,16 @@ class CustomCamera extends StatelessWidget {
           child: Wrap(
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt,color: AppColors.c87B842 ,),
-                title: const Text("Take Photo",style: TextStyle(color: AppColors.c87B842 )),
+                leading: const Icon(Icons.camera_alt,color: AppColors.orangeColor ,),
+                title: const Text("Take Photo",style: TextStyle(color: AppColors.orangeColor )),
                 onTap: () {
                   Navigator.pop(context);
                   onRetake(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library, color: AppColors.c87B842 ,),
-                title: const Text("Choose from Gallery",style: TextStyle(color:AppColors.c87B842 )),
+                leading: const Icon(Icons.photo_library, color: AppColors.orangeColor ,),
+                title: const Text("Choose from Gallery",style: TextStyle(color:AppColors.orangeColor )),
                 onTap: () {
                   Navigator.pop(context);
                   onRetake(ImageSource.gallery);
@@ -104,7 +104,7 @@ class CustomCamera extends StatelessWidget {
                 children: [
                   UIHelper.verticalSpace(18.h),
                   Image.asset(
-                    AppImages.camera,
+                    AppImages.orangecamera,
                     height: 70.h,
                   ),
                   UIHelper.verticalSpace(18.h),

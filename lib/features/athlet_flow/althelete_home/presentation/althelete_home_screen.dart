@@ -29,6 +29,8 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +97,7 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
 
                             CustomLogactivity(
                               onTap: (){NavigationService.navigateTo(Routes.athletLogFoodEmptyScreen);},
+                              // onTap: (){NavigationService.navigateTo(Routes.logFoodEmptyScreen);},
                               icon: SvgPicture.asset(AppIcons.logfoodicon),
                               subtitle: 'Track Nutrition',
                               plusicon: SvgPicture.asset(

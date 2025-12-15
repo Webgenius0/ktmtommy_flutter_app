@@ -10,14 +10,14 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
 
-class CustomEditPic extends StatefulWidget {
-  const CustomEditPic({super.key});
+class AthletCustomEdit extends StatefulWidget {
+  const AthletCustomEdit({super.key});
 
   @override
-  State<CustomEditPic> createState() => _CustomEditPicState();
+  State<AthletCustomEdit> createState() => _AthletCustomEditState();
 }
 
-class _CustomEditPicState extends State<CustomEditPic> {
+class _AthletCustomEditState extends State<AthletCustomEdit> {
 
 
   TimeOfDay selectedTime = TimeOfDay(hour: 13, minute: 12);
@@ -92,7 +92,7 @@ class _CustomEditPicState extends State<CustomEditPic> {
       ),
       child: Row(
         children: [
-          SvgPicture.asset(AppIcons.clockicon, height: 24.h),
+          SvgPicture.asset(AppIcons.clockicon, height: 24.h,color: AppColors.orangeColor,),
           UIHelper.horizontalSpace(8.w),
           Text(
             '${_getShortDate()}, ${selectedTime.format(context)}',
@@ -109,6 +109,7 @@ class _CustomEditPicState extends State<CustomEditPic> {
               style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
+                color: AppColors.orangeColor,
               ),
             ),
           ),

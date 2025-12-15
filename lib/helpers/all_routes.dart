@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ktmtommy_apps/athlet_bottom_navigation_bar.dart';
 import 'package:ktmtommy_apps/bottom_nav_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/althelete_home_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/change_password_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/edit_profile_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/my_profile_setting_screen_athlet.dart';
@@ -36,7 +37,6 @@ import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presenta
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/welcome_athelete_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_empty_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_scan_one_screen.dart';
-import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/athlets_meal_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/athlet_activity_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/presentation/athlet_log_activity_screen.dart';
@@ -119,6 +119,7 @@ final class Routes {
   static const String homeScreen = '/homeScreen';
   static const String logFoodScanOneScreen = '/logFoodScanOneScreen';
   static const String mealAnalyzeScreen = '/mealAnalyzeScreen';
+  static const String athletMealAnalyzeScreen = '/athletMealAnalyzeScreen';
   static const String logFoodScanTwoScreen = '/logFoodScanTwoScreen';
   static const String logFoodEmptyScreen = '/logFoodEmptyScreen';
   static const String mealAnalyzeSavePreviewScreen = '/mealAnalyzeSavePreviewScreen';
@@ -134,7 +135,6 @@ final class Routes {
   static const String athletLogFoodEmptyScreen = '/athletLogFoodEmptyScreen';
   static const String athletLogFoodScanOneScreen = '/athletLogFoodScanOneScreen';
   static const String athletsMealScreen = '/athletsMealScreen';
-  static const String athletMealAnalyzeScreen = '/athletMealAnalyzeScreen';
   static const String athletActivityScreen = '/athletActivityScreen';
   static const String athletLogActivityScreen = '/athletLogActivityScreen';
   static const String recentSupplementLogScreen = '/recentSupplementLogScreen';
@@ -488,6 +488,20 @@ final class RouteGenerator {
                   ));
         }
 
+      case Routes.athletMealAnalyzeScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AthletMealAnalyzeScreen(
+                imagePath: '',
+              ),
+              settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => AthletMealAnalyzeScreen(
+                imagePath: '',
+              ));
+        }
+
       case Routes.logFoodScanTwoScreen:
         if (Platform.isAndroid) {
           return FadedTransitionRoute(
@@ -615,19 +629,6 @@ final class RouteGenerator {
                   ));
         }
 
-      case Routes.athletMealAnalyzeScreen:
-        if (Platform.isAndroid) {
-          return FadedTransitionRoute(
-              widget: AthletMealAnalyzeScreen(
-                imagePath: '',
-              ),
-              settings: settings);
-        } else {
-          return CupertinoPageRoute(
-              builder: (context) => AthletMealAnalyzeScreen(
-                    imagePath: '',
-                  ));
-        }
 
       case Routes.athletActivityScreen:
         if (Platform.isAndroid) {

@@ -9,9 +9,13 @@ import 'package:intl/intl.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
+import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/widget/athlet_custom_meal_.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/widget/athlet_progress_custom.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/widget/custom_breakdown.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/widget/custom_meal_.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/widget/nutrition_facts.dart';
@@ -22,15 +26,15 @@ import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:ktmtommy_apps/networks/api_acess.dart';
 
-class MealAnalyzeScreen extends StatefulWidget {
+class AthletMealAnalyzeScreen extends StatefulWidget {
   final String imagePath;
 
-  const MealAnalyzeScreen({super.key, required this.imagePath});
+  const AthletMealAnalyzeScreen({super.key, required this.imagePath});
   @override
-  State<MealAnalyzeScreen> createState() => _MealAnalyzeScreenState();
+  State<AthletMealAnalyzeScreen> createState() => _AthletMealAnalyzeScreenState();
 }
 
-class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
+class _AthletMealAnalyzeScreenState extends State<AthletMealAnalyzeScreen> {
   bool _isSaving = false;
   List<Map<String, dynamic>> nutrients = [];
   List<Map<String, dynamic>> traleadingTitle = [];
@@ -81,24 +85,23 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
           child: Column(
             children: [
               ///=======================Appbar Section==========================
-              CustomAppbarWidget(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: 'Meal Analyze',
-                subtitle: 'Snap your meal, get calorie estimates',
-              ),
+               ArrowButtonAtheleteFlow(
+                              onTap: () => NavigationService.goBack,
+                              text: 'Meal Analyze',
+                              subtitle: 'Snap your meal, get calorie estimates',
+                            ),
+
               UIHelper.verticalSpace(24.h),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       ///=============Image Path Section =======================
-                      CustomMeal(imagePath: widget.imagePath),
+                      AthletCustomMeal(imagePath: widget.imagePath),
                       UIHelper.verticalSpace(24.h),
 
                       ///=================Macronutrient Distribution============
-                      ProgressCustom(nutrients: nutrients),
+                      AthletProgressCustom(nutrients: nutrients),
                       UIHelper.verticalSpace(24.h),
 
                       ///==================Nutrition Facts======================
@@ -127,7 +130,7 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                               Row(
                                 children: [
                                   SvgPicture.asset(AppIcons.whaticon,
-                                      height: 20.h),
+                                      height: 20.h,color: AppColors.orangeColor,),
                                   UIHelper.horizontalSpace(8.w),
                                   Text(
                                     'Nutritional Insights',
@@ -160,7 +163,7 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                                         width: 2.w,
                                         height: 55.w,
                                         decoration: BoxDecoration(
-                                          color: AppColors.c87B842,
+                                          color: AppColors.orangeColor,
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(12.r),
                                             bottomLeft: Radius.circular(12.r),
@@ -188,11 +191,13 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
                       _isSaving
                           ? const Center(
                               child: CircularProgressIndicator(
-                                color: AppColors.c87B842,
+                                color: AppColors.orangeColor,
                                 strokeWidth: 5,
                               ),
                             )
                           : CustomButtonWidget(
+                        image: DecorationImage(
+                            image: AssetImage(AppImages.orangebutton)),
                               text: 'Save Log',
                               onTap: () async {
                                 if (_isSaving) return;
@@ -260,10 +265,10 @@ class _MealAnalyzeScreenState extends State<MealAnalyzeScreen> {
 
                                   if (!mounted) return;
 
-                                  log("========>>>>Save Food Record Success! go to logFoodEmptyScreen");
+                                  log("========>>>>Save Food Record Success! go to athletLogFoodEmptyScreen");
 
                                   NavigationService.navigateTo(
-                                      Routes.logFoodEmptyScreen);
+                                      Routes.athletLogFoodEmptyScreen);
                                 } catch (e, stack) {
                                   log("========>>>>Save Failed: $e");
                                   log(stack.toString());

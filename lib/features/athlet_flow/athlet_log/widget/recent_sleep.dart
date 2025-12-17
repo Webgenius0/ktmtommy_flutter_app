@@ -3,32 +3,55 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/GetAllSleep.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
-
-
-
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 
 class RecentSleep extends StatelessWidget {
+  final GetAllSleepDataModel sleepLogs;
+
+
+
+
   const RecentSleep({
     super.key,
-    required this.title,
-    required this.icon,
-    required this.mg,
-    required this.subtitle,
-    required this.deleteIcon,
-  });
+   required this.sleepLogs,
 
-  final List<String> title;
-  final List<String> icon;
-  final List<String> mg;
-  final List<String> subtitle;
-  final List<String> deleteIcon;
+
+
+  });
 
   @override
   Widget build(BuildContext context) {
+
+
+    // Add this helper function in your widget file or a separate utility file
+    String formatTime({required String timeString}) {
+      if (timeString.isEmpty) return "--:--";
+
+      try {
+        String timeOnly = timeString;
+
+        if (timeString.contains(' ')) {
+          List<String> parts = timeString.split(' ');
+          if (parts.length > 1) {
+            timeOnly = parts[1]; // Get the time part
+          }
+        }
+
+        List<String> timeParts = timeOnly.split(':');
+        if (timeParts.length >= 2) {
+          return '${timeParts[0]}:${timeParts[1]}';
+        }
+
+        return timeOnly;
+      } catch (e) {
+        return "--:--";
+      }
+    }
+
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 13.h),
@@ -43,13 +66,21 @@ class RecentSleep extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: title.length,
+            itemCount: sleepLogs.data?.length ,
             itemBuilder: (context, index) {
-              return Padding(
+
+
+              final data = sleepLogs.data?[index];
+
+              return  Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
                 child: Row(
                   children: [
-                    SvgPicture.asset(icon[index], height: 24.h,color: AppColors.orangeColor,),
+                    SvgPicture.asset(
+                      'assets/icons/signureicon.svg',
+                      height: 24.h,
+                      color: AppColors.orangeColor,
+                    ),
                     UIHelper.horizontalSpace(20.w),
                     Expanded(
                       child: Column(
@@ -57,19 +88,20 @@ class RecentSleep extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                title[index],
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
+                              Expanded(
+                                child: Text(
+                                  "${formatTime(timeString:data!.bedTime.toString() )} - ${formatTime(timeString:data.wakeUpTime.toString() )}",
+                                  style: TextFontStyle
+                                      .textStyle24w600cFFFFFFpoppins
+                                      .copyWith(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
-                              UIHelper.horizontalSpace(30.w),
+                              UIHelper.horizontalSpace(20.w),
                               Text(
-                                mg[index],
-
+                                data.duration.toString()??"",
                                 style: TextFontStyle
                                     .textStyle24w600cFFFFFFpoppins
                                     .copyWith(
@@ -81,26 +113,31 @@ class RecentSleep extends StatelessWidget {
                           ),
                           UIHelper.verticalSpace(4.h),
                           Text(
-                            subtitle[index],
+                            data.updatedAt.toString()??"",
                             style: TextFontStyle.textStyle16w400c757575poppins
                                 .copyWith(fontSize: 12.sp),
                           ),
                         ],
                       ),
                     ),
-
-
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
-                          debugPrint('Delete icon tapped at index $index');
+                        onTap:() async {
+
+                          bool success = await deleteSleepRx.deleteSleepApiInfo(id: data.id);
+
+                          if(success){
+                            getRecentSleepRx.getRecentSleepInfo();
+                          }
+
+
                         },
                         borderRadius: BorderRadius.circular(8.r),
                         child: Padding(
                           padding: EdgeInsets.all(4.w),
                           child: SvgPicture.asset(
-                            deleteIcon[index],
+                            'assets/icons/deleteicon.svg',
                             height: 24.h,
                             color: AppColors.orangeColor,
                           ),
@@ -115,5 +152,4 @@ class RecentSleep extends StatelessWidget {
         ],
       ),
     );
-  }
-}
+  }}

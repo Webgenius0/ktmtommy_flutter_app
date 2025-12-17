@@ -1,3 +1,7 @@
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/delate_sleep/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/rx_get_recent_sleep/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/save_sleep/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/GetAllSleep.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/rx_get_chat/rx.dart';
@@ -131,7 +135,25 @@ final GetAllEquipmentRx getAllEquipmentRxObj = GetAllEquipmentRx(
   dataFetcher: BehaviorSubject<GetAllEquipmentModel>(),
 );
 
+
+final GetRecentSleepRx getRecentSleepRx = GetRecentSleepRx(
+  empty: GetAllSleepDataModel(),
+  dataFetcher: BehaviorSubject<GetAllSleepDataModel>(),
+);
+
 PostLogOutRX postLogOutRXObj = PostLogOutRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+SaveSleepRx saveSleepRx = SaveSleepRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+DeleteSleepRx deleteSleepRx = DeleteSleepRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

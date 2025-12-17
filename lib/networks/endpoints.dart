@@ -64,6 +64,12 @@ class Endpoints {
   static String sendMessageForAi() => "/api/ai-chat/send-message";
   static String getChatList() => "/api/ai-chat/history";
 
+  ///>>>>>>>>>>>>>>>>>>> sleep section >>>>>>>>>>>>>>>>>
+
+ static String saveSleepPostApiLink() => "/api/sleep/store";
+ static String saveSleepGetApiLink() => "/api/sleep";
+ static String deleteSleepGetApiLink({required dynamic id }) => "/api/sleep/delete/$id";
+
 
 
 

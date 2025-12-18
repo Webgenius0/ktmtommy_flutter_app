@@ -64,6 +64,7 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
   bool isOf = false;
   int currentGlassCount = 0;
   bool isAMSelected = true;
+  bool isMealEnabled = false;
 
   final List<String> icon = [
     'assets/icons/signureicon.svg',
@@ -210,6 +211,12 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                               UIHelper.verticalSpace(16.h),
                               // Water Intake Tracker
                               WaterIntake(
+                                onToggleChanged: (toggleValue) {
+                                  setState(() {
+                                    isMealEnabled = toggleValue;
+                                  });
+                                  print("Water intake toggle: $toggleValue");
+                                },
                                 onGlassCountChanged: (count) {
                                   setState(() => currentGlassCount = count);
                                 },

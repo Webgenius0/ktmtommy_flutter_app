@@ -1,6 +1,6 @@
 class GetAllSleepDataModel {
   bool? success;
-  List<SleepData>? data;
+  List<Data>? data;
   String? message;
 
   GetAllSleepDataModel({this.success, this.data, this.message});
@@ -8,9 +8,9 @@ class GetAllSleepDataModel {
   GetAllSleepDataModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['data'] != null) {
-      data = <SleepData>[];
+      data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new SleepData.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
     message = json['message'];
@@ -27,7 +27,7 @@ class GetAllSleepDataModel {
   }
 }
 
-class SleepData {
+class Data {
   int? id;
   int? userId;
   String? date;
@@ -37,8 +37,9 @@ class SleepData {
   String? createdAt;
   String? updatedAt;
   String? duration;
+  String? dateHuman;
 
-  SleepData(
+  Data(
       {this.id,
         this.userId,
         this.date,
@@ -47,9 +48,10 @@ class SleepData {
         this.durationMinutes,
         this.createdAt,
         this.updatedAt,
-        this.duration});
+        this.duration,
+        this.dateHuman});
 
-  SleepData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     date = json['date'];
@@ -59,6 +61,7 @@ class SleepData {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     duration = json['duration'];
+    dateHuman = json['date_human'];
   }
 
   Map<String, dynamic> toJson() {
@@ -72,6 +75,7 @@ class SleepData {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['duration'] = this.duration;
+    data['date_human'] = this.dateHuman;
     return data;
   }
 }

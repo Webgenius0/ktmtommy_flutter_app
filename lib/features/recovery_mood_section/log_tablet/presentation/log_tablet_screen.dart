@@ -43,6 +43,7 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
 
   ///===================Loading state for form submission=======================
   bool isLoading = false;
+  bool isMealEnabled = false;
 
   ///=========================== Icons for UI===================================
   final String checkIcon = 'assets/icons/signureicon.svg';
@@ -285,6 +286,12 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                               UIHelper.verticalSpace(16.h),
                               // Water Intake Tracker
                               WaterIntake(
+                                onToggleChanged: (toggleValue) {
+                                  setState(() {
+                                    isMealEnabled = toggleValue;
+                                  });
+                                  print("Water intake toggle: $toggleValue");
+                                },
                                 onGlassCountChanged: (count) {
                                   setState(() => currentGlassCount = count);
                                 },

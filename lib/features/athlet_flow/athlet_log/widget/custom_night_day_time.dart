@@ -260,21 +260,20 @@ class _CustomNightDayTimeState extends State<CustomNightDayTime> {
     setState(() {
       isLoading = true;
     });
-    // Get current date in yyyy-MM-dd format
-    final now = DateTime.now();
-    String dateText = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+    // Use the selected date instead of current date
+    String dateText = '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
 
     // Convert existing time strings to 24-hour format
     String bedTime24 = convertTo24HourFormat(_bedTimeText);
     String wakeUpTime24 = convertTo24HourFormat(_wakeUpTimeText);
-
-    String timeRange = '$bedTime24-$wakeUpTime24';
 
     bool success = await saveSleepRx.saveSleepApiInfo(
         date: dateText,
         bedTime: bedTime24,
         wakeUpTime: wakeUpTime24
     );
+
     setState(() {
       isLoading = false;
     });
@@ -283,16 +282,12 @@ class _CustomNightDayTimeState extends State<CustomNightDayTime> {
       getRecentSleepRx.getRecentSleepInfo();
     }
 
-
     // Print to console for debugging
     print('Sleep data saved!');
+    print('Date: $dateText');
     print('Bedtime: $bedTime24');
     print('Wake up time: $wakeUpTime24');
     print('Total sleep time: $_totalSleepTime');
-    print('Date: $dateText');
-    print('Time Range: $timeRange');
-
-
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

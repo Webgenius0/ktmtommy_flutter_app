@@ -16,6 +16,8 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
+import '../../../../networks/api_acess.dart';
+
 
 
 
@@ -35,13 +37,52 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
   final GlobalKey<FormState> _medicationFormKey = GlobalKey<FormState>();
   final TextEditingController notesController = TextEditingController();
   final TextEditingController medicationNameController = TextEditingController();
+  final TextEditingController amountUnitController = TextEditingController();
   final TextEditingController dosageController = TextEditingController();
   TextEditingController powderController = TextEditingController();
+  bool isWaterIntakeEnabled = false;
+  bool isMealEnabled = false;
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_medicationFormKey.currentState!.validate() &&
         _formKey.currentState!.validate()) {
-      NavigationService.navigateTo(Routes.recentSupplementLogScreen);
+
+      //
+      // bool success = await  storeSupplementRx.storeSupplementInfo(
+      //     type: powderController.text,
+      //     name: medicationNameController.text,
+      //     amount: dosageController.text,
+      //     amountUnit: amountUnit,
+      //     withMeal: isMealEnabled,
+      //     takenAt: takenAt,
+      //     waterIntake: isWaterIntakeEnabled,
+      //     glassOfWater: currentGlassCount,
+      //     note: notesController.text
+      // );
+
+      print('=== SUPPLEMENT LOG VALUES ===');
+
+      // Supplement Details
+      print('Supplement Type - Name: ${medicationNameController.text}');
+      print('Supplement Type - Dosage: ${dosageController.text}');
+      print('Supplement Type - Powder: ${powderController.text}');
+      print('Supplement amount unit : ${amountUnitController.text}');
+
+      // Time
+      // print('Time Taken: ${selectedDateTime ?? DateTime.now()}');
+
+      // Wellness Tracking
+      print('Water Intake  : $isWaterIntakeEnabled');
+      print('Water Intake Glass Count: $currentGlassCount');
+      print('Water with meal: $isMealEnabled');
+
+      // Notes
+      print('Notes: ${notesController.text}');
+
+      print('============================');
+
+
+      // NavigationService.navigateTo(Routes.recentSupplementLogScreen);
     }
   }
 
@@ -55,7 +96,6 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
 
 
   bool isOn = false;
-  bool isOf = false;
   int currentGlassCount = 0;
   bool isAMSelected = true;
 
@@ -134,6 +174,14 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
 
                           CustomMedicationDetails(
                             title: 'Supplement Type',
+
+                            amountUnitController: amountUnitController,
+                            onToggleChanged: (toggleValue) {
+                              setState(() {
+                                isMealEnabled = toggleValue;
+                              });
+                              print("with meel value : $toggleValue");
+                            },
                             nameController: medicationNameController,
                             dosageController: dosageController,
                             powderController: powderController,
@@ -205,45 +253,54 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
 
 
                                 //======================= Text  ====================================//
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Upright Posture',
-                                      style: TextFontStyle
-                                          .textStyle24w600cFFFFFFpoppins
-                                          .copyWith(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-
-                                    //================================== Toggle =================================//
-
-                                    Transform.scale(
-                                      scale: 0.90,
-                                      child: Switch(
-                                        activeColor: AppColors.cFFFFFF,
-                                        activeTrackColor: AppColors.orangeColor,
-                                        inactiveTrackColor: AppColors.cE9E9EA,
-                                        inactiveThumbColor: AppColors.orangeColor,
-                                        value: isOf,
-                                        onChanged: (bool value) {
-                                          setState(() => isOf = value);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                UIHelper.verticalSpace(16.h),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     Text(
+                                //       'Upright Posture',
+                                //       style: TextFontStyle
+                                //           .textStyle24w600cFFFFFFpoppins
+                                //           .copyWith(
+                                //         fontSize: 16.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //       ),
+                                //     ),
+                                //
+                                //     //================================== Toggle =================================//
+                                //
+                                //     Transform.scale(
+                                //       scale: 0.90,
+                                //       child: Switch(
+                                //         activeColor: AppColors.cFFFFFF,
+                                //         activeTrackColor: AppColors.orangeColor,
+                                //         inactiveTrackColor: AppColors.cE9E9EA,
+                                //         inactiveThumbColor: AppColors.orangeColor,
+                                //         value: isOf,
+                                //         onChanged: (bool value) {
+                                //           setState(() => isOf = value);
+                                //         },
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // UIHelper.verticalSpace(16.h),
 
                                 //=========================== waterIntake ===============================//
 
-                                WaterIntake(
-                                  onGlassCountChanged: (count) {
-                                    setState(() => currentGlassCount = count);
-                                  },
-                                ),
+                              WaterIntake(
+                              initialToggleState: true, // Start with toggle ON
+                              initialGlassCount: 3, // Start with 3 glasses
+                              onToggleChanged: (toggleValue) {
+                                setState(() {
+                                  isWaterIntakeEnabled = toggleValue;
+                                });
+                                print("Water intake toggle: $toggleValue");
+                              },
+                              onGlassCountChanged: (count) {
+                                setState(() => currentGlassCount = count);
+                                print("Glass count: $count");
+                              },
+                            )
 
                                 //============================ Done ==============================//
 

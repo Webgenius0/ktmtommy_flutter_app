@@ -1,6 +1,7 @@
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/delate_sleep/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/rx_get_recent_sleep/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/save_sleep/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/store_supliment/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/GetAllSleep.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
@@ -154,6 +155,11 @@ SaveSleepRx saveSleepRx = SaveSleepRx(
 
 
 DeleteSleepRx deleteSleepRx = DeleteSleepRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+StoreSupplementRx storeSupplementRx = StoreSupplementRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

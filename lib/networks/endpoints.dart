@@ -69,6 +69,7 @@ class Endpoints {
  static String saveSleepPostApiLink() => "/api/sleep/store";
  static String saveSleepGetApiLink() => "/api/sleep";
  static String deleteSleepGetApiLink({required dynamic id }) => "/api/sleep/delete/$id";
+ static String storeSupplementApiLink( ) => "/api/supplement/store";
 
 
 

@@ -113,7 +113,7 @@ class RecentSleep extends StatelessWidget {
                           ),
                           UIHelper.verticalSpace(4.h),
                           Text(
-                            data.updatedAt.toString()??"",
+                            data.dateHuman.toString()??"",
                             style: TextFontStyle.textStyle16w400c757575poppins
                                 .copyWith(fontSize: 12.sp),
                           ),

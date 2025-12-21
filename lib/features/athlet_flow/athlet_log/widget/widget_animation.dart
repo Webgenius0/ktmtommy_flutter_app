@@ -15,17 +15,17 @@ class WidgetAnimation extends StatelessWidget {
   const WidgetAnimation({
     super.key,
     required this.title,
-    required this.icon,
     required this.mg,
-    required this.subtitle,
-    required this.deleteIcon,
+    required this.subtitle, required this.onDeletePress,
+
   });
 
-  final List<String> title;
-  final List<String> icon;
-  final List<String> mg;
-  final List<String> subtitle;
-  final List<String> deleteIcon;
+  final String title;
+  final VoidCallback onDeletePress;
+
+  final String mg;
+  final String subtitle;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,79 +41,71 @@ class WidgetAnimation extends StatelessWidget {
       child: Column(
       //  crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: title.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(icon[index], height: 24.h,color: AppColors.orangeColor,),
-                    UIHelper.horizontalSpace(20.w),
+      Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.h),
+      child: Row(
+        children: [
+          SvgPicture.asset('assets/icons/signureicon.svg', height: 24.h,color: AppColors.orangeColor,),
+          UIHelper.horizontalSpace(20.w),
 
-    //===================================== Animation ============================//
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                title[index],
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Text(
-                                mg[index],
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpace(4.h),
-                          Text(
-                            subtitle[index],
-                            style: TextFontStyle.textStyle16w400c757575poppins
-                                .copyWith(fontSize: 12.sp),
-                          ),
-                        ],
+          //===================================== Animation ============================//
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: TextFontStyle
+                          .textStyle24w600cFFFFFFpoppins
+                          .copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-
-
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          debugPrint('Delete icon tapped at index $index');
-                        },
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Padding(
-                          padding: EdgeInsets.all(4.w),
-                          child: SvgPicture.asset(
-                            deleteIcon[index],
-                            height: 24.h,
-                            color: AppColors.orangeColor,
-                          ),
-                        ),
+                    Text(
+                      mg,
+                      style: TextFontStyle
+                          .textStyle24w600cFFFFFFpoppins
+                          .copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-              );
-            },
+                UIHelper.verticalSpace(4.h),
+                Text(
+                  subtitle,
+                  style: TextFontStyle.textStyle16w400c757575poppins
+                      .copyWith(fontSize: 12.sp),
+                ),
+              ],
+            ),
           ),
+
+          UIHelper.horizontalSpace(8.w),
+
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onDeletePress,
+              borderRadius: BorderRadius.circular(8.r),
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: SvgPicture.asset(
+                  'assets/icons/deleteicon.svg',
+                  height: 24.h,
+                  color: AppColors.orangeColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    )
         ],
       ),
     );

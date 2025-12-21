@@ -8,12 +8,14 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/log_suppliment_data_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/water_intake.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/widget/custom_date_times.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/widget/custom_medication_details.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/widget/widget_animation.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
+import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 import '../../../../networks/api_acess.dart';
@@ -42,23 +44,33 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
   TextEditingController powderController = TextEditingController();
   bool isWaterIntakeEnabled = false;
   bool isMealEnabled = false;
+  DateTime? _selectedDateTime;
+  bool isDeleting = false;
+  bool isUploading= false;
 
+  @override
+  void initState() {
+    getLogSupplementRx.getLogSupplementInfo();
+    super.initState();
+  }
   Future<void> _submitForm() async {
     if (_medicationFormKey.currentState!.validate() &&
         _formKey.currentState!.validate()) {
 
-      //
-      // bool success = await  storeSupplementRx.storeSupplementInfo(
-      //     type: powderController.text,
-      //     name: medicationNameController.text,
-      //     amount: dosageController.text,
-      //     amountUnit: amountUnit,
-      //     withMeal: isMealEnabled,
-      //     takenAt: takenAt,
-      //     waterIntake: isWaterIntakeEnabled,
-      //     glassOfWater: currentGlassCount,
-      //     note: notesController.text
-      // );
+      final dateTimeToUse = _selectedDateTime ?? DateTime.now();
+
+
+      setState(() {
+        isUploading = true;
+      });
+      // 2025-12-17 18:45:00 এই ফরম্যাটে রূপান্তর
+      final formattedDateTime =
+          '${dateTimeToUse.year}-'
+          '${dateTimeToUse.month.toString().padLeft(2, '0')}-'
+          '${dateTimeToUse.day.toString().padLeft(2, '0')} '
+          '${dateTimeToUse.hour.toString().padLeft(2, '0')}:'
+          '${dateTimeToUse.minute.toString().padLeft(2, '0')}:'
+          '00'; // সেকেন্ড সবসময় 00 রাখতে চাইলে
 
       print('=== SUPPLEMENT LOG VALUES ===');
 
@@ -68,24 +80,45 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
       print('Supplement Type - Powder: ${powderController.text}');
       print('Supplement amount unit : ${amountUnitController.text}');
 
-      // Time
-      // print('Time Taken: ${selectedDateTime ?? DateTime.now()}');
+      // Time - 2025-12-17 18:45:00 ফরম্যাটে
+      print('Time Taken: $formattedDateTime');
 
       // Wellness Tracking
-      print('Water Intake  : $isWaterIntakeEnabled');
+      print('Water Intake: $isWaterIntakeEnabled');
       print('Water Intake Glass Count: $currentGlassCount');
-      print('Water with meal: $isMealEnabled');
+      print('Taken with meal: $isMealEnabled');
 
       // Notes
       print('Notes: ${notesController.text}');
 
       print('============================');
 
+      // API কল - 2025-12-17 18:45:00 ফরম্যাটে
+      bool success = await storeSupplementRx.storeSupplementInfo(
+          withMeal: isMealEnabled,
+          waterIntake: isWaterIntakeEnabled,
+          type: powderController.text,
+          takenAt: formattedDateTime, // এখানে 2025-12-17 18:45:00 ফরম্যাট
+          note: notesController.text,
+          name: medicationNameController.text,
+          glassOfWater: currentGlassCount,
+          amountUnit: amountUnitController.text,
+          amount: dosageController.text
+      );
 
-      // NavigationService.navigateTo(Routes.recentSupplementLogScreen);
+      setState(() {
+        isUploading = false;
+      });
+
+      if (success) {
+        getLogSupplementRx.getLogSupplementInfo();
+        ToastUtil.showLongToast("Log Supplement success");
+        // NavigationService.navigateTo(Routes.recentSupplementLogScreen);
+      } else {
+        ToastUtil.showLongToast("Failed to save supplement log");
+      }
     }
   }
-
   @override
   void dispose() {
     notesController.dispose();
@@ -98,28 +131,6 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
   bool isOn = false;
   int currentGlassCount = 0;
   bool isAMSelected = true;
-
-
-  final List<String> icon = [
-    'assets/icons/signureicon.svg',
-    'assets/icons/signureicon.svg',
-  ];
-
-  final List<String> title = ['Proteim Powder', 'Omega-3'];
-  final List<String> subtitle = ['Yesterday, 8:00 PM', 'Yesterday, 8:00 PM'];
-
-  final List<String> mg = ['50gm', '10mg'];
-
-  final List<String> deleteIcon = [
-    'assets/icons/deleteicon.svg',
-    'assets/icons/deleteicon.svg',
-  ];
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,9 +224,13 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
                           CustomDateTimes(
                             initialDateTime: DateTime.now(),
                             onDateTimeChanged: (DateTime selectedDateTime) {
+                              // এখানে selectedDateTime store করুন
+                              setState(() {
+                                _selectedDateTime = selectedDateTime;
+                              });
                               print('Selected DateTime: $selectedDateTime');
                             },
-                            restrictToCurrentMonth: true, // Optional
+                            restrictToCurrentMonth: true,
                           ),
 
                           UIHelper.verticalSpace(18.h),
@@ -287,6 +302,7 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
 
                                 //=========================== waterIntake ===============================//
 
+
                               WaterIntake(
                               initialToggleState: true, // Start with toggle ON
                               initialGlassCount: 3, // Start with 3 glasses
@@ -301,6 +317,9 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
                                 print("Glass count: $count");
                               },
                             )
+
+
+
 
                                 //============================ Done ==============================//
 
@@ -351,12 +370,16 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
                             ),
                           ),
                           UIHelper.verticalSpace(24.h),
-
-                          CustomButtonWidget(
+                          isUploading? Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.deepOrange,
+                            ),
+                          ) : CustomButtonWidget(
                             textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                             image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
                             onTap: _submitForm,
                             text: 'Save Log',
+
                           ),
                           UIHelper.verticalSpace(24.h),
                           Text(
@@ -369,13 +392,106 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
                           ),
                           UIHelper.verticalSpace(12.h),
 
-                          WidgetAnimation(
-                            title: title,
-                            icon: icon,
-                            mg: mg,
-                            subtitle: subtitle,
-                            deleteIcon: deleteIcon,
-                          ),
+
+
+
+                    StreamBuilder<LogSupplementModelData>(
+                      stream: getLogSupplementRx.dataFetcher,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator(color: Colors.deepOrangeAccent,));
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              'Error: ${snapshot.error}',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data!.data == null || snapshot.data!.data!.isEmpty) {
+                          return Center(
+                            child: Column(
+                              children: [
+                                Text(
+                                  'No sleep data found',
+                                  style: TextStyle(color: Colors.deepOrangeAccent,fontWeight: FontWeight.w700,fontSize: 16 ),
+                                ),
+                                UIHelper.verticalSpace(16.h),
+                                Icon(Icons.sentiment_dissatisfied,color: Colors.deepOrangeAccent,size: 80,)
+                              ],
+                            ),
+                          );
+                        }
+
+                        final logSupplementData = snapshot.data!;
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          primary: false,
+                          itemCount: logSupplementData.data?.length,
+                          itemBuilder: (context, index) {
+                            final data = logSupplementData.data?[index];
+                            return   WidgetAnimation(
+                              title:data?.name.toString()??"" ,
+
+                              onDeletePress: () async {
+                                // Confirmation dialog show করুন
+                                bool? confirm = await showDialog(
+
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.deepOrange,
+                                    title: Text("Delete Confirmation",style: TextStyle(color: Colors.white),),
+                                    content: Text("Are you sure you want to delete this supplement log?",style: TextStyle(color: Colors.white),),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, false),
+                                        child: Text("Cancel",style: TextStyle(color: Colors.white),),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, true),
+                                        child: Text("Delete", style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+
+                                // যদি user confirm না করে
+                                if (confirm != true) return;
+
+                                // Deleting process শুরু করুন
+                                if (isDeleting) return;
+
+                                setState(() => isDeleting = true);
+
+                                try {
+                                  bool success = await deleteLogSupplementRx.deleteSleepApiInfo(id: data?.id);
+
+                                  if (success) {
+                                    await getLogSupplementRx.getLogSupplementInfo();
+                                    ToastUtil.showLongToast("Deleted successfully");
+                                  } else {
+                                    ToastUtil.showLongToast("Failed to delete");
+                                  }
+                                } catch (e) {
+                                  print("Delete error: $e");
+                                  ToastUtil.showLongToast("Error occurred while deleting");
+                                } finally {
+                                  if (mounted) {
+                                    setState(() => isDeleting = false);
+                                  }
+                                }
+                              },
+                              mg: data?.amountUnit??"",
+                              subtitle: data?.takenAtHuman??"",
+
+                            );
+                          },);
+                      },
+                    ),
                         ],
                       ),
                     ),

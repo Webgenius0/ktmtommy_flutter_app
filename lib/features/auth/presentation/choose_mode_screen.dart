@@ -14,8 +14,8 @@ import '../../../helpers/di.dart';
 
 
 class ChooseModeScreen extends StatefulWidget {
-  const ChooseModeScreen({super.key});
-
+  const ChooseModeScreen({super.key, this.isSocialLogin= true });
+  final bool? isSocialLogin;
   @override
   State<ChooseModeScreen> createState() => _ChooseModeScreenState();
 }
@@ -157,10 +157,21 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
                     // Navigate based on selection
                     if (selectedIndex == 0) {
                       log("==========>>>>>>>go to signUpScreen");
-                      NavigationService.navigateTo(Routes.signUpScreen);
+                      if(widget.isSocialLogin == true ){
+                        NavigationService.navigateTo(Routes.tellUsAboutScreen);
+                      }else{
+                        NavigationService.navigateTo(Routes.signUpScreen);
+                      }
+
                     } else {
                       log("==========>>>>>>>go to personalInformationSignUpScreen");
-                      NavigationService.navigateTo(Routes.personalInformationSignUpScreen);
+
+                      if(widget.isSocialLogin == true ){
+                        NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
+                      }else{
+                        NavigationService.navigateTo(Routes.personalInformationSignUpScreen);
+                      }
+
                     }
                   },
                   text: 'GET STARTED',

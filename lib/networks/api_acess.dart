@@ -6,7 +6,9 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/save_sleep/rx
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/data/store_supliment/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/GetAllSleep.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/log_suppliment_data_model.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/althelete_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/onboading_althelete_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/send_chat_rx/rx.dart';
@@ -27,6 +29,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/get_all_equipment_data/get_all_equipment_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/log_out_data/log_out_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/onboading_recovery_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/delete_activity_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/get_recent_activity_log_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/registration_data/registration_rx.dart';
@@ -50,6 +53,11 @@ AthleteAuthRegisterRx athleteAuthRegisterRxObj = AthleteAuthRegisterRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
+OnboardingAthleteSignUpRx onboardingAthleteSignUpRx = OnboardingAthleteSignUpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
 
 
 
@@ -65,6 +73,11 @@ LogStepsScreenRx logStepsScreenRxObj = LogStepsScreenRx(
 );
 
 LogActivityRx logActivityRxObj = LogActivityRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+OnboardingRecoverySignUpRx onboardingRecoverySignUpRx = OnboardingRecoverySignUpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
@@ -133,11 +146,18 @@ SendMessageRx sendMessageRx = SendMessageRx(
 );
 
 
+AltheleteSignUpRx altheleteSignUpRx = AltheleteSignUpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
 
 final GetAllEquipmentRx getAllEquipmentRxObj = GetAllEquipmentRx(
   empty: GetAllEquipmentModel(),
   dataFetcher: BehaviorSubject<GetAllEquipmentModel>(),
 );
+
 
 
 final GetRecentSleepRx getRecentSleepRx = GetRecentSleepRx(

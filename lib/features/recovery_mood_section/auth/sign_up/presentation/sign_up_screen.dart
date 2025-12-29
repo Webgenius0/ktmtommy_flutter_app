@@ -15,6 +15,7 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -268,7 +269,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 // Sign Up Button
                 CustomButtonWidget(
                   text: 'Sign Up',
-                  onTap: () {
+                  onTap: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       if (!_isChecked) {
                         setState(() {
@@ -281,14 +282,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       appData.write(kKeyuserPassword, confirmPasswordController.text);
 
 
+                      bool success = await altheleteSignUpRx.altheleteSignUpInfo(termsAccepted:true,name: nameController.text, email: emailController.text, password: passwordController.text, confirmPassword: confirmPasswordController.text);
+                      if(success) {
+                        NavigationService.navigateTo(Routes.tellUsAboutScreen);
+                      }
 
 
-                      log('++++++++++++Full Name: ${appData.read(kKeyuserFullName)}');
+
+
+                        log('++++++++++++Full Name: ${appData.read(kKeyuserFullName)}');
                       log('++++++++++++Email: ${appData.read(kKeyuserEmail)}');
                       log('++++++++++++Password: ${appData.read(kKeyuserPassword)}');
 
                       log("==========>>>>>>>go to tellUsAboutScreen");
-                      NavigationService.navigateTo(Routes.tellUsAboutScreen);
+
                     }
                   },
                 ),

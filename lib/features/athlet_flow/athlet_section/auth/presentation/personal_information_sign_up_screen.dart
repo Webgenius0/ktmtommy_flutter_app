@@ -14,6 +14,7 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class PersonalInformationSignUpScreen extends StatefulWidget {
   const PersonalInformationSignUpScreen({super.key});
@@ -267,7 +268,7 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                   image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
 
                   text: 'CONTINUE',
-                  onTap: () {
+                  onTap: () async {
 
 
                     if (_formKey.currentState?.validate() ?? false) {
@@ -278,9 +279,9 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                         );
                         return;
                       }
-                      appData.write(kKeyuserAthleteFullName,nameController.text);
-                      appData.write(kKeyuserAthleteEmail,emailController.text);
-                      appData.write(kKeyuserAthletePassword, confirmPasswordController.text);
+                      // appData.write(kKeyuserAthleteFullName,nameController.text);
+                      // appData.write(kKeyuserAthleteEmail,emailController.text);
+                      // appData.write(kKeyuserAthletePassword, confirmPasswordController.text);
                       
                       
                       log("+++++++++++name:${appData.read(kKeyuserAthleteFullName)}");
@@ -288,9 +289,16 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                       log("+++++++++++password:${appData.read(kKeyuserAthletePassword)}");
 
 
+                      bool success = await altheleteSignUpRx.altheleteSignUpInfo(termsAccepted:true,name: nameController.text, email: emailController.text, password: passwordController.text, confirmPassword: confirmPasswordController.text);
+                      if(success){
+
+                        NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
+                      }
+
+
+
                       log("==========>>>>>>>go to welcomeAtheleteScreen");
 
-                      NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
                     }
                   },
                 )],

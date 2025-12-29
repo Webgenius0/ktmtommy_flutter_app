@@ -22,6 +22,9 @@ class Endpoints {
   /// >>>>>>>>>>>>>>>>>>>>> auth and forget <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   static String login() => "/api/login";
   static String recoveryRegisterApi() => "/api/register";
+  static String signUpAltheleteApiLink() => "/api/register";
+  static String onboardingAthleteSignUpApiLink() => "/api/onboarding/athlete";
+  static String onboardingRecoverySignUpApiLink() => "/api/onboarding/recovery";
 
 
   ///========================Profile Section====================================

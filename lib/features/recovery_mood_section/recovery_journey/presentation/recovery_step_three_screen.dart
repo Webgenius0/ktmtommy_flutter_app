@@ -284,7 +284,7 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                         initialValue: selectedDuration,
                         onChanged: (value) {
                           setState(() {
-                            selectedDuration = value!;
+                            selectedDuration = value;
                           });
                         },
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -365,30 +365,26 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                   log('==============================');
 
                   try {
-                    bool success = await recoveryRegistrationApiRxObj.registerRecoveryUserApi(
-                      name: userName,
-                      email: userEmail,
-                      password: userPassword,
-                      password_confirmation: userPassword,
-                      terms_accepted: true,
+                    bool success = await onboardingRecoverySignUpRx.onboardingRecoverySignUpApiInfo(
+
                       age: appData.read(kKeyuserAge),// String
                       gender: appData.read(kKeyuserGender),
-                      reminder_from: reminderFrom,
-                      reminder_to: reminderTo,
-                      user_mode: 'recovery',
-                      injury_name: injuryName,
-                      injury_level: injuryLevel,
-                      injury_date: injuryDate,
-                      current_recovery_stage: recoveryStage,
-                      physical_symptom: physicalSymptom,
-                      physical_symptom_details: symptomLevel, // String
-                      physical_symptom_duration_hour: duration,
-                      physical_symptom_frequency: frequency,
-                      emotional_symptoms: emotionalSymptom,
-                      recovery_goal: selectedRecoveryGoal,
-                      recovery_goal_time: getFormattedTimePeriod(selectedTimePeriod),
-                      progress_timeline: progressLabel,
-                      recovery_target_date: getFormattedDuration(selectedDuration),
+                      reminderFrom: reminderFrom,
+                      reminderTo: reminderTo,
+                      userMode: 'recovery',
+                      injuryName: injuryName,
+                      injuryLevel: injuryLevel,
+                      injuryDate: injuryDate,
+                      currentRecoverySage: recoveryStage,
+                      physicalSymptom: physicalSymptom,
+                      physicalSymptomDetails: symptomLevel, // String
+                      physicalSymptomDurationHour: duration,
+                      physicalSymptomFrequency: frequency,
+                      emotionalSymptoms: emotionalSymptom,
+                      recoveryGoal: selectedRecoveryGoal,
+                      recoveryGoalTime: getFormattedTimePeriod(selectedTimePeriod),
+                      progressTimeline: progressLabel,
+                      recoveryTargetDate: getFormattedDuration(selectedDuration),
                     );
 
                     if (success) {
@@ -418,7 +414,7 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                 )
                     : Text(
                   'Next',
-                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                  style: TextStyle(color: Colors.black, fontSize: 16.sp),
                 ),
               ),
             ],

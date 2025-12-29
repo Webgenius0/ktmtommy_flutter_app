@@ -14,7 +14,7 @@ import '../../../helpers/di.dart';
 
 
 class ChooseModeScreen extends StatefulWidget {
-  const ChooseModeScreen({super.key, this.isSocialLogin= true });
+  const ChooseModeScreen({super.key, this.isSocialLogin });
   final bool? isSocialLogin;
   @override
   State<ChooseModeScreen> createState() => _ChooseModeScreenState();

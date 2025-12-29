@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
+import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
@@ -12,6 +13,7 @@ import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/c
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_with.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/select_unselect_gender.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/weeks_dropdwon.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
@@ -31,6 +33,8 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+  String selectedDuration = '4 Weeks';
+  List<String> durationList = ['4 Weeks', '1 Week', '3 Weeks', '5 Weeks'];
 
   String heightUnit = 'cm';
   bool isSelectedWeight = false;
@@ -46,6 +50,23 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
     weightController.dispose();
     super.dispose();
   }
+
+
+  // String getFormattedDuration(String duration) {
+  //   switch (duration) {
+  //     case '1 Week':
+  //       return '1_week';
+  //     case '3 Weeks':
+  //       return '3_week';
+  //     case '4 Weeks':
+  //       return '4_week';
+  //     case '5 Weeks':
+  //       return '5_week';
+  //     default:
+  //       return '4_week';
+  //   }
+  // }
+
 
   void _submit() async {
     setState(() {
@@ -97,6 +118,7 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
       String heightString = '$height $heightUnitDefault';
       String weightString = '$weight $weightUnitDefault';
 
+
       // Prepare the output map
       Map<String, dynamic> output = {
         'age': age,
@@ -126,25 +148,24 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
       log('AthleteDailyReminder: ${appData.read(kKeyAthleteDailyReminder)}');
       log("Preferred Reminder time: ${timeDisplay[selectedTime]}");
       log("Next Button clicked: go to allSetPersonalInformationScreen");
+      // log('📅 recovery_target_date: ${getFormattedDuration(selectedDuration)}');
 
       try {
-        bool success = await athleteAuthRegisterRxObj.registerAthleteUserApi(
-          name: appData.read(kKeyuserAthleteFullName) ?? 'Nahid',
-          email: appData.read(kKeyuserAthleteEmail) ?? 'example@domain.com',
-          password: appData.read(kKeyuserAthletePassword) ?? '12345678',
-          password_confirmation: appData.read(kKeyuserAthletePassword) ?? '12345678',
-          age: age,
+        bool success = await onboardingAthleteSignUpRx.onboardingAthleteSignUpApiInfo(
+
+          age: age.toString(),
           gender: selectedGender,
-          user_mode: 'athlete',
           goal: appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON',
           sport: appData.read(kKeyAthleteSelectSport) ?? 'GYM',
-          experience_level: appData.read(kKeyAthleteExperiencelevel) ?? 'ADVANCED',
+          experienceLevel: appData.read(kKeyAthleteExperiencelevel) ?? 'ADVANCED',
           height: height,
-          height_unit: heightUnitDefault, // Use default cm
+          heightUnit: heightUnitDefault, // Use default cm
           weight: weight,
-          weight_unit: weightUnitDefault, // Use default kg or lbs based on selection
-          reminder_from: reminderFrom,
-          reminder_to: reminderTo,
+          weightUnit: weightUnitDefault, // Use default kg or lbs based on selection
+          reminderFrom: reminderFrom,
+          reminderTo: reminderTo,
+          userMode: "athlete",
+          // recoveryTargetDate: getFormattedDuration(selectedDuration)
         );
 
         if (success) {
@@ -160,18 +181,12 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Read the stored data
-    String? name = appData.read(kKeyuserAthleteFullName);
-    String? email = appData.read(kKeyuserAthleteEmail);
-    String? passWord = appData.read(kKeyuserAthletePassword);
     String? goals = appData.read(kKeyAthleteSelectGoal);
     String? sport = appData.read(kKeyAthleteSelectSport);
     String? experienceLevel = appData.read(kKeyAthleteExperiencelevel);
 
     // Log the data
-    log('++++++++++++===AthleteFullName: $name');
-    log('++++++++++++====AthleteEmail: $email');
-    log('++++++++++++====AthletePassword: $passWord');
+
     log('++++++++++++====AthleteSelectGoal: $goals');
     log('++++++++++++====AthleteSelectSport: $sport');
     log('++++++++++++====AthleteExperiencelevel: $experienceLevel');
@@ -365,6 +380,19 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                               style: TextStyle(color: Colors.red, fontSize: 14.sp),
                             ),
                           ],
+                          // UIHelper.verticalSpace(24.h),
+                          // WeeksDropdwon(
+                          //   items: durationList,
+                          //   initialValue: selectedDuration,
+                          //   onChanged: (value) {
+                          //     setState(() {
+                          //       selectedDuration = value;
+                          //     });
+                          //   },
+                          //   padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          //   iconPath: AppIcons.bottomdrodwonicon,
+                          //   iconHeight: 18,
+                          // ),
                           UIHelper.verticalSpace(38.h),
                           // Submit Button
                           CustomButtonWidget(

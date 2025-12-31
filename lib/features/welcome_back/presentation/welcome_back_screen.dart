@@ -116,7 +116,7 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                   icon:  SvgPicture.asset(AppIcons.continueWithEmail,height: 24.h),
                   text: 'Continue With Email',
                   onTap: () {
-                    NavigationService.navigateTo(Routes.logInSelectionModeScreen);
+                    NavigationService.navigateTo(Routes.loginScreenAthlet);
                     // NavigationService.navigateTo(Routes.loginScreen);
                   },
                 ),

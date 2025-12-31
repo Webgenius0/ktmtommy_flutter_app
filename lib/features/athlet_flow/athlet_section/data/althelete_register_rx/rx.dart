@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/networks/dio/dio.dart';
 import 'package:rxdart/streams.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
@@ -18,8 +20,8 @@ final class AltheleteSignUpRx extends RxResponseInt<Map<String, dynamic>> {
 
   Future<bool> altheleteSignUpInfo({
 
-    required String name,
-    required String email,
+    required dynamic name,
+    required dynamic email,
     required dynamic password,
     required dynamic termsAccepted,
     required dynamic confirmPassword
@@ -44,14 +46,14 @@ final class AltheleteSignUpRx extends RxResponseInt<Map<String, dynamic>> {
   @override
   handleSuccessWithReturn(Map<String, dynamic> data) {
 
+
     String token = data['access_token'];
 
-    // Save the token and login status using appData
     appData.write(kKeyAccessToken, token);
+
     appData.write(kKeyIsLoggedIn, true);
     appData.write(kKeyUserID, userId);
-    // appData.write(kKeyUserType, userRole);
-    // appData.write(kKeyUserEmail, userEmail);
+
 
     // Update DioSingleton with the new token
     DioSingleton.instance.update(token);

@@ -61,7 +61,7 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                 ),
                 UIHelper.verticalSpace(24.h),
                 Text(
-                    'Personal Information',
+                    'ersonal Information',
                     style:  TextFontStyle.textStyle24w700cFFFFFFTeko
                 ),
                 UIHelper.verticalSpace(2.h),

@@ -21,8 +21,10 @@ class AdminChatWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
+
+
+
     List<TextSpan> parseFormattedText(String text) {
-      // ফাংশন ডিক্লেয়ারেশন প্রথমে
       void addTextWithBullets(String text, List<TextSpan> spans) {
         if (text.isEmpty) return;
 
@@ -37,7 +39,7 @@ class AdminChatWidget extends StatelessWidget {
             spans.add(
               TextSpan(
                 text: '•$bulletContent',
-                style: TextStyle(color: Colors.white,fontSize: 30),
+                style: TextStyle(color: Colors.white,fontSize: 14),
               ),
             );
           } else if (line.isNotEmpty) {
@@ -49,7 +51,6 @@ class AdminChatWidget extends StatelessWidget {
             );
           }
 
-          // লাইন ব্রেক যোগ করুন (শেষ লাইন ব্যতীত)
           if (i < lines.length - 1) {
             spans.add(TextSpan(text: '\n'));
           }
@@ -100,6 +101,9 @@ class AdminChatWidget extends StatelessWidget {
 
       return spans;
     }
+
+
+
 
 
 

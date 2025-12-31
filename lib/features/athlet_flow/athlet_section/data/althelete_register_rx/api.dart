@@ -14,8 +14,8 @@ final class AltheleteSignUpApi {
 
   Future<Map<String, dynamic>> altheleteSignUpApi(
       {
-        required String name,
-      required String email,
+        required dynamic name,
+      required dynamic email,
       required dynamic password,
       required dynamic confirmPassword,
       required dynamic termsAccepted

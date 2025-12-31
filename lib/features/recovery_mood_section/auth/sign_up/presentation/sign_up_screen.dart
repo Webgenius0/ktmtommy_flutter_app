@@ -284,6 +284,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       bool success = await altheleteSignUpRx.altheleteSignUpInfo(termsAccepted:true,name: nameController.text, email: emailController.text, password: passwordController.text, confirmPassword: confirmPasswordController.text);
                       if(success) {
+                        print(">>>>>>>>>>>> its work");
                         NavigationService.navigateTo(Routes.tellUsAboutScreen);
                       }
 

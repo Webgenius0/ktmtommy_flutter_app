@@ -25,6 +25,8 @@ class Endpoints {
   static String signUpAltheleteApiLink() => "/api/register";
   static String onboardingAthleteSignUpApiLink() => "/api/onboarding/athlete";
   static String onboardingRecoverySignUpApiLink() => "/api/onboarding/recovery";
+  static String changePasswordScreenApi() => "/api/onboarding/recovery";
+  static String postEditProfileApiLink() => "/api/onboarding/recovery";
 
 
   ///========================Profile Section====================================

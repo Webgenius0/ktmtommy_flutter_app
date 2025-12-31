@@ -67,7 +67,7 @@ class _LoadingState extends State<Loading> {
 
     if (!isFirstTime && isLoggedIn) {
       // User already log in  +  not first time + derected to their respective home screens
-      String? userMode = appData.read(kKeyUserLogInType); // "recovery" and "athlete"
+      String? userMode = appData.read(kKeyUserType); // "recovery" and "athlete"
       String token = appData.read(kKeyAccessToken) ?? "";
 
       // Token Update Dio
@@ -97,7 +97,7 @@ class _LoadingState extends State<Loading> {
       ///====== Not first time + not logged in → log in selection screen ======///
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LogInSelectionModeScreen()),
+        MaterialPageRoute(builder: (context) => LoginScreenAthlet()),
       );
     }
   }
@@ -112,7 +112,7 @@ class _LoadingState extends State<Loading> {
     } else {
       return appData.read(kKeyIsFirstTime)
           ? OnboardingScreen ()
-          : const LogInSelectionModeScreen();
+          : const LoginScreenAthlet();
     }
     
   }

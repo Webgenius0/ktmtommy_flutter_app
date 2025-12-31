@@ -1,6 +1,9 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:ktmtommy_apps/athlet_bottom_navigation_bar.dart';
+import 'package:ktmtommy_apps/bottom_nav_screen.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_api.dart';
 import '../../../../helpers/di.dart';
 import '../../../../helpers/toast.dart';
@@ -44,7 +47,7 @@ final class LoginRx extends RxResponseInt<Map<String, dynamic>> {
     String token = data['access_token'];
     dynamic userId = data['data']['id'];
     dynamic userEmail = data['data']['email'];
-    dynamic userRole = data['data']['user_type'];
+    dynamic userRole = data['data']['user_mode'];
 
     // Save the token and login status using appData
     appData.write(kKeyAccessToken, token);
@@ -53,6 +56,11 @@ final class LoginRx extends RxResponseInt<Map<String, dynamic>> {
     appData.write(kKeyUserType, userRole);
     appData.write(kKeyUserEmail, userEmail);
 
+    if(userRole =="recovery"){
+      Get.offAll(BottomNavScreen());
+    }else{
+      Get.offAll(AthletBottomNavigationBar());
+    }
     // Update DioSingleton with the new token
     DioSingleton.instance.update(token);
 

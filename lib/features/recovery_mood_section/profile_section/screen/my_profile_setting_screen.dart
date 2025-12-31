@@ -288,20 +288,20 @@ class _MyProfileSettingScreenState extends State<MyProfileSettingScreen> {
 
                       UIHelper.verticalSpace(20.h),
 
-                      GestureDetector(
-                        onTap: () {
-                          NavigationService.navigateTo(
-                              Routes.notificationScreen);
-                          log("================>>> Notification Settings Clicked");
-                        },
-                        child: _buildMenuRow(
-                          title: "Notification Settings",
-                          textColor: Colors.white,
-                          iconPath: AppIcons.notification_icon,
-                          trailing: Icons.arrow_forward_ios_rounded,
-                          iconColor: AppColors.c87B842,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     NavigationService.navigateTo(
+                      //         Routes.notificationScreen);
+                      //     log("================>>> Notification Settings Clicked");
+                      //   },
+                      //   child: _buildMenuRow(
+                      //     title: "Notification Settings",
+                      //     textColor: Colors.white,
+                      //     iconPath: AppIcons.notification_icon,
+                      //     trailing: Icons.arrow_forward_ios_rounded,
+                      //     iconColor: AppColors.c87B842,
+                      //   ),
+                      // ),
                       UIHelper.verticalSpace(10.h),
                       _divider(),
                       UIHelper.verticalSpace(10.h),
@@ -369,7 +369,7 @@ class _MyProfileSettingScreenState extends State<MyProfileSettingScreen> {
                                   if (isLogout) {
                                     NavigationService
                                         .navigateToUntilReplacement(
-                                            Routes.logInSelectionModeScreen);
+                                            Routes.loginScreenAthlet);
                                     appData.write(kKeyIsLoggedIn, false);
                                   }
                                 } catch (error) {

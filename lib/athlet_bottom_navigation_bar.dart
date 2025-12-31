@@ -10,6 +10,8 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/a
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_setting/presentation/athlet_setting_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/presentation/athlet_trainer_screen.dart';
 
+import 'features/athlet_flow/profile_section_athlet/screen/my_profile_setting_screen_athlet.dart';
+
 
 
 class AthletBottomNavigationBar extends StatefulWidget {
@@ -36,7 +38,7 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
     AtheleteSheduleScreen(),
     AthletProgressScreen(),
     AthletTrainerScreen(),
-    AthletSettingScreen(),
+    MyProfileSettingScreenAthlet(),
   ];
 
   void onItemTapped(int index) {

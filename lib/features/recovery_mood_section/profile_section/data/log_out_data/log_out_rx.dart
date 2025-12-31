@@ -120,11 +120,11 @@ final class PostLogOutRX extends RxResponseInt<Map<String, dynamic>> {
 
       // 5. Login screen এ redirect
       if (Get.isOverlaysOpen) Get.back();
-      Get.offAllNamed(Routes.logInSelectionModeScreen);
+      Get.offAllNamed(Routes.loginScreenAthlet);
 
     } catch (e) {
       log("========>>>>>>>>>>>>Error during clearing user data: $e");
-      Get.offAllNamed(Routes.logInSelectionModeScreen);
+      Get.offAllNamed(Routes.loginScreenAthlet);
     }
   }
 

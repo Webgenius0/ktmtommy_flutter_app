@@ -28,7 +28,9 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/data/log_tablet_screen_store_data/store_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/get_all_equipment_data/get_all_equipment_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/change_password_screen_data/change_password_screen_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/log_out_data/log_out_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/rx_edit_profile/rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/onboading_recovery_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/delete_activity_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/get_recent_activity_log_rx.dart';
@@ -147,6 +149,19 @@ SendMessageRx sendMessageRx = SendMessageRx(
 
 
 AltheleteSignUpRx altheleteSignUpRx = AltheleteSignUpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+
+EditProfileApiRx editProfileApiRx = EditProfileApiRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+ChangePasswordScreenRx changePasswordScreenRx= ChangePasswordScreenRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

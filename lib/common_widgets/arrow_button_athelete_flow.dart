@@ -16,7 +16,7 @@ class ArrowButtonAtheleteFlow extends StatelessWidget {
   final String? text;
   final String? subtitle;
   final TextStyle? textStyle;
-
+  final bool? noBack;
 
 
   const ArrowButtonAtheleteFlow({
@@ -26,7 +26,7 @@ class ArrowButtonAtheleteFlow extends StatelessWidget {
     this.text,
 
 
-    this.subtitle,
+    this.subtitle, this.noBack,
   });
 
   @override
@@ -37,7 +37,7 @@ class ArrowButtonAtheleteFlow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
 
-          SvgPicture.asset(
+        noBack== true?SizedBox():  SvgPicture.asset(
             AppIcons.arrwButton,
           ),
 

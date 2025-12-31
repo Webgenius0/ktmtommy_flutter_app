@@ -87,6 +87,7 @@ const String kKeyData = 'data';
 const String kKeyCode = 'code';
 const String kKeyIsLoggedIn = 'is_logged_in';
 const String kKeyAccessToken = 'access_token';
+const String kKeyUserMode = 'user_mode';
 const String kKeyResetToken = 'reset_token';
 
 //============== Food Scan Data Keys (Exact Postman Field Names) =====================

@@ -56,7 +56,7 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
     if (success) {
       EasyLoading.showSuccess('Login Successful! 🎉');
 
-      NavigationService.navigateTo(Routes.athletBottomNavigationBar);
+      // NavigationService.navigateTo(Routes.athletBottomNavigationBar);
     } else {
       EasyLoading.showError('Invalid email or password 😔');
     }

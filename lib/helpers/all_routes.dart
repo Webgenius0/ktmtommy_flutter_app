@@ -152,7 +152,7 @@ final class Routes {
   static const String subscriptionTbiModeScreen = '/subscriptionTbiModeScreen';
   static const String subscriptionAthletModeScreen = '/subscriptionAthletModeScreen';
   static const String editMedicationScreen = '/editMedicationScreen';
-  static const String logInSelectionModeScreen = '/logInSelectionModeScreen';
+  // static const String logInSelectionModeScreen = '/logInSelectionModeScreen';
 
   ///=================Profile Section=====================================///
   static const String myProfileSettingScreen = '/myProfileSettingScreen';
@@ -763,14 +763,14 @@ final class RouteGenerator {
               builder: (context) => SubscriptionAthletModeScreen());
         }
 
-      case Routes.logInSelectionModeScreen:
-        if (Platform.isAndroid) {
-          return FadedTransitionRoute(
-              widget: LogInSelectionModeScreen(), settings: settings);
-        } else {
-          return CupertinoPageRoute(
-              builder: (context) => LogInSelectionModeScreen());
-        }
+      // case Routes.logInSelectionModeScreen:
+      //   if (Platform.isAndroid) {
+      //     return FadedTransitionRoute(
+      //         widget: LogInSelectionModeScreen(), settings: settings);
+      //   } else {
+      //     return CupertinoPageRoute(
+      //         builder: (context) => LogInSelectionModeScreen());
+      //   }
 
       case Routes.myProfileSettingScreen:
         if (Platform.isAndroid) {

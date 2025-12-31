@@ -9,6 +9,8 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/widget/custom_coming_soon.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/widget/widget_motivations.dart';
+import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import '../../../recovery_mood_section/recovery_journey/widget/custom_trainer.dart';
 
@@ -226,6 +228,9 @@ class _AthletTrainerScreenState extends State<AthletTrainerScreen> {
         //============================== Button ===============================//
 
                         CustomButtonWidget(
+                          onTap: (){
+                            NavigationService.navigateTo(Routes.aiChatScreen);
+                          },
                             textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                             image: DecorationImage(image: AssetImage(AppImages.orangebutton)),
                             text: 'Use This Trainer'),

@@ -9,6 +9,8 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -21,7 +23,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   // Controllers
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(text: appData.read(kKeyuserEmail));
   final TextEditingController _ageController = TextEditingController();
 
   // State variables
@@ -217,6 +219,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         UIHelper.verticalSpace(8.h),
                         // Email
                         _buildTextField(
+                          readOnly: true,
                           controller: _emailController,
                           hint: "Email Address",
                           icon: AppIcons.email_icon,

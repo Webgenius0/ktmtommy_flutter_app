@@ -17,7 +17,8 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class MyProfileSettingScreenAthlet extends StatefulWidget {
-  const MyProfileSettingScreenAthlet({super.key});
+  const MyProfileSettingScreenAthlet({super.key, this.isBack});
+  final bool? isBack;
 
   @override
   State<MyProfileSettingScreenAthlet> createState() => _MyProfileSettingScreenAthletState();
@@ -36,6 +37,7 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
               ///========== Appbar with back button and title=================
               ArrowButtonAtheleteFlow(
                 text: 'My Profile & Settings',
+                noBack: true,
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -289,19 +291,19 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
 
                       UIHelper.verticalSpace(20.h),
 
-                      GestureDetector(
-                        onTap: () {
-                          NavigationService.navigateTo(Routes.notificationScreenAthlet);
-                          log("================>>> Notification Settings Clicked notificationScreenAthlet");
-                        },
-                        child: _buildMenuRow(
-                          title: "Notification Settings",
-                          textColor: Colors.white,
-                          iconPath: AppIcons.notification_icon,
-                          trailing: Icons.arrow_forward_ios_rounded,
-                          iconColor: AppColors.cF55216,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     NavigationService.navigateTo(Routes.notificationScreenAthlet);
+                      //     log("================>>> Notification Settings Clicked notificationScreenAthlet");
+                      //   },
+                      //   child: _buildMenuRow(
+                      //     title: "Notification Settings",
+                      //     textColor: Colors.white,
+                      //     iconPath: AppIcons.notification_icon,
+                      //     trailing: Icons.arrow_forward_ios_rounded,
+                      //     iconColor: AppColors.cF55216,
+                      //   ),
+                      // ),
                       UIHelper.verticalSpace(10.h),
                       _divider(),
                       UIHelper.verticalSpace(10.h),
@@ -368,7 +370,7 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
 
                                   if(isLogout){
                                     NavigationService.navigateToUntilReplacement(
-                                        Routes.logInSelectionModeScreen);
+                                        Routes.loginScreenAthlet);
                                     appData.write(kKeyIsLoggedIn, false);
                                   }
 

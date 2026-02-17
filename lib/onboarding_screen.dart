@@ -36,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               UIHelper.verticalSpace(50.h),
               Center(
                 child: Image.asset(
-                  AppImages.bikeimage,
+                  AppImages.appLogo,
                   height: 204.h,
                 ),
               ),

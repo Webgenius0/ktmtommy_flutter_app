@@ -5,6 +5,7 @@ class AppImages {
   static const String alertLogo = '$_basePath/images/alertLogo.png';
   static const String bacroundimage = '$_basePath/bacroundimage.png';
   static const String bikeimage = '$_basePath/bikeimage.png';
+  static const String appLogo = '$_basePath/app_logo.png';
   static const String buttonBackground = '$_basePath/Button_Bacground.png';
   static const String withbacrounbutton = '$_basePath/withbacrounbutton.png';
   static const String recoverimage = '$_basePath/recoverimage.png';

@@ -44,7 +44,7 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
 
               children: [
                 UIHelper.verticalSpace(32.h),
-                Image.asset(AppImages.bikeimage, height: 141.h),
+                Image.asset(AppImages.appLogo, height: 141.h),
                 UIHelper.verticalSpace(23.h),
                 Text(
                   'Welcome Back!',

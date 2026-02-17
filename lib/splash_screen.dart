@@ -24,7 +24,7 @@ class SplashScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               UIHelper.verticalSpace(144.h),
-              Image.asset(AppImages.bikeimage,height: 246.h),
+              Image.asset(AppImages.appLogo,height: 246.h),
                UIHelper.verticalSpace(102.h),
               Lottie.asset('assets/lottie/loadinglotiefile.json',height: 200.h,width: 200.w),
 

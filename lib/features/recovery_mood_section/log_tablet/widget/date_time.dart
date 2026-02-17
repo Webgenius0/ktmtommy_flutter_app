@@ -71,9 +71,12 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
           child: SvgPicture.asset(AppIcons.clockicon, height: 24.h),
         ),
         UIHelper.horizontalSpace(4.w),
-        Text(
-          _selectedTime.format(context),
-          style: TextFontStyle.textStyle24w600cFFFFFFpoppins,
+        GestureDetector(
+          onTap: _handleTimePick,
+          child: Text(
+            _selectedTime.format(context),
+            style: TextFontStyle.textStyle24w600cFFFFFFpoppins,
+          ),
         ),
       ],
     );
@@ -132,11 +135,6 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
       ),
     );
   }
-
-
-
-
-
 
 
   Future<void> _handleTimePick() async {

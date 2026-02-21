@@ -41,7 +41,7 @@ class _CustomTrainerState extends State<CustomTrainer> {
             borderRadius: BorderRadius.circular(16.r),
             side: BorderSide(
               color: widget.isSelected ? AppColors.c87B842 : Colors.grey,
-              width: 1.w,
+              width: 2.w,
             ),
           ),
         ),

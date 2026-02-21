@@ -57,7 +57,7 @@ class TBIRecovery extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onTap,
-            child: Image.asset(AppImages.homeprofile, height: 48.h)),
+            child: Image.asset(AppImages.logo225, height: 48.h)),
       ],
     );
   }

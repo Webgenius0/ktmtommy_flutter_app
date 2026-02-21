@@ -430,13 +430,134 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                         UIHelper.verticalSpace(24.h),
 
                         ///============ Recent Medication Section===============
-                        Text(
-                          'Recent Medication',
-                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins
-                              .copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Recent Medication',
+                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                  .copyWith(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+
+                            TextButton(
+
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false, // user must choose
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      elevation: 10,
+                                      backgroundColor: Colors.white,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.warning_amber_rounded,
+                                              size: 60,
+                                              color: Color(0xFF87B842),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Text(
+                                              "Delete All Medications",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            SizedBox(height: 10),
+                                            Text(
+                                              "Are you sure you want to delete all medications? This action cannot be undone.",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black54,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            SizedBox(height: 25),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                // Cancel button
+                                                Expanded(
+                                                  child: OutlinedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    style: OutlinedButton.styleFrom(
+                                                      side: BorderSide(color: Colors.grey.shade400),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      padding: EdgeInsets.symmetric(vertical: 14),
+                                                    ),
+                                                    child: Text(
+                                                      "Cancel",
+                                                      style: TextStyle(color: Colors.grey.shade700),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 15),
+                                                // Delete button
+                                                Expanded(
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      padding: EdgeInsets.symmetric(vertical: 14),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      backgroundColor: Color(0xFF87B842), // your green
+                                                      elevation: 5,
+                                                    ),
+                                                    child: Text(
+                                                      "Delete",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+
+
+
+                              child: Text(
+                                'Delete All',
+                                style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                    .copyWith(
+                                  fontSize: 16.sp,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+
+
+                          ],
                         ),
                         UIHelper.verticalSpace(12.h),
 

@@ -318,6 +318,54 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
           ],
         ),
       ),
+      floatingActionButton: Container(
+        width: 60.w,
+        height: 68.w,
+        decoration: BoxDecoration(
+          color: AppColors.c87B842,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(
+              side: BorderSide(
+                 color: AppColors.c87B842,
+              )
+            ),
+            onTap: () {
+           NavigationService.navigateTo(Routes.dailySummeryScreen);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event_note_sharp,
+                  color: AppColors.c181818,
+                  size: 22.sp,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  "Summery",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.c181818,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

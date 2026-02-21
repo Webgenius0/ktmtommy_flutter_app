@@ -39,6 +39,8 @@ class AppImages {
  static const String doliamge = '$_basePath/doliamge.png';
  static const String standardimages = '$_basePath/standardimage.png';
  static const String chatBackground = '$_basePath/chat_background.png';
+ static const String logo225 = '$_basePath/225_logo.png';
+ static const String placeholderImage = '$_basePath/placeholder_image.png';
 
 
 

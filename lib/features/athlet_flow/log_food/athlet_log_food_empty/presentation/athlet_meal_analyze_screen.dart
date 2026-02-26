@@ -88,7 +88,7 @@ class _AthletMealAnalyzeScreenState extends State<AthletMealAnalyzeScreen> {
                ArrowButtonAtheleteFlow(
                               onTap: () => NavigationService.goBack,
                               text: 'Meal Analyze',
-                              subtitle: 'Snap your meal, get calorie estimates',
+                              subtitle: 'ap your meal, get calorie estimates',
                             ),
 
               UIHelper.verticalSpace(24.h),

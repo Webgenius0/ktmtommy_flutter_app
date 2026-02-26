@@ -1,3 +1,5 @@
+
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_scan_one_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/model/get_all_food_model.dart';
+import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:ktmtommy_apps/networks/api_acess.dart';
 import '../../../../../helpers/navigation_service.dart' show NavigationService;
@@ -27,6 +30,29 @@ class AthletLogFoodEmptyScreen extends StatefulWidget {
 class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isAnalyzing = false;
+
+  // Add selected filter index
+  int _selectedFilterIndex = 0; // 0 = All, 1 = Breakfast, 2 = Lunch, 3 = Dinner
+
+  // Filter options with icons
+  final List<Map<String, dynamic>> _filterOptions = [
+    {
+      "icon": Icons.filter_list, // Using a generic icon for "All"
+      "title": "All"
+    },
+    {
+      "icon": Icons.free_breakfast, // Coffee/breakfast icon
+      "title": 'Breakfast',
+    },
+    {
+      "icon": Icons.lunch_dining, // Lunch icon
+      "title": 'Lunch',
+    },
+    {
+      "icon": Icons.dinner_dining, // Dinner icon
+      "title": 'Dinner'
+    },
+  ];
 
   Future<void> _takePhoto() async {
     await _pickAndAnalyze(ImageSource.camera);
@@ -134,7 +160,6 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                   UIHelper.verticalSpace(32.h),
 
                   ///===========Image Section===================================
-
                   GestureDetector(
                     onTap: _isAnalyzing ? null : _showImageSourceOptions,
                     child: CustomDotted(
@@ -143,12 +168,113 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                           : 'Take a photo to track your meal',
                     ),
                   ),
-
                   UIHelper.verticalSpace(32.h),
-                  Text('Recent Meal',
-                      style: TextFontStyle.textStyle24w600cFFFFFFpoppins
-                          .copyWith(
-                              fontSize: 18.sp, fontWeight: FontWeight.w500)),
+
+                  ///===========Filter Buttons Section (Added from design)=====
+                  Container(
+                    height: 40.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _filterOptions.length,
+                      separatorBuilder: (context, index) =>
+                          UIHelper.horizontalSpace(12.w),
+                      itemBuilder: (context, index) {
+                        bool isSelected = _selectedFilterIndex == index;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedFilterIndex = index;
+                            });
+                            // Here you can add logic to filter meals based on selection
+                            // For example: filter by meal type (Breakfast, Lunch, Dinner)
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.orangeColor
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(30.r),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.orangeColor
+                                    : AppColors.c757575,
+                                width: 1.w,
+                              ),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    _filterOptions[index]["icon"],
+                                    size: 16.sp,
+                                    color: isSelected
+                                        ? AppColors.c181818
+                                        : AppColors.cFFFFFF,
+                                  ),
+                                  UIHelper.horizontalSpace(6.w),
+                                  Text(
+                                    _filterOptions[index]["title"],
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: isSelected
+                                          ? AppColors.c181818
+                                          : AppColors.cFFFFFF,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  UIHelper.verticalSpace(24.h),
+
+                  ///===========Recent Meal History Header=====================
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Recent Meal History',
+                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                  .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500)),
+                          Text('View and manage your food logs',
+                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                  .copyWith(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white70)),
+                        ],
+                      ),
+                      // Optional: Add a "View All" button if needed
+                      TextButton(
+                        onPressed: () {
+                          // Navigate to all meals history
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(50.w, 30.h),
+                        ),
+                        child: Text(
+                          'View All',
+                          style: TextStyle(
+                            color: AppColors.orangeColor,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   UIHelper.verticalSpace(12.h),
 
                   ///========Recent Meal Food card==============================
@@ -158,8 +284,8 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                             child: CircularProgressIndicator(
-                          color: AppColors.orangeColor,
-                        ));
+                              color: AppColors.orangeColor,
+                            ));
                       }
                       if (snapshot.hasError) {
                         return const Center(
@@ -171,21 +297,28 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
 
                       final List<Datum> meals = snapshot.data!.data!;
 
+                      // Optional: Filter meals based on selected filter
+                      List<Datum> filteredMeals = meals;
+                      if (_selectedFilterIndex > 0) {
+                        // Add your filtering logic here based on meal type
+                        // For example: filteredMeals = meals.where((meal) => meal.mealType == _filterOptions[_selectedFilterIndex]["title"]).toList();
+                      }
+
                       return ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: meals.length,
+                        itemCount: filteredMeals.length,
                         separatorBuilder: (context, index) =>
                             UIHelper.verticalSpace(12.h),
                         itemBuilder: (context, index) {
-                          final meal = meals[index];
+                          final meal = filteredMeals[index];
 
                           String formattedTime = "—";
                           if (meal.takenAt != null &&
                               meal.takenAt!.isNotEmpty) {
                             try {
                               final DateTime dateTime =
-                                  DateTime.parse(meal.takenAt!);
+                              DateTime.parse(meal.takenAt!);
                               formattedTime =
                                   DateFormat('h:mm a').format(dateTime);
                             } catch (e) {
@@ -242,7 +375,7 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                           child: const Center(
                                               child: CircularProgressIndicator(
                                                   color:
-                                                      AppColors.orangeColor)),
+                                                  AppColors.orangeColor)),
                                         );
                                       },
                                     ),
@@ -251,7 +384,7 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           meal.foodName ?? "Just now",
@@ -267,8 +400,8 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                           style: TextFontStyle
                                               .textStyle24w600cF55216poppins
                                               .copyWith(
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w500),
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w500),
                                         ),
                                         UIHelper.verticalSpace(8.h),
                                         Row(
@@ -295,6 +428,7 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                       );
                     },
                   ),
+                  UIHelper.verticalSpace(20.h), // Add bottom padding
                 ],
               ),
             ),
@@ -314,9 +448,9 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                         "Analyzing your meal...",
                         style: TextFontStyle.textStyle14w400c87B842poppins
                             .copyWith(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.primaryColor),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.orangeColor),
                       ),
                     ],
                   ),
@@ -325,6 +459,56 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
           ],
         ),
       ),
+
+      floatingActionButton: Container(
+        width: 60.w,
+        height: 68.w,
+        decoration: BoxDecoration(
+          color: Colors.deepOrange,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(
+                side: BorderSide(
+                  color: AppColors.c87B842,
+                )),
+            onTap: () {
+              NavigationService.navigateTo(Routes.athletDailySummeryScreen);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event_note_sharp,
+                  color: AppColors.cFFFFFF,
+                  size: 22.sp,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  "Summery",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.cFFFFFF,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+
+
     );
   }
 

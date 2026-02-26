@@ -40,6 +40,29 @@ class _AthletLogFoodScanOneScreenState
   bool _isSaving = false;
   String _currentImagePath = "";
 
+  // Add selected meal type
+  int _selectedMealIndex = 0; // 0 = Breakfast, 1 = Lunch, 2 = Dinner, 3 = Snack
+
+  // Meal type options with icons
+  final List<Map<String, dynamic>> _mealTypes = [
+    {
+      "icon": Icons.free_breakfast,
+      "title": "Breakfast",
+    },
+    {
+      "icon": Icons.lunch_dining,
+      "title": "Lunch",
+    },
+    {
+      "icon": Icons.dinner_dining,
+      "title": "Dinner",
+    },
+    {
+      "icon": Icons.fastfood,
+      "title": "Snack",
+    },
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -145,7 +168,7 @@ class _AthletLogFoodScanOneScreenState
 
       ///============= kKeyIngredients Map jsonEncode===========================
       final Map<String, dynamic> ingredientMap =
-          Map<String, dynamic>.from(appData.read(kKeyIngredients) ?? {});
+      Map<String, dynamic>.from(appData.read(kKeyIngredients) ?? {});
 
       final List<dynamic> insights =
           appData.read(kKeyNutritionalInsights) ?? [];
@@ -156,7 +179,7 @@ class _AthletLogFoodScanOneScreenState
         image: imageFile,
         food_name: appData.read(kKeyFoodName) ?? "Unknown Food",
         total_estimated_calories:
-            (appData.read(kKeyTotalCalories) ?? 0).toString(),
+        (appData.read(kKeyTotalCalories) ?? 0).toString(),
         carbs_percentage: appData.read(kKeyCarbsPercentage) ?? "0%",
         carbs_in_gm: appData.read(kKeyCarbsInGm) ?? "0g",
         protein_percentage: appData.read(kKeyProteinPercentage) ?? "0%",
@@ -213,7 +236,6 @@ class _AthletLogFoodScanOneScreenState
                 text: 'Log Food',
                 subtitle: 'Snap your meal, get calorie estimates',
               ),
-
               UIHelper.verticalSpace(24.h),
 
               ///========================== Pro Tip===========================
@@ -262,6 +284,83 @@ class _AthletLogFoodScanOneScreenState
 
                       UIHelper.verticalSpace(18.h),
 
+                      ///===================== Meal Type Selection =====================
+                      Text('Meal Type',
+                          style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                              .copyWith(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500)),
+
+                      UIHelper.verticalSpace(12.h),
+
+                      /// Meal Type Filter Buttons - Fixed GridView
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 3.5, // Adjusted for better button height
+                        ),
+                        itemCount: _mealTypes.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          bool isSelected = _selectedMealIndex == index;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedMealIndex = index;
+                              });
+                              // Here you can save the selected meal type
+                              log("Selected meal type: ${_mealTypes[index]["title"]}");
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w, vertical: 8.h),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColors.orangeColor
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(30.r),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.orangeColor
+                                      : AppColors.c757575,
+                                  width: 1.w,
+                                ),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      _mealTypes[index]["icon"],
+                                      size: 18.sp,
+                                      color: isSelected
+                                          ? AppColors.c181818
+                                          : AppColors.orangeColor,
+                                    ),
+                                    UIHelper.horizontalSpace(8.w),
+                                    Text(
+                                      _mealTypes[index]["title"],
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: isSelected
+                                            ? AppColors.c181818
+                                            : AppColors.cFFFFFF,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      UIHelper.verticalSpace(18.h),
+
                       ///===================== Chicken Widget ========================
                       AthletCustomChiken(
                           text: foodName, imagePath: _currentImagePath),
@@ -274,8 +373,8 @@ class _AthletLogFoodScanOneScreenState
                       Text('Notes',
                           style: TextFontStyle.textStyle24w600cFFFFFFpoppins
                               .copyWith(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500)),
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500)),
 
                       UIHelper.verticalSpace(12.h),
 
@@ -292,14 +391,14 @@ class _AthletLogFoodScanOneScreenState
 
                       _isSaving
                           ? const Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.orangeColor))
+                          child: CircularProgressIndicator(
+                              color: AppColors.orangeColor))
                           : CustomButtonWidget(
-                              text: 'Save Log',
-                              onTap: _saveLog,
-                              image: DecorationImage(
-                                  image: AssetImage(AppImages.orangebutton)),
-                            ),
+                        text: 'Save Log',
+                        onTap: _saveLog,
+                        image: DecorationImage(
+                            image: AssetImage(AppImages.orangebutton)),
+                      ),
 
                       UIHelper.verticalSpace(30.h),
                     ],

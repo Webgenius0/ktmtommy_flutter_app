@@ -1,27 +1,29 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
+import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/log_activity_calander.dart';
-import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/widget/time_custom.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-class DailySummerySettingsScreen extends StatefulWidget {
-  const DailySummerySettingsScreen({super.key});
+class AthletDailySummerySettingsScreen extends StatefulWidget {
+  const AthletDailySummerySettingsScreen({super.key});
 
   @override
-  State<DailySummerySettingsScreen> createState() =>
-      _DailySummerySettingsScreenState();
+  State<AthletDailySummerySettingsScreen> createState() =>
+      _AthletDailySummerySettingsScreenState();
 }
 
-class _DailySummerySettingsScreenState
-    extends State<DailySummerySettingsScreen> {
+class _AthletDailySummerySettingsScreenState
+    extends State<AthletDailySummerySettingsScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
@@ -52,7 +54,7 @@ class _DailySummerySettingsScreenState
             children: [
               UIHelper.verticalSpace(20),
 
-              CustomAppbarWidget(
+              ArrowButtonAtheleteFlow(
                 onTap: () => NavigationService.goBack(),
                 text: 'Settings',
                 subtitle: 'Manage your dietitian email preferences',
@@ -81,12 +83,14 @@ class _DailySummerySettingsScreenState
                                 Expanded(
                                   child: Text(
                                     'Daily Summary',
-                                    style: TextFontStyle.textStyle20w700c000000poppins.copyWith(color: Colors.white),
+                                    style: TextFontStyle.textStyle20w700c000000poppins.copyWith(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 Switch(
                                   value: isEnabled,
-                                  activeColor: AppColors.c87B842,
+                                  activeColor: AppColors.orangeColor, // Changed to orange
                                   onChanged: (v) {
                                     setState(() {
                                       isEnabled = v;
@@ -99,7 +103,9 @@ class _DailySummerySettingsScreenState
                             Text(
                               'Share your daily food intake with your dietitian',
                               style: TextFontStyle
-                                  .textStyle14w400c87B842poppins.copyWith(color: Colors.white),
+                                  .textStyle14w400c87B842poppins.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
 
                             UIHelper.verticalSpace(20),
@@ -161,7 +167,9 @@ class _DailySummerySettingsScreenState
                             Text(
                               'Summary will be sent daily at 3:30 PM',
                               style: TextFontStyle
-                                  .textStyle14w400c87B842poppins.copyWith(color: Colors.white),
+                                  .textStyle14w400c87B842poppins.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -186,7 +194,10 @@ class _DailySummerySettingsScreenState
                                 Text(
                                   '📧 How it works',
                                   style: TextFontStyle
-                                      .textStyle14w400c87B842poppins.copyWith(color: Colors.white),
+                                      .textStyle14w400c87B842poppins.copyWith(
+                                    color: AppColors.orangeColor, // Changed to orange
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
@@ -211,13 +222,15 @@ class _DailySummerySettingsScreenState
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Icon(Icons.lock_outline,
-                                  color: AppColors.primaryColor, size: 18.sp),
+                              child: Icon(
+                                Icons.lock_outline,
+                                color: AppColors.orangeColor, // Changed to orange
+                                size: 18.sp,
+                              ),
                             ),
                             UIHelper.horizontalSpace(8),
                             Expanded(
@@ -225,11 +238,19 @@ class _DailySummerySettingsScreenState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:[
-                                  Text("Privacy Notice",style: TextFontStyle.headline18w500cFFFFFF.copyWith(color: Color(0xFF87B842),fontSize: 16),),
+                                  Text(
+                                    "Privacy Notice",
+                                    style: TextFontStyle.headline18w500cFFFFFF.copyWith(
+                                      color: AppColors.orangeColor, // Changed to orange
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   Text(
                                     'This demo app is not meant for collecting PII or securing sensitive health data. Please consult your healthcare provider for professional medical advice.',
                                     style: TextFontStyle
-                                        .textStyle14w400c87B842poppins.copyWith(color: Colors.white),
+                                        .textStyle14w400c87B842poppins.copyWith(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -247,8 +268,13 @@ class _DailySummerySettingsScreenState
               Padding(
                 padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
                 child: CustomButtonWidget(
+
                   text: 'Save Settings',
+                  image: DecorationImage(
+                      image: AssetImage(AppImages.orangebutton)),
                   onTap: () {},
+                  // You might want to add orange styling to the button
+                  // If CustomButtonWidget supports color customization
                 ),
               ),
             ],
@@ -264,17 +290,24 @@ class _DailySummerySettingsScreenState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('•  ',
-              style:
-              TextFontStyle.textStyle14w400c87B842poppins.copyWith(color: Colors.white,fontSize: 20)),
+          Text(
+            '•  ',
+            style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
+              color: AppColors.orangeColor, // Changed to orange
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Expanded(
-            child: Text(text,
-                style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(color: Colors.white)),
+            child: Text(
+              text,
+              style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
-

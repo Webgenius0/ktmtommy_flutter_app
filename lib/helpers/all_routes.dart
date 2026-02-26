@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:ktmtommy_apps/athlet_bottom_navigation_bar.dart';
 import 'package:ktmtommy_apps/bottom_nav_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/althelete_home_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_daily_summery.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_daily_summery_chating_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/change_password_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/edit_profile_screen_athlet.dart';
@@ -12,6 +14,8 @@ import 'package:ktmtommy_apps/features/chat/presentation/chat_screen.dart';
 import 'package:ktmtommy_apps/features/log_in_selection_mode/log_in_selection_mode_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/add_equipment_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/home_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/daily_summary_settings_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/daily_summery_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_empty_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_scan_two_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_screen.dart';
@@ -130,6 +134,8 @@ final class Routes {
   static const String experienceLevelScreen = '/experienceLevelScreen';
   static const String personalizedScreen = '/personalizedScreen';
   static const String allSetPersonalInformationScreen = '/allSetPersonalInformationScreen';
+  static const String dailySummeryScreen = '/dailySummeryScreen';
+  static const String athletDailySummeryScreen = '/athletDailySummeryScreen';
 //===============
 
   static const String athletLogFoodEmptyScreen = '/athletLogFoodEmptyScreen';
@@ -166,6 +172,8 @@ final class Routes {
   static const String myProfileSettingScreenAthlet = '/myProfileSettingScreenAthlet';
   static const String editProfileScreenAthlet = '/editProfileScreenAthlet';
   static const String notificationScreenAthlet = '/notificationScreenAthlet';
+  static const String dailySummerySettingsScreen = '/dailySummerySettingsScreen';
+  static const String athletDailySummerySettingsScreen = '/athletDailySummerySettingsScreen';
 
 
 
@@ -199,6 +207,14 @@ final class RouteGenerator {
           return CupertinoPageRoute(builder: (context) => BottomNavScreen());
         }
 
+      case Routes.athletDailySummerySettingsScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AthletDailySummerySettingsScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AthletDailySummerySettingsScreen());
+        }
+
       // case Routes.navigationScreen:
       //   if (Platform.isAndroid) {
       //     return FadedTransitionRoute(
@@ -222,6 +238,24 @@ final class RouteGenerator {
               widget: LogInRecoveryModeScreen(), settings: settings);
         } else {
           return CupertinoPageRoute(builder: (context) => LogInRecoveryModeScreen());
+        }
+
+
+      case Routes.athletDailySummeryScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AthletDailySummeryScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AthletDailySummeryScreen());
+        }
+
+
+      case Routes.dailySummerySettingsScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: DailySummerySettingsScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => DailySummerySettingsScreen());
         }
 
 
@@ -538,6 +572,15 @@ final class RouteGenerator {
         } else {
           return CupertinoPageRoute(
               builder: (context) => PersonalInformationSignUpScreen());
+        }
+
+      case Routes.dailySummeryScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: DailySummeryScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => DailySummeryScreen());
         }
 
       case Routes.welcomeAtheleteScreen:

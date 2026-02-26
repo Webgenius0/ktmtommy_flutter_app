@@ -57,9 +57,9 @@ class TextFontStyle {
 
 
   static var headline18w500cFFFFFF = GoogleFonts.poppins(
-    color: AppColors.c979CA8,
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w400,
+    color: AppColors.cFFFFFF,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
   );
 
 
@@ -199,7 +199,6 @@ static final textStyle14w400cA3A3A3poppins = TextStyle(
     color: AppColors.c87B842,
     fontSize: 16,
     fontFamily: 'poppins',
-   fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w400,
     height: 1.30,
   );

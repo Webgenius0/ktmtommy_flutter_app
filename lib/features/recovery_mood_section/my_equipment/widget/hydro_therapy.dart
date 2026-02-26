@@ -20,7 +20,7 @@ class HydroTherapy extends StatefulWidget {
 }
 
 class _HydroTherapyState extends State<HydroTherapy> {
-  List<String> durationList = ['Once', 'Everyday', 'Weekends', 'Custom'];
+  List<String> durationList = ['Once',"Daily" 'Everyday', 'Fortnightly ', 'Custom'];
   List<String> weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat'];
 
   late String selectedUnit = durationList[0];

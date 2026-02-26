@@ -3,6 +3,8 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/model/al
 import 'package:rxdart/subjects.dart';
 
 const String baseUrl = "https://admin.mybalancedayapp.com";
+const String personImageUrl = "https://images.unsplash.com/photo-1729101143873-d80050bae219?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kaWFucyUyMGdpcmx8ZW58MHx8MHx8fDA%3D";
+
 
 final class NetworkConstants {
   NetworkConstants._();

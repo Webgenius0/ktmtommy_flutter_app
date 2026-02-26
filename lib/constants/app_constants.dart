@@ -183,6 +183,7 @@ const String kKeyUserLogInType = 'user_login_type';
 
 // * Recover user signup data
 const String kKeyuserEmail = 'userEmail';
+const String kKeyuserPhone = 'userNumber';
 const String kKeyuserPassword = 'userPassword';
 
 const String kKeyuserFullName = 'userFullName';
@@ -195,6 +196,7 @@ const String kKeyuserReminderEndTime = 'userReminderEndTime';
 const String kKeyuserAthleteFullName = 'userAthleteFullName';
 const String kKeyuserAthletePassword = 'userAthletePassword';
 const String kKeyuserAthleteEmail = 'userAthleteEmail';
+const String kKeyuserAthletePhone = 'userAthletenumber';
 const String kKeyAthleteSelectGoal = 'athleteSelectGoal';
 const String kKeyAthleteSelectSport = 'athleteSelectGoalSport';
 const String kKeyAthleteExperiencelevel = 'athleteExperiencelevel';

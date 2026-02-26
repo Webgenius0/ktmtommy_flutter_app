@@ -134,6 +134,9 @@ class AppIcons {
   static const String profile_icon = '$iconsRoute/profile_icon.svg';
   static const String email_icon = '$iconsRoute/email_icon.svg';
   static const String password_key = '$iconsRoute/password_key.svg';
+  static const String bestIcon = '$iconsRoute/best_icon.svg';
+  static const String goodIcon = '$iconsRoute/good.svg';
+  static const String poorIcon = '$iconsRoute/pood.svg';
 
 
 

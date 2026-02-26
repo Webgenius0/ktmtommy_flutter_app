@@ -28,6 +28,7 @@ class _LogActivityScreenState extends State<LogActivityScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDateTime;
@@ -109,6 +110,20 @@ class _LogActivityScreenState extends State<LogActivityScreen> {
                                     _selectedDateTime = selectedDate;
 
                                     dateController.text = DateFormat('dd MMM yyyy').format(selectedDate);
+                                  });
+                                },
+                              ),
+                              UIHelper.verticalSpace(18.h),
+
+                              Text('Time', style: TextFontStyle.textStyle14w400cA3A3A3poppins),
+                              UIHelper.verticalSpace(4.h),
+                              LogActivityTimePicker(
+                                controller: timeController,
+                                hintText: 'Select time',
+                                onTimeSelected: (DateTime selectedTime) {
+                                  setState(() {
+                                    _selectedDateTime = selectedTime; // This combines date and time
+                                    _selectedTime = DateFormat('HH:mm:ss').format(selectedTime);
                                   });
                                 },
                               ),

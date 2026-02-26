@@ -382,14 +382,17 @@ class _LogSupplementScreenState extends State<LogSupplementScreen> {
 
                           ),
                           UIHelper.verticalSpace(24.h),
-                          Text(
-                            'Recent Medication',
-                            style: TextFontStyle.textStyle24w600cFFFFFFpoppins
-                                .copyWith(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+
+                              Text(
+                                'Recent Medication',
+                                style: TextFontStyle.textStyle24w600cFFFFFFpoppins
+                                    .copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+
+
                           UIHelper.verticalSpace(12.h),
 
 

@@ -54,7 +54,7 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
                     log("=============Profile Icon Click and go to myProfileSettingScreenAthlet");
 
                   },
-                    profileImageAsset: AppImages.tomimage,
+                    profileImageAsset: AppImages.logo225,
                     title: 'LET S GRIND, ALEX. NO EXCUSES TODAY.'),
                 UIHelper.verticalSpace(18.h),
 

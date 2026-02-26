@@ -134,6 +134,8 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
                     );
                   }
 
+            final totalItem = snapshot.data?.data?.length??0;
+
                   // Data Available → TabBar + List
                   return Column(
                     children: [
@@ -170,92 +172,136 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
                               );
                             }
 
-                            return ListView.builder(
-                              padding: EdgeInsets.symmetric(horizontal: 24.w),
-                              itemCount: filtered.length,
-                              itemBuilder: (context, index) {
-                                final item = filtered[index];
-
-                                return Container(
-                                  margin: EdgeInsets.only(bottom: 16.h),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c181818,
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    border: Border.all(color: AppColors.c454545, width: 1.w),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    child: Column(
+                            return Column(
+                              children: [
+                                Container(
+                                  width: 327,
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFF181818),
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        width: 1,
+                                        color: const Color(0xFF87B842)
+                                      ),
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                  ),child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        Text("Total Equipment",style: TextFontStyle.textStyle16w400c5C5C5C,),
+                                        Text("${totalItem} items",style: TextFontStyle.headline18w500cFFFFFF,),
 
-                                        // Image from image_url (Full URL)
-                                        SizedBox(
-                                          height: 140.h,
-                                          width: double.infinity,
-                                          child: item.imageUrl != null && item.imageUrl!.isNotEmpty
-                                              ? CachedNetworkImage(
-                                            imageUrl: item.imageUrl!,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) => Container(
-                                              color: Colors.grey.shade800,
-                                              child: const Center(
-                                                child: CircularProgressIndicator(
-                                                  color: AppColors.c87B842,
-                                                  strokeWidth: 2,
-                                                ),
-                                              ),
-                                            ),
-                                            errorWidget: (context, url, error) => Image.asset(
-                                              AppImages.copyImage,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                              : Image.asset(AppImages.copyImage, fit: BoxFit.cover),
+                                      ],
+                                    ),
+
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
+                                      decoration: ShapeDecoration(
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            width: 1,
+                                            color: const Color(0xFF87B842) /* Secondary-Color-2 */,
+                                          ),
+                                          borderRadius: BorderRadius.circular(25),
                                         ),
+                                      ),child: Text("$totalItem",style: TextFontStyle.textStyle20w700c000000poppins.copyWith(color: Colors.white),),
+                                    )
+                                    
+                                  ],
+                                ),
+                                ),
+                                UIHelper.verticalSpace(24),
+                                Expanded(  // ← Add Expanded here
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                                    itemCount: filtered.length,
+                                    itemBuilder: (context, index) {
+                                      final item = filtered[index];
 
-                                        Padding(
-                                          padding: EdgeInsets.all(16.w),
+                                      return Container(
+                                        margin: EdgeInsets.only(bottom: 16.h),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.c181818,
+                                          borderRadius: BorderRadius.circular(20.r),
+                                          border: Border.all(color: AppColors.c454545, width: 1.w),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(20.r),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              // Name
-                                              Text(
-                                                item.name ?? 'No Name',
-                                                style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18.sp,
-                                                ),
-                                              ),
-                                              UIHelper.verticalSpace(8.h),
-
-                                              // Type + Icon
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    _getIconForType(item.type),
-                                                    height: 22.h,
-                                                    color: AppColors.c87B842,
-                                                  ),
-                                                  UIHelper.horizontalSpace(8.w),
-                                                  Text(
-                                                    item.type ?? 'Others',
-                                                    style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
-                                                      fontSize: 16.sp,
+                                              // Image from image_url (Full URL)
+                                              SizedBox(
+                                                height: 140.h,
+                                                width: double.infinity,
+                                                child: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                                    ? CachedNetworkImage(
+                                                  imageUrl: item.imageUrl!,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) => Container(
+                                                    color: Colors.grey.shade800,
+                                                    child: const Center(
+                                                      child: CircularProgressIndicator(
+                                                        color: AppColors.c87B842,
+                                                        strokeWidth: 2,
+                                                      ),
                                                     ),
                                                   ),
+                                                  errorWidget: (context, url, error) => Image.asset(
+                                                    AppImages.copyImage,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )
+                                                    : Image.asset(AppImages.copyImage, fit: BoxFit.cover),
+                                              ),
 
+                                              Padding(
+                                                padding: EdgeInsets.all(16.w),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    // Name
+                                                    Text(
+                                                      item.name ?? 'No Name',
+                                                      style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 18.sp,
+                                                      ),
+                                                    ),
+                                                    UIHelper.verticalSpace(8.h),
 
-                                                ],
+                                                    // Type + Icon
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          _getIconForType(item.type),
+                                                          height: 22.h,
+                                                          color: AppColors.c87B842,
+                                                        ),
+                                                        UIHelper.horizontalSpace(8.w),
+                                                        Text(
+                                                          item.type ?? 'Others',
+                                                          style: TextFontStyle.textStyle14w400c87B842poppins.copyWith(
+                                                            fontSize: 16.sp,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             );
                           }).toList(),
                         ),

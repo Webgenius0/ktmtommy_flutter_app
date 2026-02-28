@@ -386,15 +386,26 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          meal.foodName ?? "Just now",
-                                          style: TextFontStyle
-                                              .textStyle24w600cFFFFFFpoppins
-                                              .copyWith(fontSize: 18.sp),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  meal.foodName ?? "Just now",
+                                                  style: TextFontStyle
+                                                      .textStyle24w600cFFFFFFpoppins
+                                                      .copyWith(fontSize: 18.sp),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                UIHelper.verticalSpace(8.h),
+                                              ],
+                                            ),
+                                            IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,))
+                                          ],
                                         ),
-                                        UIHelper.verticalSpace(8.h),
                                         Text(
                                           "${meal.totalEstimatedCalories ?? 0} Cal",
                                           style: TextFontStyle

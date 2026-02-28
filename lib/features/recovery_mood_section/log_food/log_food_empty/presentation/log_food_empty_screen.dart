@@ -379,15 +379,28 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          meal.foodName ?? "Just now",
-                                          style: TextFontStyle
-                                              .textStyle24w600cFFFFFFpoppins
-                                              .copyWith(fontSize: 18.sp),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 150,
+                                                  child: Text(meal.foodName ?? "Just now",
+                                                    style: TextFontStyle
+                                                        .textStyle24w600cFFFFFFpoppins
+                                                        .copyWith(fontSize: 18.sp),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                UIHelper.verticalSpace(8.h),
+                                              ],
+                                            ),
+                                            IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,))
+                                          ],
                                         ),
-                                        UIHelper.verticalSpace(8.h),
                                         Text(
                                           "${meal.totalEstimatedCalories ?? 0} Cal",
                                           style: TextFontStyle
@@ -486,7 +499,7 @@ class _LogFoodEmptyScreenState extends State<LogFoodEmptyScreen> {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  "Summery",
+                  "Summary",
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w500,

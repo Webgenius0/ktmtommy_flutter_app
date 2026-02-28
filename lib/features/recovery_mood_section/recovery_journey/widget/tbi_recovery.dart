@@ -13,8 +13,9 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 class TBIRecovery extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
+  final Widget widget;
 
-  const TBIRecovery({super.key, required this.title, this.onTap});
+  const TBIRecovery({super.key, required this.title, this.onTap, required this.widget});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class TBIRecovery extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onTap,
-            child: Image.asset(AppImages.logo225, height: 48.h)),
+            child: widget)
       ],
     );
   }

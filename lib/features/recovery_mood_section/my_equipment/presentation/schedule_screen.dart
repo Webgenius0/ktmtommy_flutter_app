@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
+import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/widget/balance_dialouge_box.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/tbi_recovery.dart';
@@ -39,7 +40,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
             Padding(
               padding:  EdgeInsets.all(24.sp),
-              child: TBIRecovery(title: 'Schedule'),
+              child: TBIRecovery(title: 'Schedule',widget: Image.asset( AppImages.logo225)),
             ),
             UIHelper.verticalSpace(18.h),
 

@@ -6,6 +6,8 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/wi
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/recovery_journey.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/special_thanks.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/tbi_recovery.dart';
+import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
@@ -32,7 +34,11 @@ class _MyStoryScreenState extends State<MyStoryScreen> {
               padding:  EdgeInsets.symmetric(horizontal: 24.w,vertical: 12.h),
               child: Column(
                 children: [
-                  TBIRecovery(title: 'My Story'),
+                  TBIRecovery(
+                    widget: Icon(Icons.settings,color: AppColors.c87B842,size: 35,),
+                    title: 'My Story',onTap: (){
+              NavigationService.navigateTo(Routes.myProfileSettingScreen);
+                  },),
                 ],
               ),
             ),

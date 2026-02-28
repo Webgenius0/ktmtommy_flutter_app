@@ -26,7 +26,9 @@ class _MyEquipmentScreenState extends State<MyEquipmentScreen> {
           padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 12.h),
           child: Column(
             children: [
-              TBIRecovery(title: 'My Equipment'),
+              TBIRecovery(title: 'My Equipment',
+              widget: Image.asset( AppImages.logo225),
+              ),
               UIHelper.verticalSpace(32.h),
               Image.asset(AppImages.copyImage,height: 196.h,),
               UIHelper.verticalSpace(48.h),

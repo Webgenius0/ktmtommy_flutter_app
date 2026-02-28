@@ -55,7 +55,7 @@ class _MyEquipmentTwoScreenState extends State<MyEquipmentTwoScreen>
             // Header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-              child: TBIRecovery(title: 'My Equipment'),
+              child: TBIRecovery(title: 'My Equipment',widget: Image.asset( AppImages.logo225)),
             ),
 
             // Main Content

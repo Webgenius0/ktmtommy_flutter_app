@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
+import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/widget/custom_loog_food.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/widget/custom_time_line.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/tbi_recovery.dart';
@@ -34,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   TBIRecovery(
+
+                    widget: Image.asset( AppImages.logo225),
                       onTap: () {
 
                         NavigationService.navigateTo(Routes.myProfileSettingScreen);

@@ -18,6 +18,13 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_e
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/daily_summery_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_empty_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/log_food_scan_two_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/my_medicines_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/add_medicine_basic_info_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/add_medicine_taking_schedule_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/add_medicine_duration_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/add_medicine_additional_info_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/add_medicine_success_screen.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/presentation/medicine_details_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/meal_analyze_save_preview_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_tablet/presentation/edit_medication_screen.dart';
@@ -121,6 +128,13 @@ final class Routes {
   static const String newLogEntryScreen = '/newLogEntryScreen';
   static const String scheduleScreen = '/scheduleScreen';
   static const String homeScreen = '/homeScreen';
+  static const String myMedicinesScreen = '/myMedicinesScreen';
+  static const String addMedicineBasicInfoScreen = '/addMedicineBasicInfoScreen';
+  static const String addMedicineTakingScheduleScreen = '/addMedicineTakingScheduleScreen';
+  static const String addMedicineDurationScreen = '/addMedicineDurationScreen';
+  static const String addMedicineAdditionalInfoScreen = '/addMedicineAdditionalInfoScreen';
+  static const String addMedicineSuccessScreen = '/addMedicineSuccessScreen';
+  static const String medicineDetailsScreen = '/medicineDetailsScreen';
   static const String logFoodScanOneScreen = '/logFoodScanOneScreen';
   static const String mealAnalyzeScreen = '/mealAnalyzeScreen';
   static const String athletMealAnalyzeScreen = '/athletMealAnalyzeScreen';
@@ -506,6 +520,75 @@ final class RouteGenerator {
           return FadedTransitionRoute(widget: HomeScreen(), settings: settings);
         } else {
           return CupertinoPageRoute(builder: (context) => HomeScreen());
+        }
+
+      case Routes.myMedicinesScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: MyMedicinesScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => MyMedicinesScreen());
+        }
+
+      case Routes.addMedicineBasicInfoScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isEdit = args?['isEdit'] ?? false;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: AddMedicineBasicInfoScreen(
+            name: args?['name'],
+            dosage: args?['dosage'],
+            type: args?['type'],
+            isEdit: isEdit,
+          ), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AddMedicineBasicInfoScreen(
+            name: args?['name'],
+            dosage: args?['dosage'],
+            type: args?['type'],
+            isEdit: isEdit,
+          ));
+        }
+
+      case Routes.addMedicineTakingScheduleScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isEdit = args?['isEdit'] ?? false;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: AddMedicineTakingScheduleScreen(isEdit: isEdit), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AddMedicineTakingScheduleScreen(isEdit: isEdit));
+        }
+
+      case Routes.addMedicineDurationScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isEdit = args?['isEdit'] ?? false;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: AddMedicineDurationScreen(isEdit: isEdit), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AddMedicineDurationScreen(isEdit: isEdit));
+        }
+
+      case Routes.addMedicineAdditionalInfoScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isEdit = args?['isEdit'] ?? false;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: AddMedicineAdditionalInfoScreen(isEdit: isEdit), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AddMedicineAdditionalInfoScreen(isEdit: isEdit));
+        }
+
+      case Routes.addMedicineSuccessScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isEdit = args?['isEdit'] ?? false;
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: AddMedicineSuccessScreen(isEdit: isEdit), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => AddMedicineSuccessScreen(isEdit: isEdit));
+        }
+
+      case Routes.medicineDetailsScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(widget: MedicineDetailsScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => MedicineDetailsScreen());
         }
 
       case Routes.mealAnalyzeScreen:

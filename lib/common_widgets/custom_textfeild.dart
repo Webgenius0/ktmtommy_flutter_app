@@ -69,7 +69,7 @@ class CustomTextfield extends StatefulWidget {
     this.fillColor,
     this.hintTextSyle,
     this.borderColor,
-    this.textAlign = TextAlign.center,
+    this.textAlign  ,
     this.ontap,
     this.contentPadding,  this.idoNotErrorBorder = false
   });

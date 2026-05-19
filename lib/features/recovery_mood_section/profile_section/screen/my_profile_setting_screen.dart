@@ -115,8 +115,7 @@ class _MyProfileSettingScreenState extends State<MyProfileSettingScreen> {
               ///===============Manage Subscription===================///
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Container(
-                  height: 197.h,
+                child: Container( 
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.c87B842),

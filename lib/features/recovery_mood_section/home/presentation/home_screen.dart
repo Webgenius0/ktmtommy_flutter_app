@@ -1,8 +1,8 @@
-import 'dart:developer';
+ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
@@ -22,6 +22,164 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  ///================= MEDICINE DIALOG =================
+  void showMedicineDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              color: AppColors.bacroundColorBlack,
+              borderRadius: BorderRadius.circular(28.r),
+              border: Border.all(
+                color: AppColors.c5E5E5E.withOpacity(.3),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                ///=========== TOP IMAGE ===========
+                Image.asset(
+                  AppImages.logo225,
+                  height: 70.h,
+                ),
+
+                UIHelper.verticalSpace(18.h),
+
+                ///=========== TITLE ===========
+                Text(
+                  "Log Medicines",
+                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                UIHelper.verticalSpace(28.h),
+
+                ///=========== LOG PRESCRIBED ===========
+                customDialogCard(
+                  onTap: () {
+                    Navigator.pop(context);
+
+                    log("Log Prescribed Medicine");
+                    NavigationService.navigateTo(Routes.myMedicinesScreen);
+                  },
+                  icon: Icons.add,
+                  iconBg: const Color(0xffA6FF00),
+                  title: "Log Prescribed Medicine",
+                  subtitle: "Add a new medicine to your schedule",
+                ),
+
+                UIHelper.verticalSpace(18.h),
+
+                ///=========== LOG TABLET ===========
+                customDialogCard(
+                  onTap: () {
+                    Navigator.pop(context);
+
+                    log("Log Tablet");
+
+                    NavigationService.navigateTo(
+                      Routes.logTabletScreen,
+                    );
+                  },
+                  icon: Icons.grid_view_rounded,
+                  iconBg: Colors.red,
+                  title: "Log Tablet",
+                  subtitle: "Record Medication",
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  ///================= CUSTOM DIALOG CARD =================
+  Widget customDialogCard({
+    required VoidCallback onTap,
+    required IconData icon,
+    required Color iconBg,
+    required String title,
+    required String subtitle,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18.r),
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 18.h,
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xff121212),
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(
+            color: const Color(0xffA6FF00),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+
+            ///=========== ICON ===========
+            Container(
+              height: 46.h,
+              width: 46.w,
+              decoration: BoxDecoration(
+                color: iconBg,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 22.sp,
+              ),
+            ),
+
+            UIHelper.horizontalSpace(14.w),
+
+            ///=========== TEXT ===========
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Text(
+                    title,
+                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+
+                  UIHelper.verticalSpace(4.h),
+
+                  Text(
+                    subtitle,
+                    style: TextFontStyle.textStyle14w500c242424.copyWith(
+                      color: Colors.white38,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,36 +188,44 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Column(
                 children: [
                   TBIRecovery(
-
-                    widget: Image.asset( AppImages.logo225),
-                      onTap: () {
-
-                        NavigationService.navigateTo(Routes.myProfileSettingScreen);
-                      },
-                      title: 'My Balance Day'),
+                    widget: Image.asset(AppImages.logo225),
+                    onTap: () {
+                      NavigationService.navigateTo(
+                        Routes.myProfileSettingScreen,
+                      );
+                    },
+                    title: 'My Balance Day',
+                  ),
                 ],
               ),
             ),
+
             UIHelper.verticalSpace(24.h),
+
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 22.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ///===========Log Tablet Section========================
+
+                        ///=========== LOG TABLET =================
                         CustomLoogFood(
                           onTap: () {
-                            log("========>>>>>>>>>Log Tablet Clicked go to logTabletScreen");
-                            NavigationService.navigateTo(Routes.logTabletScreen);
+
+                            /// OPEN DIALOG
+                            showMedicineDialog();
+
                           },
                           icon: SvgPicture.asset(AppIcons.logTableticon),
                           subtitle: 'Record Medication',
@@ -70,12 +236,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           title: 'Log Tablet',
                         ),
+
                         UIHelper.horizontalSpace(20.w),
-                        ///================Log Food Section=====================
+
+                        ///=========== LOG FOOD =================
                         CustomLoogFood(
                           onTap: () {
-                            log("========>>>>>>>>>Log Food Clicked go to logFoodEmptyScreen");
-                            NavigationService.navigateTo(Routes.logFoodEmptyScreen);
+                            log(
+                              "========>>>>>>>>>Log Food Clicked",
+                            );
+
+                            NavigationService.navigateTo(
+                              Routes.logFoodEmptyScreen,
+                            );
                           },
                           icon: SvgPicture.asset(AppIcons.logfoodicon),
                           subtitle: 'Track Nutrition',
@@ -88,16 +261,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+
                     UIHelper.verticalSpace(20.h),
-                    ///====Tablet, Food, Steps, Activity Section================
+
+                    ///=========== SECOND ROW =================
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ///==============Log Steps Section=====================
+
+                        ///=========== LOG STEPS =================
                         CustomLoogFood(
                           onTap: () {
-                            log("========>>>>>>>>>Log Steps Clicked go to logStepsScreen");
-                            NavigationService.navigateTo(Routes.logStepsScreen);
+                            NavigationService.navigateTo(
+                              Routes.logStepsScreen,
+                            );
                           },
                           icon: SvgPicture.asset(AppIcons.logSteps),
                           subtitle: 'Sync your steps',
@@ -108,12 +285,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           title: 'Log Steps',
                         ),
+
                         UIHelper.horizontalSpace(20.w),
-                        ///============Log Activity Section ===================
+
+                        ///=========== LOG ACTIVITY =================
                         CustomLoogFood(
                           onTap: () {
-                            log("========>>>>>>>>>Log Food Clicked go to logActivityScreen");
-                            NavigationService.navigateTo(Routes.logActivityScreen);
+                            NavigationService.navigateTo(
+                              Routes.logActivityScreen,
+                            );
                           },
                           icon: SvgPicture.asset(AppIcons.logactivity),
                           subtitle: 'Add your workout',
@@ -126,16 +306,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+
                     UIHelper.verticalSpace(24.h),
+
                     Text(
                       'Today’s Timeline',
                       style:
-                          TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                      TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+
                     UIHelper.verticalSpace(12.h),
+
                     CustomTimeLine(
                       title: 'Morning Medication',
                       subtitle: 'Completed',
@@ -143,7 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       morningText: 'Morning Medication',
                       amText: '8:00 AM',
                     ),
+
                     UIHelper.verticalSpace(18.h),
+
                     CustomTimeLine(
                       title: 'Lunch',
                       subtitle: 'Completed',
@@ -151,7 +337,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       morningText: 'Lunch',
                       amText: '12:30 PM',
                     ),
+
                     UIHelper.verticalSpace(18.h),
+
                     CustomTimeLine(
                       color: AppColors.c5E5E5E,
                       title: 'Morning Medication',
@@ -160,7 +348,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       morningText: 'Walk Outside',
                       amText: '2:00 PM',
                     ),
+
                     UIHelper.verticalSpace(18.h),
+
                     CustomTimeLine(
                       color: AppColors.c5E5E5E,
                       title: 'Evening Exercise',
@@ -169,7 +359,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       morningText: 'Evening Exercise',
                       amText: '5:30 PM',
                     ),
-                    UIHelper.verticalSpace(44.w),
+
+                    UIHelper.verticalSpace(44.h),
                   ],
                 ),
               ),

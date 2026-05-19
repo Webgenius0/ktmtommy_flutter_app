@@ -119,7 +119,6 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Container(
-                  height: 197.h,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.cF55216),

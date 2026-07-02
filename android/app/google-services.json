@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "175885993791",
+    "project_id": "my-balance-day",
+    "storage_bucket": "my-balance-day.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175885993791:android:0a3c9601e08d39f30df58a",
+        "android_client_info": {
+          "package_name": "com.mybalance.day.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175885993791-pa58mreagl4cf6s7niqm67qe41dp0mo2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGPmIUX4udMlQ52LaWovYej1DGO3PadYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175885993791-pa58mreagl4cf6s7niqm67qe41dp0mo2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "175885993791-734jgvmcvoqlfqgkbp72nbvk788tgns0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ktmtommyApps"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

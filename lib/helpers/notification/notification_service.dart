@@ -161,6 +161,9 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:markhayhurst/feature/ballers_feature/account/screens/baller_account_screen.dart';
+import 'package:dio/dio.dart';
+import '../../networks/dio/dio.dart';
+import '../../networks/endpoints.dart';
 import '../../constants/app_constants.dart';
 import '../di.dart';
 
@@ -296,7 +299,16 @@ class NotificationService {
         log("FCM Token =====>>> $fcmToken");
       }
 
+      if (fcmToken != null) {
+        await appData.write(kKeyDeviceToken, fcmToken);
+        sendFcmTokenToServer();
+      }
 
+      _firebaseMessaging.onTokenRefresh.listen((newToken) async {
+        log("FCM Token Refreshed: $newToken");
+        await appData.write(kKeyDeviceToken, newToken);
+        sendFcmTokenToServer();
+      });
 
       //
       // if (fcmToken != null) {
@@ -314,6 +326,37 @@ class NotificationService {
 
     initPushNotification();
     initLocalNotification();
+  }
+
+  static Future<void> sendFcmTokenToServer() async {
+    try {
+      final token = appData.read(kKeyDeviceToken);
+      final deviceId = appData.read(kKeyDeviceID);
+      final isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
+      final accessToken = appData.read(kKeyAccessToken);
+
+      if (token == null || !isLoggedIn || accessToken == null) {
+        log("Cannot send FCM token. Token: $token, isLoggedIn: $isLoggedIn, hasAccessToken: ${accessToken != null}");
+        return;
+      }
+
+      log("Sending FCM token to server... Token: $token, Device ID: $deviceId");
+
+      FormData data = FormData.fromMap({
+        "token": token,
+        "device_id": deviceId ?? "unknown_device",
+      });
+
+      final response = await postHttp(Endpoints.storeFcmToken(), data);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("FCM token stored successfully on server!");
+      } else {
+        log("Failed to store FCM token: ${response.statusCode} - ${response.data}");
+      }
+    } catch (e) {
+      log("Error sending FCM token to server: $e");
+    }
   }
 }
 

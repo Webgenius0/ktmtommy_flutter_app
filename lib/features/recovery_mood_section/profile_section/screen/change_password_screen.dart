@@ -7,6 +7,7 @@ import 'package:ktmtommy_apps/common_widgets/custom_arrow_back.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/widget/custom_password_field.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -41,48 +42,55 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
+    
+    final success = await changePasswordScreenRx.postChangePasswordScreenApi(
+      current_password: _currentPassController.text,
+      password: _newPassController.text,
+      password_confirmation: _confirmPassController.text,
+    );
 
     if (!mounted) return;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        backgroundColor: AppColors.c181818,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(AppIcons.check_icon, width: 80.w, height: 80.h),
-            UIHelper.verticalSpace(20.h),
-            Text("Password Changed!",
-                style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            UIHelper.verticalSpace(12.h),
-            Text("Your password has been updated successfully.",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.cA3A3A3, fontSize: 14.sp)),
-            UIHelper.verticalSpace(30.h),
-            CustomButton(
-              name: "Back to Profile",
-              onCallBack: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              color: AppColors.c87B842,
-              borderColor: AppColors.c87B842,
-              height: 48.h,
-              borderRadius: 999.r,
-              context: context,
-            ),
-          ],
+    if (success) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          backgroundColor: AppColors.c181818,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(AppIcons.check_icon, width: 80.w, height: 80.h),
+              UIHelper.verticalSpace(20.h),
+              Text("Password Changed!",
+                  style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+              UIHelper.verticalSpace(12.h),
+              Text("Your password has been updated successfully.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.cA3A3A3, fontSize: 14.sp)),
+              UIHelper.verticalSpace(30.h),
+              CustomButton(
+                name: "Back to Profile",
+                onCallBack: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                color: AppColors.c87B842,
+                borderColor: AppColors.c87B842,
+                height: 48.h,
+                borderRadius: 999.r,
+                context: context,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
 
     setState(() => _isLoading = false);
   }

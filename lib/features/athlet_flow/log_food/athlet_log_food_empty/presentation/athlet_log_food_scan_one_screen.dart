@@ -198,6 +198,7 @@ class _AthletLogFoodScanOneScreenState
         nutritional_insights: jsonEncode(insights),
         taken_at: takenAt,
         notes: _noteController.text.trim(),
+        meal_type: _mealTypes[_selectedMealIndex]["title"].toString().toLowerCase(),
       );
 
       if (!mounted) return;
@@ -276,7 +277,9 @@ class _AthletLogFoodScanOneScreenState
                             context,
                             MaterialPageRoute(
                               builder: (_) => AthletMealAnalyzeScreen(
-                                  imagePath: _currentImagePath),
+                                imagePath: _currentImagePath,
+                                meal_type: _mealTypes[_selectedMealIndex]["title"].toString().toLowerCase(),
+                              ),
                             ),
                           );
                         },

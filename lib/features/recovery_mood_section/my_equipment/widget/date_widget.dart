@@ -1,292 +1,263 @@
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
-// import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-//
-//
-//
-//
-//
-// class DateWidget extends StatefulWidget {
-//   final ValueChanged<DateTime>? onDateSelected;
-//   final Color? selectedColor;
-//   final Color? textColor;
-//   final Color? unselectedTextColor;
-//   final TextStyle? dayAbbreviationStyle;
-//   final TextStyle? dateTextStyle;
-//   final TextStyle? weekRangeTextStyle;
-//
-//   const DateWidget({
-//     super.key,
-//     this.onDateSelected,
-//     this.selectedColor,
-//     this.textColor,
-//     this.unselectedTextColor,
-//     this.dayAbbreviationStyle,
-//     this.dateTextStyle,
-//     this.weekRangeTextStyle,
-//   });
-//
-//   @override
-//   State<DateWidget> createState() => _DateWidgetState();
-// }
-//
-// class _DateWidgetState extends State<DateWidget> {
-//   late int selectedIndex;
-//   DateTime currentWeekStart = _findFirstDateOfTheWeek(DateTime.now());
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     // Set selectedIndex to today's weekday index in the current week
-//     final today = DateTime.now();
-//     selectedIndex = today.difference(currentWeekStart).inDays;
-//   }
-//
-//   static DateTime _findFirstDateOfTheWeek(DateTime date) {
-//     return date.subtract(Duration(days: date.weekday % 7));
-//   }
-//
-//   List<DateTime> getWeekDays(DateTime firstDay) {
-//     return List.generate(7, (index) => firstDay.add(Duration(days: index)));
-//   }
-//
-//   void _goToPreviousWeek() {
-//     setState(() {
-//       currentWeekStart = currentWeekStart.subtract(const Duration(days: 7));
-//       selectedIndex = -1;
-//     });
-//   }
-//
-//   void _goToNextWeek() {
-//     setState(() {
-//       currentWeekStart = currentWeekStart.add(const Duration(days: 7));
-//       selectedIndex = -1;
-//     });
-//   }
-//
-//   String _formatWeekRange() {
-//     final firstDay = currentWeekStart;
-//     final lastDay = firstDay.add(const Duration(days: 6));
-//     return '${_getMonthName(firstDay.month)} ${firstDay.day} - ${_getMonthName(lastDay.month)} ${lastDay.day}';
-//   }
-//
-//   String _getMonthName(int month) {
-//     const months = [
-//       "Jan",
-//       "Feb",
-//       "Mar",
-//       "Apr",
-//       "May",
-//       "Jun",
-//       "Jul",
-//       "Aug",
-//       "Sep",
-//       "Oct",
-//       "Nov",
-//       "Dec"
-//     ];
-//     return months[month - 1];
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final weekDays = getWeekDays(currentWeekStart);
-//     final dayAbbreviations = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-//
-//     return Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           children: [
-//             GestureDetector(
-//               onTap: _goToPreviousWeek,
-//               child: Icon(
-//                 Icons.chevron_left,
-//                 size: 24,
-//                 color: widget.textColor ?? AppColors.cFFFFFF,
-//               ),
-//             ),
-//             UIHelper.horizontalSpace(6.w),
-//             Text(
-//               _formatWeekRange(),
-//               textAlign: TextAlign.center,
-//               style: widget.weekRangeTextStyle ??
-//                   TextStyle(
-//                     fontSize: 16.sp,
-//                     fontWeight: FontWeight.w500,
-//                     color: widget.textColor ?? AppColors.cFFFFFF,
-//                   ),
-//             ),
-//             UIHelper.horizontalSpace(6.w),
-//             GestureDetector(
-//               onTap: _goToNextWeek,
-//               child: Icon(
-//                 Icons.chevron_right,
-//                 size: 24,
-//                 color: widget.textColor ?? AppColors.cFFFFFF,
-//               ),
-//             ),
-//           ],
-//         ),
-//         UIHelper.verticalSpace(18.h),
-//
-//         // Day abbreviations row
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: List.generate(7, (index) {
-//             return SizedBox(
-//               width: 40.w,
-//               child: Text(
-//                 dayAbbreviations[index],
-//                 textAlign: TextAlign.center,
-//                 style: widget.dayAbbreviationStyle ??
-//                     TextStyle(
-//                       fontSize: 14.sp,
-//                       fontWeight: FontWeight.w400,
-//                       color: widget.unselectedTextColor ?? Colors.grey,
-//                     ),
-//               ),
-//             );
-//           }),
-//         ),
-//         UIHelper.verticalSpace(10.h),
-//
-//         // Dates row
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: List.generate(7, (index) {
-//             final date = weekDays[index];
-//             bool isSelected = index == selectedIndex;
-//             return GestureDetector(
-//               onTap: () {
-//                 setState(() {
-//                   selectedIndex = index;
-//                 });
-//                 if (widget.onDateSelected != null) {
-//                   widget.onDateSelected!(date);
-//                 }
-//               },
-//               child: Container(
-//                 height: 40.h,
-//                 width: 40.h,
-//                 decoration: BoxDecoration(
-//                   color: isSelected
-//                       ? widget.selectedColor ?? AppColors.cCC1F28
-//                       : Colors.transparent,
-//                   shape: BoxShape.circle,
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     date.day.toString(),
-//                     style: widget.dateTextStyle ??
-//                         TextStyle(
-//                           fontSize: 14.sp,
-//                           fontWeight: FontWeight.w400,
-//                           color: isSelected
-//                               ? Colors.white
-//                               : widget.textColor ?? Colors.white,
-//                         ),
-//                   ),
-//                 ),
-//               ),
-//             );
-//           }),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/schedule_feedback_model.dart';
 
 class DateWidget extends StatefulWidget {
-  const DateWidget({super.key});
+  final ValueChanged<DateTime>? onDateSelected;
+
+  const DateWidget({super.key, this.onDateSelected});
 
   @override
   State<DateWidget> createState() => _DateWidgetState();
 }
 
 class _DateWidgetState extends State<DateWidget> {
-  int selectedIndex = 3;
+  final ScrollController _scrollController = ScrollController();
+  DateTime? _selectedDate;
+  int _selectedIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateTime.now();
+    _fetchFeedback();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _fetchFeedback() {
+    final now = DateTime.now();
+    final fromDate = now.subtract(const Duration(days: 15));
+    final toDate = now.add(const Duration(days: 15));
+
+    final fromStr = DateFormat('yyyy-MM-dd').format(fromDate);
+    final toStr = DateFormat('yyyy-MM-dd').format(toDate);
+
+    scheduleFeedbackRxObj.getScheduleFeedback(fromStr, toStr).then((_) {
+      _scrollToToday();
+    });
+  }
+
+  void _scrollToToday() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final data = scheduleFeedbackRxObj.dataFetcher.valueOrNull?.data;
+      if (data == null || data.isEmpty) return;
+
+      final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      final index = data.indexWhere((element) => element.date == todayStr);
+      if (index != -1) {
+        setState(() {
+          _selectedIndex = index;
+          _selectedDate = DateTime.now();
+        });
+
+        // Width of item is 38.w + padding of 6.w on each side = 50.w
+        final double itemWidth = 50.w;
+        final screenWidth = MediaQuery.of(context).size.width;
+        final scrollOffset =
+            (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            scrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      }
+    });
+  }
+
+  void _onDateTap(int index, FeedbackDatum item) {
+    if (item.date == null) return;
+    final parsedDate = DateTime.tryParse(item.date!);
+    if (parsedDate == null) return;
+
+    setState(() {
+      _selectedIndex = index;
+      _selectedDate = parsedDate;
+    });
+
+    if (widget.onDateSelected != null) {
+      widget.onDateSelected!(parsedDate);
+    }
+  }
+
+  void _scrollLeft() {
+    if (_scrollController.hasClients) {
+      final double target = _scrollController.offset - 150.w;
+      _scrollController.animateTo(
+        target.clamp(0.0, _scrollController.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _scrollRight() {
+    if (_scrollController.hasClients) {
+      final double target = _scrollController.offset + 150.w;
+      _scrollController.animateTo(
+        target.clamp(0.0, _scrollController.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  String _getHeaderText() {
+    if (_selectedDate == null) return '';
+    return DateFormat('MMMM yyyy').format(_selectedDate!);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final days = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-    final dates = ['19', '20', '21', '22', '23', '24', '25'];
+    return StreamBuilder<ScheduleFeedbackModel>(
+      stream: scheduleFeedbackRxObj.scheduleFeedbackStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            height: 120.h,
+            child: const Center(
+              child: CircularProgressIndicator(color: AppColors.c87B842),
+            ),
+          );
+        }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Row(
-          children: [
-            const Icon(Icons.chevron_left, color: Colors.white, size: 26),
-            SizedBox(width: 8.w),
-            Text(
-              'May 13 - May 19',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
+        if (snapshot.hasError) {
+          return SizedBox(
+            height: 120.h,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Failed to load calendar',
+                    style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                  ),
+                  SizedBox(height: 8.h),
+                  TextButton(
+                    onPressed: _fetchFeedback,
+                    child: const Text(
+                      'Retry',
+                      style: TextStyle(color: AppColors.c87B842),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: 8.w),
-            const Icon(Icons.chevron_right, color: Colors.white, size: 26),
-          ],
-        ),
+          );
+        }
 
-        SizedBox(height: 18.h),
-
-        /// Days
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(7, (index) {
-            return SizedBox(
-              width: 44.w,
+        final list = snapshot.data?.data ?? [];
+        if (list.isEmpty) {
+          return SizedBox(
+            height: 120.h,
+            child: Center(
               child: Text(
-                days[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13.sp,
-                ),
+                'No calendar data available',
+                style: TextStyle(color: Colors.white70, fontSize: 14.sp),
               ),
-            );
-          }),
-        ),
+            ),
+          );
+        }
 
-        SizedBox(height: 12.h),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Month Header
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: _scrollLeft,
+                  child: const Icon(Icons.chevron_left,
+                      color: Colors.white, size: 26),
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  _getHeaderText(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                GestureDetector(
+                  onTap: _scrollRight,
+                  child: const Icon(Icons.chevron_right,
+                      color: Colors.white, size: 26),
+                ),
+              ],
+            ),
+            SizedBox(height: 18.h),
 
-        /// Dates
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(7, (index) {
-            return _DateCircle(
-              label: dates[index],
-              isSelected: index == selectedIndex,
-              type: index == 0
-                  ? DateType.crown
-                  : index == 1
-                  ? DateType.star
-                  : index == 2
-                  ? DateType.disabled
-                  : DateType.normal,
-              onTap: () {
-                setState(() => selectedIndex = index);
-              },
-            );
-          }),
-        ),
-      ],
+            // Horizontal calendar scroll list
+            SizedBox(
+              height: 85.h,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  final item = list[index];
+                  final date = DateTime.tryParse(item.date ?? '');
+                  if (date == null) return const SizedBox.shrink();
+
+                  final dayName = DateFormat('E').format(date); // e.g. "Sat"
+                  final isSelected = index == _selectedIndex;
+
+                  // Map rating to DateType
+                  DateType type = DateType.normal;
+                  if (item.rating == 'best') {
+                    type = DateType.crown;
+                  } else if (item.rating == 'good') {
+                    type = DateType.star;
+                  } else if (item.rating == 'poor') {
+                    type = DateType.disabled;
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          dayName,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.grey,
+                            fontSize: 13.sp,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        _DateCircle(
+                          label: date.day.toString(),
+                          isSelected: isSelected,
+                          type: type,
+                          onTap: () => _onDateTap(index, item),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -314,30 +285,28 @@ class _DateCircle extends StatelessWidget {
 
     if (type == DateType.crown) {
       bgColor = const Color(0xFFFFC107); // yellow
-      icon = SvgPicture.asset(AppIcons.bestIcon,height: 20,);
+      icon = SvgPicture.asset(AppIcons.bestIcon, height: 20);
     } else if (type == DateType.star) {
       bgColor = const Color(0xFF4CAF50); // green
-      icon = SvgPicture.asset(AppIcons.goodIcon,height: 20,);
+      icon = SvgPicture.asset(AppIcons.goodIcon, height: 20);
     } else if (type == DateType.disabled) {
       bgColor = const Color(0xFF5A5A5A); // grey
-      icon = SvgPicture.asset(AppIcons.poorIcon,height: 20,);
+      icon = SvgPicture.asset(AppIcons.poorIcon, height: 20);
       textColor = Colors.white70;
     }
 
     return GestureDetector(
-      onTap: type == DateType.disabled ? null : onTap,
+      onTap: onTap,
       child: Container(
         width: 38.w,
         height: 48.w,
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.horizontal(
+          borderRadius: const BorderRadius.horizontal(
             right: Radius.circular(50),
-            left: Radius.circular(50)
+            left: Radius.circular(50),
           ),
-          border: isSelected
-              ? Border.all(color: Colors.red, width: 2)
-              : null,
+          border: isSelected ? Border.all(color: Colors.red, width: 2) : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -352,7 +321,7 @@ class _DateCircle extends StatelessWidget {
             ),
             if (icon != null) ...[
               SizedBox(height: 2.h),
-              icon!,
+              icon,
             ],
           ],
         ),
@@ -360,4 +329,3 @@ class _DateCircle extends StatelessWidget {
     );
   }
 }
-

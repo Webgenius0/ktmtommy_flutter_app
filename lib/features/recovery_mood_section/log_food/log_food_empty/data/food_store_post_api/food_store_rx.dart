@@ -36,6 +36,7 @@ final class FoodStoreRx extends RxResponseInt<Map<String, dynamic>> {
     required dynamic nutritional_insights,
     required dynamic notes,
     required dynamic taken_at,
+    required dynamic meal_type,
   }) async {
     try {
       final result = await _api.saveFoodRecord(
@@ -60,6 +61,7 @@ final class FoodStoreRx extends RxResponseInt<Map<String, dynamic>> {
         nutritional_insights: nutritional_insights,
         notes: notes,
         taken_at: taken_at,
+        meal_type: meal_type,
       );
 
       if (result['success'] == true) {

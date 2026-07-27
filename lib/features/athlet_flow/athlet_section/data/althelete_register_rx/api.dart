@@ -18,7 +18,8 @@ final class AltheleteSignUpApi {
       required dynamic email,
       required dynamic password,
       required dynamic confirmPassword,
-      required dynamic termsAccepted
+      required dynamic termsAccepted,
+      required dynamic timezone,
       }) async {
     try {
       // Create the request data map
@@ -27,8 +28,8 @@ final class AltheleteSignUpApi {
         "password": password,
         "password_confirmation": confirmPassword,
         "name": name,
-        "terms_accepted":termsAccepted
-
+        "terms_accepted": termsAccepted,
+        "timezone": timezone,
       };
       // Make the POST request
       Response response = (await postHttp(Endpoints.signUpAltheleteApiLink(), data));

@@ -35,7 +35,7 @@ class _AthletSettingScreenState extends State<AthletSettingScreen> {
                 ArrowButtonAtheleteFlow(
                   text: 'My Profile & Settings',
                   onTap: () {
-                    NavigationService.goBack();
+                    NavigationService.goBack;
                   },
                 ),
                 UIHelper.verticalSpace(20.h),

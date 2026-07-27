@@ -58,7 +58,7 @@ class _LogActivityScreenState extends State<LogActivityScreen> {
             child: Column(
               children: [
                 CustomAppbarWidget(
-                  onTap: () => NavigationService.goBack(),
+                  onTap: () => NavigationService.goBack,
                   text: 'Log Activity',
                 ),
                 Expanded(

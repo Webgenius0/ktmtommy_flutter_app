@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:phone_form_field/phone_form_field.dart'; // 👈 New package
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
@@ -60,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(AppImages.restbacroundimage),
+            image: AssetImage(AppImages.bacroundimage),
             fit: BoxFit.cover,
           ),
         ),
@@ -70,30 +72,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CustomAppbarWidget(
-                    onTap: () {
-                      NavigationService.goBack();
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            NavigationService.goBack;
+                          },
+                          child:
+                              SvgPicture.asset(AppIcons.arrwbaciconwithcolor)),
+                    ],
                   ),
-                  UIHelper.verticalSpace(24.h),
+                  Text('Create an Account',
+                      textAlign: TextAlign.center,
+                      style: TextFontStyle.textStyle24w600cFFFFFFpoppins),
+                  UIHelper.verticalSpace(8.h),
                   Text(
-                    'Personal Information',
-                    style: TextFontStyle.textStylePoppins.copyWith(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.cFFFFFF,
-                    ),
-                  ),
-                  UIHelper.verticalSpace(2.h),
-                  Text(
-                    'Please provide us with the information to\ncontinue',
-                    style: TextFontStyle.textStylePoppins.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.cFFFFFF,
-                    ),
+                    'Hello there, please enter information\nto register 👍',
+                    textAlign: TextAlign.center,
+                    style: TextFontStyle.textStyle14w400cE8E8E8poppins,
                   ),
                   UIHelper.verticalSpace(24.h),
 
@@ -354,11 +353,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
 
-                  UIHelper.verticalSpace(70.h),
+                  UIHelper.verticalSpace(24.h),
 
                   // Sign Up Button
                   CustomButtonWidget(
-                    text: 'Sign Up',
+                    textStyle: TextFontStyle.textStyle20w700c000000poppins,
+                    image: DecorationImage(
+                      image: AssetImage(AppImages.withbacrounbutton),
+                    ),
+                    text: 'SIGN UP',
                     onTap: () async {
                       // Validate form
                       if (_formKey.currentState?.validate() ?? false) {
@@ -380,34 +383,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         appData.write(
                             kKeyuserPassword, confirmPasswordController.text);
 
-                        // Call API
-                        bool success = await altheleteSignUpRx
-                            .altheleteSignUpInfo(
-                          termsAccepted: true,
-                          name: nameController.text,
-                          email: emailController.text,
-                          password: passwordController.text,
-                          confirmPassword: confirmPasswordController.text,
-                        );
+                        // Show loading
+                        EasyLoading.show(status: 'Registering...');
+                        try {
+                          // Get current system IANA timezone
+                          String timezone = 'UTC';
+                          try {
+                            timezone = (await FlutterTimezone.getLocalTimezone()).identifier;
+                          } catch (e) {
+                            log("Error getting timezone: $e");
+                          }
 
-                        if (success) {
-                          log('Registration successful');
-                          log('Full Name: ${appData.read(kKeyuserFullName)}');
-                          log('Email: ${appData.read(kKeyuserEmail)}');
-                          log('Phone: ${appData.read(kKeyuserPhone)}');
-
-                          NavigationService.navigateTo(Routes.tellUsAboutScreen);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Registration failed. Please try again.'),
-                              backgroundColor: Colors.red,
-                            ),
+                          // Call API
+                          bool success = await altheleteSignUpRx
+                              .altheleteSignUpInfo(
+                            termsAccepted: true,
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            confirmPassword: confirmPasswordController.text,
+                            timezone: timezone,
                           );
+
+                          if (success) {
+                            EasyLoading.showSuccess('Registration Successful! 🎉');
+                            log('Registration successful');
+                            log('Full Name: ${appData.read(kKeyuserFullName)}');
+                            log('Email: ${appData.read(kKeyuserEmail)}');
+                            log('Phone: ${appData.read(kKeyuserPhone)}');
+
+                            NavigationService.navigateToWithArgs(
+                              Routes.verifyOtpScreen,
+                              {'isFromSignUp': true},
+                            );
+                          } else {
+                            EasyLoading.dismiss();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Registration failed. Please try again.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          EasyLoading.dismiss();
+                          log("Exception during registration: $e");
                         }
                       }
                     },
                   ),
+                  UIHelper.verticalSpace(30.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Already have an account? ',
+                        style: TextFontStyle.textStyle14w400cF3F3F3poppins,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          NavigationService.navigateTo(Routes.loginScreenAthlet);
+                        },
+                        child: Text('Login now',
+                            style: TextFontStyle.textStyle14w400cF55216poppins
+                                .copyWith(
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.red,
+                            )),
+                      ),
+                    ],
+                  ),
+                  UIHelper.verticalSpace(30.h),
                 ],
               ),
             ),

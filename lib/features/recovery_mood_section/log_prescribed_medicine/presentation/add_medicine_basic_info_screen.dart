@@ -9,15 +9,19 @@ import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 class AddMedicineBasicInfoScreen extends StatefulWidget {
+  final int? id;
   final String? name;
   final String? dosage;
+  final String? dosageType;
   final String? type;
   final bool isEdit;
 
   const AddMedicineBasicInfoScreen({
     super.key,
+    this.id,
     this.name,
     this.dosage,
+    this.dosageType,
     this.type,
     this.isEdit = false,
   });
@@ -40,6 +44,9 @@ class _AddMedicineBasicInfoScreenState extends State<AddMedicineBasicInfoScreen>
     super.initState();
     if (widget.name != null) nameController.text = widget.name!;
     if (widget.dosage != null) dosageController.text = widget.dosage!;
+    if (widget.dosageType != null) {
+      selectedUnit = widget.dosageType!;
+    }
     if (widget.type != null && types.contains(widget.type)) {
       selectedType = widget.type!;
     }
@@ -61,7 +68,7 @@ class _AddMedicineBasicInfoScreenState extends State<AddMedicineBasicInfoScreen>
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => NavigationService.goBack(),
+                    onTap: () => NavigationService.goBack,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
@@ -250,9 +257,18 @@ class _AddMedicineBasicInfoScreenState extends State<AddMedicineBasicInfoScreen>
                 text: 'Next',
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
+                    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+                    final nextArgs = Map<String, dynamic>.from(args);
+                    nextArgs['id'] = widget.id;
+                    nextArgs['isEdit'] = widget.isEdit;
+                    nextArgs['medicine_name'] = nameController.text;
+                    nextArgs['dosage'] = dosageController.text;
+                    nextArgs['dosage_type'] = selectedUnit;
+                    nextArgs['medicine_type'] = selectedType;
+
                     NavigationService.navigateToWithArgs(
                       Routes.addMedicineTakingScheduleScreen,
-                      {'isEdit': widget.isEdit},
+                      nextArgs,
                     );
                   }
                 },

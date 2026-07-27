@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:s_castor_flutter/networks/api_acess.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../../helpers/all_routes.dart';
 import '../../../../helpers/navigation_service.dart';
 import '../../../../helpers/toast.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 
 
 class SocialAuthApple {
@@ -60,16 +62,42 @@ class SocialAuthApple {
         // 🧪 Optional: Use UID or token for RevenueCat or backend
         debugPrint("📤 Sending login to API...");
 
-        await postGoogleLoginRX.postGoogleLogin(
+        Map response = await postGoogleLoginRX.postGoogleLogin(
           token: identityToken,
           registerType: "apple",
         );
 
         log('Apple login response: ${postGoogleLoginRX.getSocialLoginRes.value}');
 
-        // Navigate to home
-       NavigationService.navigateToUntilReplacement(Routes.bottomNavScreen);
-        ToastUtil.showLongToast('Login Successfully');
+        if (response["success"] == true) {
+          ToastUtil.showLongToast('Login Successfully');
+          final data = response["data"] ?? {};
+          final bool onboardingCompleted = data["onboarding_completed"] ?? false;
+          final String? userMode = data["user_mode"];
+
+          if (!onboardingCompleted) {
+            if (userMode == "recovery") {
+              await appData.write(kKeyUserType, "recovery");
+              NavigationService.navigateToUntilReplacement(Routes.tellUsAboutScreen);
+            } else if (userMode == "athlete") {
+              await appData.write(kKeyUserType, "athlete");
+              NavigationService.navigateToUntilReplacement(Routes.welcomeAtheleteScreen);
+            } else {
+              NavigationService.navigateToUntilReplacement(Routes.chooseModeScreen);
+            }
+          } else {
+            if (userMode != null) {
+              await appData.write(kKeyUserType, userMode);
+            }
+            if (userMode == "athlete") {
+              NavigationService.navigateToUntilReplacement(Routes.athletBottomNavigationBar);
+            } else {
+              NavigationService.navigateToUntilReplacement(Routes.navigationScreen);
+            }
+          }
+        } else {
+          ToastUtil.showLongToast("Login failed. Please try again.");
+        }
 
         return userCredential;
       } else {

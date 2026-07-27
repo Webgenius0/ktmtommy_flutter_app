@@ -79,7 +79,7 @@ class _RecentScreenState extends State<RecentScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: CustomAppbarWidget(
-                onTap: () => NavigationService.goBack(),
+                onTap: () => NavigationService.goBack,
                 text: 'Recent Activity Log',
               ),
             ),

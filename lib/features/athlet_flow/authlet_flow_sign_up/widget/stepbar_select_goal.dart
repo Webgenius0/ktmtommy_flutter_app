@@ -8,6 +8,7 @@ import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 class StepBarSelectGoal extends StatelessWidget {
   final VoidCallback onTap;
   final int currentStep;
+  final int totalSteps;
   final Function(int) onStepTap;
 
   const StepBarSelectGoal({
@@ -15,12 +16,13 @@ class StepBarSelectGoal extends StatelessWidget {
     required this.currentStep,
     required this.onStepTap,
     required this.onTap,
+    this.totalSteps = 5,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: List.generate(4, (index) {
+      children: List.generate(totalSteps, (index) {
         return Expanded(
           child: GestureDetector(
             onTap: () => onStepTap(index),

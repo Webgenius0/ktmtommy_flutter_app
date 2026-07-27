@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -80,7 +81,23 @@ Future<void> setInitValue() async {
   //       await deviceInfo.androidInfo; // unique ID on Android
   //   appData.writeIfNull(kKeyDeviceID, androidDeviceInfo.id);
   // }
+  await appData.writeIfNull(kKeyDeviceID, _generateUuid());
   await Future.delayed(const Duration(seconds: 2));
+}
+
+String _generateUuid() {
+  final random = Random.secure();
+  final values = List<int>.generate(16, (i) => random.nextInt(256));
+  values[6] = (values[6] & 0x0f) | 0x40; // version 4
+  values[8] = (values[8] & 0x3f) | 0x80; // variant
+  final buffer = StringBuffer();
+  for (var i = 0; i < 16; i++) {
+    if (i == 4 || i == 6 || i == 8 || i == 10) {
+      buffer.write('-');
+    }
+    buffer.write(values[i].toRadixString(16).padLeft(2, '0'));
+  }
+  return buffer.toString();
 }
 
 

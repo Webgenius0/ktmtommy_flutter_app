@@ -9,8 +9,11 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
 
 class DurationTime extends StatefulWidget {
+  final ValueChanged<String>? onDurationSelected;
+
   const DurationTime({
     super.key,
+    this.onDurationSelected,
   });
 
   @override
@@ -38,11 +41,14 @@ class _DurationTimeState extends State<DurationTime> {
 
 
       PopupMenuButton<String>(
-        color: Color(0xFF2A2A2A),
+        color: const Color(0xFF2A2A2A),
         onSelected: (String value) {
           setState(() {
             selectedUnit = value;
           });
+          if (widget.onDurationSelected != null) {
+            widget.onDurationSelected!(value);
+          }
         },
         itemBuilder: (BuildContext context) {
           return durationList.map((String value) {

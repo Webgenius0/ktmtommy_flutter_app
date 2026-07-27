@@ -1,8 +1,7 @@
 import 'dart:developer';
-
+import 'package:dio/dio.dart';
+import 'package:ktmtommy_apps/networks/exception_handler/data_source.dart';
 import 'package:rxdart/subjects.dart';
-import '../helpers/all_routes.dart';
-import '../helpers/navigation_service.dart';
 
 abstract class RxResponseInt<T> {
   T empty;
@@ -23,9 +22,19 @@ abstract class RxResponseInt<T> {
 
   dynamic handleErrorWithReturn(dynamic error) {
     log(error.toString());
-    // DioException responseError = error as DioException;
 
-    if (error.response!.statusCode == 401) {
+    int? statusCode;
+    if (error is DioException) {
+      statusCode = error.response?.statusCode;
+    } else if (error is Failure) {
+      statusCode = error.resonseCode;
+    } else {
+      try {
+        statusCode = error.response?.statusCode;
+      } catch (_) {}
+    }
+
+    if (statusCode == 401) {
       // NavigationService.navigateToUntilReplacement(Routes.login);
     }
 

@@ -7,6 +7,7 @@ import 'package:ktmtommy_apps/bottom_nav_screen.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_api.dart';
 import '../../../../helpers/di.dart';
 import '../../../../helpers/toast.dart';
+import '../../../../helpers/notification/notification_service.dart';
 import '../../../../networks/dio/dio.dart';
 import '../../../../networks/rx_base.dart';
 import '../../../../constants/app_constants.dart';
@@ -63,6 +64,7 @@ final class LoginRx extends RxResponseInt<Map<String, dynamic>> {
     }
     // Update DioSingleton with the new token
     DioSingleton.instance.update(token);
+    NotificationService.sendFcmTokenToServer();
 
     // Add the data to the stream
     dataFetcher.sink.add(data);

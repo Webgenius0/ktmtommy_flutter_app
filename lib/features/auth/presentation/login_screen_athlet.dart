@@ -9,9 +9,12 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/features/welcome_back/widget/custom_continue_with_google_screen.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
+import 'package:ktmtommy_apps/helpers/social_login/apple_login.dart';
+import 'package:ktmtommy_apps/helpers/social_login/google_login.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:ktmtommy_apps/networks/api_acess.dart';
 
@@ -26,6 +29,7 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  int selectedIndex = -1;
   bool showPassword = false;
 
   @override
@@ -56,7 +60,7 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
     if (success) {
       EasyLoading.showSuccess('Login Successful! 🎉');
 
-      // NavigationService.navigateTo(Routes.athletBottomNavigationBar);
+       // NavigationService.navigateTo(Routes.athletBottomNavigationBar);
     } else {
       EasyLoading.showError('Invalid email or password 😔');
     }
@@ -90,7 +94,7 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
                               SvgPicture.asset(AppIcons.arrwbaciconwithcolor)),
                     ],
                   ),
-                  UIHelper.verticalSpace(107.h),
+                  UIHelper.verticalSpace(50.h),
                   Text('Login to your Account',
                       textAlign: TextAlign.center,
                       style: TextFontStyle.textStyle24w600cFFFFFFpoppins),
@@ -181,6 +185,33 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
                     text: 'LOGIN',
                     onTap: _handleLogin,
                   ),
+                  UIHelper.verticalSpace(14.h),
+
+                  CustomContinueWithGoogle(
+                    title: 'Continue With Google',
+                    icon: SvgPicture.asset(AppIcons.googleicon, height: 18.h),
+                    isSelected: selectedIndex == 0,
+                    onTap: () async{
+                      setState(() {
+                        selectedIndex = 0;
+                      });
+                      await GoogleAuthData.signInWithGoogle(context);
+                    },
+                  ),
+                  UIHelper.verticalSpace(14.h),
+
+                  CustomContinueWithGoogle(
+                    title: 'Continue With Apple',
+                    icon: SvgPicture.asset(AppIcons.appleicon, height: 21.h),
+                    isSelected: selectedIndex == 1,
+                    onTap: () async{
+                      await SocialAuthApple.signInWithApple(context);
+                      setState(() {
+                        selectedIndex = 1;
+                      });
+                    },
+                  ),
+                  UIHelper.verticalSpace(14.h),
 
                   UIHelper.verticalSpace(30.h),
                   Row(
@@ -192,7 +223,7 @@ class _LoginScreenAthletState extends State<LoginScreenAthlet> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          NavigationService.navigateTo(Routes.chooseModeScreen);
+                          NavigationService.navigateTo(Routes.signUpScreen);
                         },
                         child: Text('Register now',
                             style: TextFontStyle.textStyle14w400cF55216poppins

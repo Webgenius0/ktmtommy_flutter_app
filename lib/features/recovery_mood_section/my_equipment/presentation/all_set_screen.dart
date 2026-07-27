@@ -11,10 +11,8 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:lottie/lottie.dart';
-
-
-
-
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
 
 class AllSetScreen extends StatefulWidget {
   const AllSetScreen({super.key});
@@ -26,6 +24,27 @@ class AllSetScreen extends StatefulWidget {
 class _AllSetScreenState extends State<AllSetScreen> {
   @override
   Widget build(BuildContext context) {
+    String? name = appData.read(kKeyuserFullName);
+    String? goal = appData.read(kKRecoveryGoal);
+    String? startTime = appData.read(kKeyuserReminderStartTime);
+    String? endTime = appData.read(kKeyuserReminderEndTime);
+
+    String reminderText = 'Morning (8 AM - 12 PM)';
+    if (startTime != null && endTime != null) {
+      if (startTime == '08:00:00') {
+        reminderText = 'Morning (8 AM - 12 PM)';
+      } else if (startTime == '12:00:00') {
+        reminderText = 'Afternoon (12 PM - 5 PM)';
+      } else if (startTime == '18:00:00') {
+        reminderText = 'Evening (6 PM - 10 PM)';
+      } else {
+        // Strip seconds if present to make it look clean
+        String cleanStart = startTime.split(':').take(2).join(':');
+        String cleanEnd = endTime.split(':').take(2).join(':');
+        reminderText = '$cleanStart - $cleanEnd';
+      }
+    }
+
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: Container(
@@ -79,7 +98,7 @@ class _AllSetScreenState extends State<AllSetScreen> {
                     CustomYourAllSet(
                       textStyle: TextFontStyle.textStyle14w400c87B842poppins,
                       title: 'Name',
-                      subtitle: 'Alex Johnson',
+                      subtitle: name ?? 'Alex Johnson',
                       icon: SvgPicture.asset(
                         AppIcons.usernameicon,
                         height: 20.h,
@@ -93,7 +112,7 @@ class _AllSetScreenState extends State<AllSetScreen> {
                     CustomYourAllSet(
                       textStyle: TextFontStyle.textStyle14w400c87B842poppins,
                       title: 'Goals',
-                      subtitle: 'Return to work(Part Time)',
+                      subtitle: goal ?? 'Return to work(Part Time)',
                       icon: SvgPicture.asset(AppIcons.liteicon, height: 20.h),
                     ),
 
@@ -102,7 +121,7 @@ class _AllSetScreenState extends State<AllSetScreen> {
                     CustomYourAllSet(
                       textStyle: TextFontStyle.textStyle14w400c87B842poppins,
                       title: 'Daily Reminder',
-                      subtitle: 'Evening 6-10 PM)',
+                      subtitle: reminderText,
                       icon: SvgPicture.asset(
                         AppIcons.notification,
                         height: 20.h,

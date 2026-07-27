@@ -172,6 +172,7 @@
 //         nutritional_insights: jsonEncode(insights),
 //         taken_at: takenAt,
 //         notes: _noteController.text.trim(),
+//         meal_type: _mealTypes[_selectedMealIndex]["title"].toString().toLowerCase(),
 //       );
 //
 //       if (!mounted) return;
@@ -501,6 +502,7 @@ class _LogFoodScanTwoScreenState extends State<LogFoodScanTwoScreen> {
         nutritional_insights: jsonEncode(insights),
         taken_at: takenAt,
         notes: _noteController.text.trim(),
+        meal_type: _mealTypes[_selectedMealIndex]["title"].toString().toLowerCase(),
       );
 
       if (!mounted) return;
@@ -576,7 +578,9 @@ class _LogFoodScanTwoScreenState extends State<LogFoodScanTwoScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => MealAnalyzeScreen(
-                                  imagePath: _currentImagePath),
+                                imagePath: _currentImagePath,
+                                meal_type: _mealTypes[_selectedMealIndex]["title"].toString().toLowerCase(),
+                              ),
                             ),
                           );
                         },

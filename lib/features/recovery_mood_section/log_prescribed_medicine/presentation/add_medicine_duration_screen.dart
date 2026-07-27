@@ -7,6 +7,7 @@ import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/helpers/toast.dart';
 
 class AddMedicineDurationScreen extends StatefulWidget {
   final bool isEdit;
@@ -20,6 +21,43 @@ class _AddMedicineDurationScreenState extends State<AddMedicineDurationScreen> {
   DateTime? startDate;
   DateTime? endDate;
   bool beforeMeal = false;
+
+  DateTime? _parseDate(dynamic dateVal) {
+    if (dateVal == null) return null;
+    if (dateVal is DateTime) return dateVal;
+    final String dateStr = dateVal.toString();
+    try {
+      return DateFormat('yyyy-MM-dd').parse(dateStr);
+    } catch (_) {}
+    try {
+      return DateFormat('MMM d, yyyy').parse(dateStr);
+    } catch (_) {}
+    try {
+      return DateTime.tryParse(dateStr);
+    } catch (_) {}
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (args != null) {
+        setState(() {
+          if (args['start_date'] != null) {
+            startDate = _parseDate(args['start_date']);
+          }
+          if (args['end_date'] != null) {
+            endDate = _parseDate(args['end_date']);
+          }
+          if (args['before_meal'] != null) {
+            beforeMeal = args['before_meal'] == true || args['before_meal'] == 1 || args['before_meal'] == '1';
+          }
+        });
+      }
+    });
+  }
 
   Future<void> _selectDate(BuildContext context, bool isStart) async {
     final DateTime? picked = await showDatePicker(
@@ -67,7 +105,7 @@ class _AddMedicineDurationScreenState extends State<AddMedicineDurationScreen> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => NavigationService.goBack(),
+                    onTap: () => NavigationService.goBack,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
@@ -232,9 +270,20 @@ class _AddMedicineDurationScreenState extends State<AddMedicineDurationScreen> {
               CustomButtonWidget(
                 text: 'Next',
                 onTap: () {
+                  if (startDate == null) {
+                    ToastUtil.showShortToast('Please select a start date');
+                    return;
+                  }
+
+                  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+                  final nextArgs = Map<String, dynamic>.from(args);
+                  nextArgs['start_date'] = startDate;
+                  nextArgs['end_date'] = endDate;
+                  nextArgs['before_meal'] = beforeMeal;
+
                   NavigationService.navigateToWithArgs(
                     Routes.addMedicineAdditionalInfoScreen,
-                    {'isEdit': widget.isEdit},
+                    nextArgs,
                   );
                 },
               ),

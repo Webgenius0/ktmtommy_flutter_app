@@ -10,6 +10,7 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/althelete
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/onboading_althelete_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
+import 'package:ktmtommy_apps/features/auth/data/verify_otp_rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/send_chat_rx/rx.dart';
 import 'package:ktmtommy_apps/features/chat/model/chat_history.dart';
@@ -30,14 +31,34 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/g
 import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/get_all_equipment_model.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/change_password_screen_data/change_password_screen_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/log_out_data/log_out_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/delete_account_data/delete_account_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/rx_edit_profile/rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/onboading_recovery_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/delete_activity_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/recent_activity_log_get_data/get_recent_activity_log_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/data/registration_data/registration_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/model/recent_activity_log_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/data/save_medicine_data/rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/data/get_medicine_data/rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/data/show_medicine_details/rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/data/delete_medicine_data/rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/model/prescribed_medicine_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/model/prescribed_medicine_details_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/daily_food_summary_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/model/daily_food_summary_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/dietitian_settings_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/model/dietitian_settings_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/profile_section/data/update_timezone/update_timezone_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/schedule_feedback/schedule_feedback_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/schedule_feedback_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/schedule/schedule_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/schedule/get_schedule_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/model/schedule_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/daily_activity_data/daily_activity_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/home/model/daily_activity_model.dart';
+import 'package:ktmtommy_apps/helpers/social_login/social_login_rx.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/my_equipment/data/subscription_rx.dart';
 import 'package:rxdart/subjects.dart';
-
 
 ///============Authentication Section==================///
 LoginRx loginRxObj = LoginRx(
@@ -45,7 +66,8 @@ LoginRx loginRxObj = LoginRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-RecoveryRegistrationApiRx recoveryRegistrationApiRxObj = RecoveryRegistrationApiRx(
+RecoveryRegistrationApiRx recoveryRegistrationApiRxObj =
+    RecoveryRegistrationApiRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
@@ -59,9 +81,6 @@ OnboardingAthleteSignUpRx onboardingAthleteSignUpRx = OnboardingAthleteSignUpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
-
-
 
 ///================== Medication Section Tablet , Food, Steps, Activity===== ///
 StoreRx storeRxObj = StoreRx(
@@ -79,11 +98,11 @@ LogActivityRx logActivityRxObj = LogActivityRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-OnboardingRecoverySignUpRx onboardingRecoverySignUpRx = OnboardingRecoverySignUpRx(
+OnboardingRecoverySignUpRx onboardingRecoverySignUpRx =
+    OnboardingRecoverySignUpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
 
 final GetRecentStepRx getRecentStepRxObj = GetRecentStepRx(
   empty: GetRecentStepModel(),
@@ -93,6 +112,16 @@ final GetRecentStepRx getRecentStepRxObj = GetRecentStepRx(
 final GetAllFoodRx getAllFoodRxObj = GetAllFoodRx(
   empty: GetAllFoodModel(),
   dataFetcher: BehaviorSubject<GetAllFoodModel>(),
+);
+
+final DailyFoodSummaryRx dailyFoodSummaryRxObj = DailyFoodSummaryRx(
+  empty: DailyFoodSummaryModel(),
+  dataFetcher: BehaviorSubject<DailyFoodSummaryModel>(),
+);
+
+final DietitianSettingsRx dietitianSettingsRxObj = DietitianSettingsRx(
+  empty: DietitianSettingsModel(),
+  dataFetcher: BehaviorSubject<DietitianSettingsModel>(),
 );
 
 final GetRecentActivityLogRx getRecentActivityLogRx = GetRecentActivityLogRx(
@@ -135,51 +164,51 @@ FoodStoreRx foodStoreRxObj = FoodStoreRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 AddEquipmentsRx addEquipmentsRxObj = AddEquipmentsRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 SendMessageRx sendMessageRx = SendMessageRx(
   empty: <String, dynamic>{},
-  dataFetcher: BehaviorSubject<Map<String, dynamic>>(), chatHistoryRx: getChatMessageRx,
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+  chatHistoryRx: getChatMessageRx,
 );
-
 
 AltheleteSignUpRx altheleteSignUpRx = AltheleteSignUpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
+VerifyOtpRx verifyOtpRx = VerifyOtpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
 
 EditProfileApiRx editProfileApiRx = EditProfileApiRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
-ChangePasswordScreenRx changePasswordScreenRx= ChangePasswordScreenRx(
+ChangePasswordScreenRx changePasswordScreenRx = ChangePasswordScreenRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
+UpdateTimezoneRx updateTimezoneRx = UpdateTimezoneRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
 
 final GetAllEquipmentRx getAllEquipmentRxObj = GetAllEquipmentRx(
   empty: GetAllEquipmentModel(),
   dataFetcher: BehaviorSubject<GetAllEquipmentModel>(),
 );
 
-
-
 final GetRecentSleepRx getRecentSleepRx = GetRecentSleepRx(
   empty: GetAllSleepDataModel(),
   dataFetcher: BehaviorSubject<GetAllSleepDataModel>(),
 );
-
 
 final GetLogSupplementRx getLogSupplementRx = GetLogSupplementRx(
   empty: LogSupplementModelData(),
@@ -191,18 +220,20 @@ PostLogOutRX postLogOutRXObj = PostLogOutRX(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
+DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
 
 SaveSleepRx saveSleepRx = SaveSleepRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 DeleteSleepRx deleteSleepRx = DeleteSleepRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
 
 DeleteLogSupplementRx deleteLogSupplementRx = DeleteLogSupplementRx(
   empty: <String, dynamic>{},
@@ -213,3 +244,54 @@ StoreSupplementRx storeSupplementRx = StoreSupplementRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
+
+SavePrescribedMedicineRx savePrescribedMedicineRxObj = SavePrescribedMedicineRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+final GetPrescribedMedicinesRx getPrescribedMedicinesRxObj =
+    GetPrescribedMedicinesRx(
+  empty: PrescribedMedicineModel(),
+  dataFetcher: BehaviorSubject<PrescribedMedicineModel>(),
+);
+
+PostSocialLoginRX postGoogleLoginRX = PostSocialLoginRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),);
+
+
+
+final GetPrescribedMedicineDetailsRx getPrescribedMedicineDetailsRxObj =
+    GetPrescribedMedicineDetailsRx(
+  empty: PrescribedMedicineDetailsModel(),
+  dataFetcher: BehaviorSubject<PrescribedMedicineDetailsModel>(),
+);
+
+final DeletePrescribedMedicineRx deletePrescribedMedicineRxObj =
+    DeletePrescribedMedicineRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+final ScheduleFeedbackRx scheduleFeedbackRxObj = ScheduleFeedbackRx(
+  empty: ScheduleFeedbackModel(),
+  dataFetcher: BehaviorSubject<ScheduleFeedbackModel>(),
+);
+
+final ScheduleRx scheduleRxObj = ScheduleRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+final GetScheduleRx getScheduleRxObj = GetScheduleRx(
+  empty: ScheduleModel(),
+  dataFetcher: BehaviorSubject<ScheduleModel>(),
+);
+
+final DailyActivityRx dailyActivityRxObj = DailyActivityRx(
+  empty: DailyActivityModel(),
+  dataFetcher: BehaviorSubject<DailyActivityModel>(),
+);
+
+final SubscriptionRx subscriptionRxObj = SubscriptionRx();

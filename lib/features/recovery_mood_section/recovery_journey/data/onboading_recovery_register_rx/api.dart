@@ -23,11 +23,8 @@ final class OnboardingRecoverySignUpApi {
         required dynamic injuryName,
         required dynamic injuryLevel,
         required dynamic injuryDate,
-        required dynamic currentRecoverySage,
-        required dynamic physicalSymptom,
-        required dynamic physicalSymptomDetails,
-        required dynamic physicalSymptomDurationHour,
-        required dynamic physicalSymptomFrequency,
+        required dynamic currentRecoveryStage,
+        required List<Map<String, dynamic>> physicalSymptoms,
         required dynamic emotionalSymptoms,
         required dynamic recoveryGoal,
         required dynamic recoveryGoalTime,
@@ -40,32 +37,19 @@ final class OnboardingRecoverySignUpApi {
       Map<String, dynamic> data = {
         "user_mode": userMode,
         "age": age,
-        "gender":gender,
-        "reminder_from":reminderFrom,
-        "reminder_to":reminderTo,
-
-
-        "injury_name":injuryName,
-        "injury_level":injuryLevel,
-        "injury_date":injuryDate,
-        "current_recovery_stage":currentRecoverySage,
-
-
-        "physical_symptom":physicalSymptom,
-        "physical_symptom_details":physicalSymptomDetails,
-        "physical_symptom_duration_hour":physicalSymptomDurationHour,
-        "physical_symptom_frequency":physicalSymptomFrequency,
-        "emotional_symptoms":physicalSymptom,
-
-
-
-        "recovery_goal":recoveryGoal,
-        "recovery_goal_time":recoveryGoalTime,
-        "progress_timeline":progressTimeline,
-        "recovery_target_date":recoveryTargetDate,
-
-
-
+        "gender": gender,
+        "reminder_from": reminderFrom,
+        "reminder_to": reminderTo,
+        "injury_name": injuryName,
+        "injury_level": injuryLevel,
+        "injury_date": injuryDate,
+        "current_recovery_stage": currentRecoveryStage,
+        "physical_symptoms": physicalSymptoms,
+        "emotional_symptoms": emotionalSymptoms,
+        "recovery_goal": recoveryGoal,
+        "recovery_goal_time": recoveryGoalTime,
+        "progress_timeline": progressTimeline,
+        "recovery_target_date": recoveryTargetDate,
       };
       // Make the POST request
       Response response = (await postHttp(Endpoints.onboardingRecoverySignUpApiLink(), data));

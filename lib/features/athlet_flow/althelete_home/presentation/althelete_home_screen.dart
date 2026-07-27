@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
@@ -26,6 +28,21 @@ class AltheleteHomeScreen extends StatefulWidget {
 }
 
 class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTimezone();
+  }
+
+  Future<void> _updateTimezone() async {
+    try {
+      final timezone = (await FlutterTimezone.getLocalTimezone()).identifier;
+      await updateTimezoneRx.updateTimezone(timezone);
+    } catch (e) {
+      log("Error updating timezone: $e");
+    }
+  }
 
 
 

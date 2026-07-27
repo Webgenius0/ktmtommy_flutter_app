@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:phone_form_field/phone_form_field.dart'; // 👈 Add this package
@@ -73,7 +74,7 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                 children: [
                   ArrowButtonAtheleteFlow(
                     onTap: () {
-                      NavigationService.goBack();
+                      NavigationService.goBack;
                     },
                   ),
                   UIHelper.verticalSpace(24.h),
@@ -380,6 +381,14 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                         log("+++++++++++phone: ${appData.read(kKeyuserAthletePhone)}");
                         log("+++++++++++password: ${appData.read(kKeyuserAthletePassword)}");
 
+                        // Get current system IANA timezone
+                        String timezone = 'UTC';
+                        try {
+                          timezone = (await FlutterTimezone.getLocalTimezone()).identifier;
+                        } catch (e) {
+                          log("Error getting timezone: $e");
+                        }
+
                         // Call API with phone number
                         bool success = await altheleteSignUpRx.altheleteSignUpInfo(
                             termsAccepted: true,
@@ -387,7 +396,8 @@ class _PersonalInformationSignUpScreenState extends State<PersonalInformationSig
                             email: emailController.text,
                             // phone: fullPhoneNumber, // Add phone parameter
                             password: passwordController.text,
-                            confirmPassword: confirmPasswordController.text
+                            confirmPassword: confirmPasswordController.text,
+                            timezone: timezone,
                         );
 
                         if (success) {

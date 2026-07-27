@@ -10,7 +10,9 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
 
 class CustomTimeClock extends StatefulWidget {
-  const CustomTimeClock({super.key});
+  final ValueChanged<TimeOfDay>? onTimeSelected;
+
+  const CustomTimeClock({super.key, this.onTimeSelected});
 
   @override
   State<CustomTimeClock> createState() => _CustomTimeClockState();
@@ -65,6 +67,9 @@ class _CustomTimeClockState extends State<CustomTimeClock> {
       setState(() {
         selectedTime = picked;
       });
+      if (widget.onTimeSelected != null) {
+        widget.onTimeSelected!(picked);
+      }
     }
   }
 

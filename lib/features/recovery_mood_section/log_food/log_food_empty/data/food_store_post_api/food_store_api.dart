@@ -31,6 +31,7 @@ final class FoodStoreApi {
     required dynamic nutritional_insights,
     required dynamic notes,
     required dynamic taken_at,
+    required dynamic meal_type,
   }) async {
     try {
       final multipartImage = await MultipartFile.fromFile(
@@ -60,6 +61,7 @@ final class FoodStoreApi {
         "nutritional_insights": nutritional_insights,
         "notes": notes,
         "taken_at": taken_at,
+        "meal_type": meal_type,
       });
 
       final response = await postHttp(Endpoints.postFoodStoreApi(), formData);

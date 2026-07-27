@@ -12,13 +12,19 @@ import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'dart:developer';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 
 
 
 
 class VerifyOtpScreen extends StatefulWidget {
-  const VerifyOtpScreen({super.key});
+  final bool isFromSignUp;
+  const VerifyOtpScreen({super.key, this.isFromSignUp = false});
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -130,7 +136,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     ),
                     UIHelper.verticalSpace(2.h),
                     Text(
-                      'Enter an OTP sent to mail@mail.com',
+                      'Enter an OTP sent to ${appData.read(kKeyuserEmail) ?? 'mail@mail.com'}',
                       style: TextFontStyle.textStyle20w700cEEE6DApoppins.copyWith(
                         fontWeight: FontWeight.w400,
                         fontSize: 14.sp,
@@ -196,9 +202,36 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         image: AssetImage(AppImages.withbacrounbutton),
                       ),
                       text: 'CONTINUE',
-                      onTap: () {
+                      onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          NavigationService.navigateTo(Routes.resetPasswordScreen);
+                          EasyLoading.show(status: 'Verifying...');
+                          try {
+                            String email = appData.read(kKeyuserEmail) ?? '';
+                            String otp = _otpController.text.trim();
+                            String otpType = widget.isFromSignUp
+                                ? 'email_verification'
+                                : 'forget_password';
+
+                            bool success = await verifyOtpRx.verifyOtp(
+                              email: email,
+                              otp: otp,
+                              otpType: otpType,
+                            );
+
+                            if (success) {
+                              EasyLoading.showSuccess('OTP Verified! 🎉');
+                              if (widget.isFromSignUp) {
+                                NavigationService.navigateTo(Routes.chooseModeScreen);
+                              } else {
+                                NavigationService.navigateTo(Routes.resetPasswordScreen);
+                              }
+                            } else {
+                              EasyLoading.dismiss();
+                            }
+                          } catch (e) {
+                            EasyLoading.dismiss();
+                            log("Exception during OTP verification: $e");
+                          }
                         }
                       },
                     ),

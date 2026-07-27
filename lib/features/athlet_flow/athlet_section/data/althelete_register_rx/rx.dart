@@ -4,6 +4,7 @@ import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
+import 'package:ktmtommy_apps/helpers/notification/notification_service.dart';
 import 'package:ktmtommy_apps/networks/dio/dio.dart';
 import 'package:rxdart/streams.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
@@ -24,13 +25,14 @@ final class AltheleteSignUpRx extends RxResponseInt<Map<String, dynamic>> {
     required dynamic email,
     required dynamic password,
     required dynamic termsAccepted,
-    required dynamic confirmPassword
+    required dynamic confirmPassword,
+    required dynamic timezone,
 
   }) async {
     try {
       // Call the sign-in API
       Map<String, dynamic> data =
-      await api.altheleteSignUpApi( termsAccepted: termsAccepted, password: password,confirmPassword: confirmPassword,email: email, name: name,);
+      await api.altheleteSignUpApi( termsAccepted: termsAccepted, password: password,confirmPassword: confirmPassword,email: email, name: name, timezone: timezone,);
 
       String message = data['message'];
       log(">>>>>>>>>>>>>>> massage : $message");
@@ -45,18 +47,19 @@ final class AltheleteSignUpRx extends RxResponseInt<Map<String, dynamic>> {
 
   @override
   handleSuccessWithReturn(Map<String, dynamic> data) {
+    String? token = data['access_token'];
 
+    if (token != null) {
+      appData.write(kKeyAccessToken, token);
+      appData.write(kKeyIsLoggedIn, true);
+      // Update DioSingleton with the new token
+      DioSingleton.instance.update(token);
+      NotificationService.sendFcmTokenToServer();
+    }
 
-    String token = data['access_token'];
-
-    appData.write(kKeyAccessToken, token);
-
-    appData.write(kKeyIsLoggedIn, true);
-    appData.write(kKeyUserID, userId);
-
-
-    // Update DioSingleton with the new token
-    DioSingleton.instance.update(token);
+    if (data['data'] != null && data['data']['id'] != null) {
+      appData.write(kKeyUserID, data['data']['id']);
+    }
 
     // Add the data to the stream
     dataFetcher.sink.add(data);

@@ -5,143 +5,214 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_prescribed_medicine/model/prescribed_medicine_details_model.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class MedicineDetailsScreen extends StatelessWidget {
-  final String name;
-  final String dosage;
-  final String type;
+class MedicineDetailsScreen extends StatefulWidget {
+  final int id;
 
   const MedicineDetailsScreen({
     super.key,
-    this.name = 'Napa Extra',
-    this.dosage = '500mg',
-    this.type = 'Tablet',
+    required this.id,
   });
+
+  @override
+  State<MedicineDetailsScreen> createState() => _MedicineDetailsScreenState();
+}
+
+class _MedicineDetailsScreenState extends State<MedicineDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getPrescribedMedicineDetailsRxObj.fetchPrescribedMedicineDetails(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UIHelper.verticalSpace(20.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+        child: StreamBuilder<PrescribedMedicineDetailsModel>(
+          stream: getPrescribedMedicineDetailsRxObj.getPrescribedMedicineDetailsData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Color(0xffA6FF00)),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
+                    const Icon(Icons.wifi_off, color: Colors.grey, size: 60),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'Connection failed',
+                      style: TextStyle(color: Colors.white70, fontSize: 16.sp),
+                    ),
+                    TextButton(
+                      onPressed: () => getPrescribedMedicineDetailsRxObj.fetchPrescribedMedicineDetails(widget.id),
+                      child: const Text('Try Again', style: TextStyle(color: Color(0xffA6FF00))),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            final data = snapshot.data?.data;
+            if (data == null) {
+              return Center(
+                child: Text(
+                  'No medicine details found',
+                  style: TextStyle(color: Colors.white54, fontSize: 14.sp),
+                ),
+              );
+            }
+
+            final String medicineName = data.medicineName ?? 'Unknown';
+            final String dosageStr = '${data.dosage ?? ''}${data.dosageType ?? ''}';
+            final String typeStr = data.medicineType ?? '';
+
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  UIHelper.verticalSpace(20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () => NavigationService.goBack(),
-                          child: Container(
-                            padding: EdgeInsets.all(8.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xffA6FF00), width: 1.5),
-                            ),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: const Color(0xffA6FF00),
-                              size: 20.sp,
-                            ),
-                          ),
-                        ),
-                        UIHelper.horizontalSpace(16.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text(
-                              name,
-                              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w600,
+                            GestureDetector(
+                              onTap: () => NavigationService.goBack,
+                              child: Container(
+                                padding: EdgeInsets.all(8.w),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: const Color(0xffA6FF00), width: 1.5),
+                                ),
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  color: const Color(0xffA6FF00),
+                                  size: 20.sp,
+                                ),
                               ),
                             ),
-                            Text(
-                              '$dosage • $type',
-                              style: TextFontStyle.textStyle14w500c242424.copyWith(
-                                color: Colors.white54,
-                                fontSize: 13.sp,
-                              ),
+                            UIHelper.horizontalSpace(16.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  medicineName,
+                                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '$dosageStr • $typeStr',
+                                  style: TextFontStyle.textStyle14w500c242424.copyWith(
+                                    color: Colors.white54,
+                                    fontSize: 13.sp,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        PopupMenuButton<String>(
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: Colors.white54,
+                            size: 24.sp,
+                          ),
+                          color: const Color(0xff222222),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: Text(
+                                'Edit',
+                                style: TextFontStyle.textStyle14w500c242424.copyWith(color: Colors.white),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Text(
+                                'Delete',
+                                style: TextFontStyle.textStyle14w500c242424.copyWith(color: Colors.redAccent),
+                              ),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              NavigationService.navigateToWithArgs(
+                                Routes.addMedicineBasicInfoScreen,
+                                {
+                                  'id': widget.id,
+                                  'name': medicineName,
+                                  'dosage': data.dosage ?? '',
+                                  'dosage_type': data.dosageType ?? 'mg',
+                                  'type': typeStr,
+                                  'taking_times': data.takingTimes,
+                                  'start_date': data.startDate,
+                                  'end_date': data.endDate,
+                                  'before_meal': data.beforeMeal,
+                                  'notification': data.notification,
+                                  'notify_before': data.notifyBefore,
+                                  'doctor_note': data.doctorNote,
+                                  'isEdit': true,
+                                },
+                              );
+                            } else if (value == 'delete') {
+                              _showDeleteDialog(context);
+                            }
+                          },
+                        ),
                       ],
                     ),
-                    PopupMenuButton<String>(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Colors.white54,
-                        size: 24.sp,
-                      ),
-                      color: const Color(0xff222222),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'edit',
-                          child: Text(
-                            'Edit',
-                            style: TextFontStyle.textStyle14w500c242424.copyWith(color: Colors.white),
-                          ),
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Divider(color: Colors.white12, thickness: 1.h),
+                  UIHelper.verticalSpace(16.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Column(
+                      children: [
+                        _buildDailyScheduleCard(data.takingTimes ?? []),
+                        UIHelper.verticalSpace(16.h),
+                        _buildDurationCard(
+                          startDate: data.startDate ?? '',
+                          endDate: data.endDate ?? 'N/A',
+                          beforeMeal: data.beforeMeal == true,
                         ),
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: Text(
-                            'Delete',
-                            style: TextFontStyle.textStyle14w500c242424.copyWith(color: Colors.redAccent),
-                          ),
+                        UIHelper.verticalSpace(16.h),
+                        _buildReminderSettingsCard(
+                          enabled: data.notification == true,
+                          notifyBefore: data.notifyBefore,
                         ),
+                        UIHelper.verticalSpace(16.h),
+                        _buildDoctorNotesCard(data.doctorNote),
+                        UIHelper.verticalSpace(30.h),
                       ],
-                      onSelected: (value) {
-                        if (value == 'edit') {
-                          NavigationService.navigateToWithArgs(
-                            Routes.addMedicineBasicInfoScreen,
-                            {
-                              'name': name,
-                              'dosage': dosage.replaceAll(RegExp(r'[^0-9.]'), ''),
-                              'type': type,
-                              'isEdit': true,
-                            },
-                          );
-                        } else if (value == 'delete') {
-                          _showDeleteDialog(context);
-                        }
-                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              UIHelper.verticalSpace(16.h),
-              Divider(color: Colors.white12, thickness: 1.h),
-              UIHelper.verticalSpace(16.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  children: [
-                    _buildDailyScheduleCard(),
-                    UIHelper.verticalSpace(16.h),
-                    _buildDurationCard(),
-                    UIHelper.verticalSpace(16.h),
-                    _buildReminderSettingsCard(),
-                    UIHelper.verticalSpace(16.h),
-                    _buildDoctorNotesCard(),
-                    UIHelper.verticalSpace(30.h),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildDailyScheduleCard() {
+  Widget _buildDailyScheduleCard(List<String> takingTimes) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -166,9 +237,21 @@ class MedicineDetailsScreen extends StatelessWidget {
             ],
           ),
           UIHelper.verticalSpace(16.h),
-          _timeChip('08:00 AM'),
-          UIHelper.verticalSpace(10.h),
-          _timeChip('10:00 PM'),
+          if (takingTimes.isEmpty)
+            Text(
+              'No taking times selected',
+              style: TextFontStyle.textStyle14w500c242424.copyWith(
+                color: Colors.white54,
+                fontSize: 14.sp,
+              ),
+            )
+          else
+            ...takingTimes.map((time) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: _timeChip(time),
+              );
+            }),
         ],
       ),
     );
@@ -192,7 +275,11 @@ class MedicineDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDurationCard() {
+  Widget _buildDurationCard({
+    required String startDate,
+    required String endDate,
+    required bool beforeMeal,
+  }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -217,19 +304,22 @@ class MedicineDetailsScreen extends StatelessWidget {
             ],
           ),
           UIHelper.verticalSpace(16.h),
-          _infoRow('Start Date', 'May 1, 2026'),
+          _infoRow('Start Date', startDate),
           UIHelper.verticalSpace(12.h),
-          _infoRow('End Date', 'May 31, 2026'),
+          _infoRow('End Date', endDate),
           UIHelper.verticalSpace(12.h),
           Divider(color: Colors.white12, thickness: 1.h),
           UIHelper.verticalSpace(12.h),
-          _infoRow('Before Meal', 'No'),
+          _infoRow('Before Meal', beforeMeal ? 'Yes' : 'No'),
         ],
       ),
     );
   }
 
-  Widget _buildReminderSettingsCard() {
+  Widget _buildReminderSettingsCard({
+    required bool enabled,
+    required int? notifyBefore,
+  }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -254,15 +344,17 @@ class MedicineDetailsScreen extends StatelessWidget {
             ],
           ),
           UIHelper.verticalSpace(16.h),
-          _infoRow('Notifications', 'Enabled'),
-          UIHelper.verticalSpace(12.h),
-          _infoRow('Notify Before', '20 minutes'),
+          _infoRow('Notifications', enabled ? 'Enabled' : 'Disabled'),
+          if (enabled && notifyBefore != null) ...[
+            UIHelper.verticalSpace(12.h),
+            _infoRow('Notify Before', '$notifyBefore minutes'),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildDoctorNotesCard() {
+  Widget _buildDoctorNotesCard(String? notes) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -288,7 +380,9 @@ class MedicineDetailsScreen extends StatelessWidget {
           ),
           UIHelper.verticalSpace(12.h),
           Text(
-            'Please take this medicine when your stomach is full. Do not take it in empty stomach.',
+            (notes == null || notes.trim().isEmpty)
+                ? 'No special instructions provided by your doctor.'
+                : notes,
             style: TextFontStyle.textStyle14w500c242424.copyWith(
               color: Colors.white70,
               height: 1.5,
@@ -400,9 +494,15 @@ class MedicineDetailsScreen extends StatelessWidget {
                     UIHelper.horizontalSpace(12.w),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.pop(context); // close dialog
-                          NavigationService.goBack(); // go back from details screen
+                          EasyLoading.show(status: 'Deleting...');
+                          bool success = await deletePrescribedMedicineRxObj.deletePrescribedMedicineInfo(widget.id);
+                          EasyLoading.dismiss();
+                          if (success) {
+                            getPrescribedMedicinesRxObj.fetchPrescribedMedicines();
+                            NavigationService.goBack; // go back from details screen
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 14.h),

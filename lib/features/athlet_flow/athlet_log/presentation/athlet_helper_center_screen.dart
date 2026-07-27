@@ -55,7 +55,7 @@ class _AthletHelperCenterScreenState extends State<AthletHelperCenterScreen> {
                 ArrowButtonAtheleteFlow(
                   text: 'Help Center',
                   onTap: () {
-                    NavigationService.goBack();
+                    NavigationService.goBack;
                   },
                 ),
                 UIHelper.verticalSpace(24.h),

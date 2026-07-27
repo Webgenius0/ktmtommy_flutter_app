@@ -277,6 +277,7 @@ class _EditProfileScreenAthletState extends State<EditProfileScreenAthlet> {
     return TextField(
       controller: controller,
       readOnly: readOnly,
+      enableInteractiveSelection: !readOnly,
       onTap: onTap,
       keyboardType: keyboardType,
       style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(

@@ -21,6 +21,36 @@ class _AddMedicineTakingScheduleScreenState extends State<AddMedicineTakingSched
     const TimeOfDay(hour: 12, minute: 0),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (args != null && args['taking_times'] != null) {
+        final rawTimes = args['taking_times'];
+        if (rawTimes is List) {
+          final List<TimeOfDay> parsedTimes = [];
+          for (var item in rawTimes) {
+            final String timeStr = item.toString();
+            final parts = timeStr.split(':');
+            if (parts.length >= 2) {
+              final int? hour = int.tryParse(parts[0]);
+              final int? minute = int.tryParse(parts[1]);
+              if (hour != null && minute != null) {
+                parsedTimes.add(TimeOfDay(hour: hour, minute: minute));
+              }
+            }
+          }
+          if (parsedTimes.isNotEmpty) {
+            setState(() {
+              takingTimes = parsedTimes;
+            });
+          }
+        }
+      }
+    });
+  }
+
   Future<void> _selectTime(BuildContext context, int index) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -75,7 +105,7 @@ class _AddMedicineTakingScheduleScreenState extends State<AddMedicineTakingSched
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => NavigationService.goBack(),
+                    onTap: () => NavigationService.goBack,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
@@ -211,9 +241,13 @@ class _AddMedicineTakingScheduleScreenState extends State<AddMedicineTakingSched
               CustomButtonWidget(
                 text: 'Next',
                 onTap: () {
+                  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+                  final nextArgs = Map<String, dynamic>.from(args);
+                  nextArgs['taking_times'] = takingTimes;
+
                   NavigationService.navigateToWithArgs(
                     Routes.addMedicineDurationScreen,
-                    {'isEdit': widget.isEdit},
+                    nextArgs,
                   );
                 },
               ),

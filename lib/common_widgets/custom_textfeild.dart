@@ -92,6 +92,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
     return TextFormField(
       textAlign: widget.textAlign ?? TextAlign.left,
       readOnly: widget.isRead ?? false,
+      enableInteractiveSelection: !(widget.isRead ?? false),
       cursorHeight: widget.cursorHeight ?? 20,
       focusNode: widget.focusNode,
       obscureText: _obscureText,

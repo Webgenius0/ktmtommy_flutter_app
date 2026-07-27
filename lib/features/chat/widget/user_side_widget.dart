@@ -42,7 +42,7 @@ class UserChatWidget extends StatelessWidget {
                   Text(
                     message,
                     style: TextFontStyle.textStyle14w400c87B842poppins
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white),
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
                   ),
                   Text(
                     time,

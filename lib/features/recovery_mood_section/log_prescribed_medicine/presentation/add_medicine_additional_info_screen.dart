@@ -7,6 +7,10 @@ import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+import 'package:ktmtommy_apps/helpers/toast.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class AddMedicineAdditionalInfoScreen extends StatefulWidget {
   final bool isEdit;
@@ -22,6 +26,31 @@ class _AddMedicineAdditionalInfoScreenState extends State<AddMedicineAdditionalI
   final TextEditingController doctorNotesController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (args != null) {
+        setState(() {
+          if (args['notification'] != null) {
+            reminderNotification = args['notification'] == true || args['notification'] == 1 || args['notification'] == '1';
+          }
+          if (args['notify_before'] != null) {
+            final val = args['notify_before'];
+            final String formatted = '$val minutes';
+            if (['5 minutes', '10 minutes', '15 minutes', '20 minutes', '30 minutes'].contains(formatted)) {
+              notifyBefore = formatted;
+            }
+          }
+          if (args['doctor_note'] != null) {
+            doctorNotesController.text = args['doctor_note'].toString();
+          }
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bacroundColorBlack,
@@ -35,7 +64,7 @@ class _AddMedicineAdditionalInfoScreenState extends State<AddMedicineAdditionalI
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => NavigationService.goBack(),
+                    onTap: () => NavigationService.goBack,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
@@ -195,11 +224,97 @@ class _AddMedicineAdditionalInfoScreenState extends State<AddMedicineAdditionalI
               const Spacer(),
               CustomButtonWidget(
                 text: 'Save Medicine',
-                onTap: () {
-                  NavigationService.navigateToWithArgs(
-                    Routes.addMedicineSuccessScreen,
-                    {'isEdit': widget.isEdit},
-                  );
+                onTap: () async {
+                  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+                  
+                  final dynamic id = args['id'];
+                  final String? medicineName = args['medicine_name'];
+                  final String? dosage = args['dosage'];
+                  final String? dosageType = args['dosage_type'];
+                  final String? medicineType = args['medicine_type'];
+                  final List<TimeOfDay>? takingTimes = args['taking_times'] as List<TimeOfDay>?;
+                  final DateTime? startDate = args['start_date'] as DateTime?;
+                  final DateTime? endDate = args['end_date'] as DateTime?;
+                  final bool beforeMeal = args['before_meal'] ?? false;
+
+                  // 1. Validation Checks
+                  if (medicineName == null || medicineName.trim().isEmpty) {
+                    ToastUtil.showShortToast('Medicine name is required');
+                    return;
+                  }
+                  if (dosage == null || dosage.trim().isEmpty) {
+                    ToastUtil.showShortToast('Dosage is required');
+                    return;
+                  }
+                  if (takingTimes == null || takingTimes.isEmpty) {
+                    ToastUtil.showShortToast('Please specify taking times');
+                    return;
+                  }
+                  if (startDate == null) {
+                    ToastUtil.showShortToast('Please specify start date');
+                    return;
+                  }
+
+                  // 2. Data Formatting
+                  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                  final String startDateStr = formatter.format(startDate);
+                  final String? endDateStr = endDate != null ? formatter.format(endDate) : null;
+
+                  final List<String> takingTimesStr = takingTimes.map((time) {
+                    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                  }).toList();
+
+                  final int beforeMealFlag = beforeMeal ? 1 : 0;
+                  final int notificationFlag = reminderNotification ? 1 : 0;
+                  final int notifyBeforeMinutes = int.tryParse(notifyBefore.split(' ').first) ?? 30;
+
+                  // 3. API Call
+                  EasyLoading.show(status: widget.isEdit ? 'Updating medicine...' : 'Saving medicine...');
+                  
+                  bool success = false;
+                  if (widget.isEdit) {
+                    if (id == null) {
+                      ToastUtil.showShortToast('Medicine ID is missing for update');
+                      EasyLoading.dismiss();
+                      return;
+                    }
+                    success = await savePrescribedMedicineRxObj.updatePrescribedMedicineInfo(
+                      id: id,
+                      medicineName: medicineName,
+                      dosage: dosage,
+                      dosageType: dosageType ?? 'mg',
+                      medicineType: medicineType ?? 'Tablet',
+                      takingTimes: takingTimesStr,
+                      startDate: startDateStr,
+                      endDate: endDateStr,
+                      beforeMeal: beforeMealFlag,
+                      notification: notificationFlag,
+                      notifyBefore: notificationFlag == 1 ? notifyBeforeMinutes : 0,
+                      doctorNote: doctorNotesController.text,
+                    );
+                  } else {
+                    success = await savePrescribedMedicineRxObj.savePrescribedMedicineInfo(
+                      medicineName: medicineName,
+                      dosage: dosage,
+                      dosageType: dosageType ?? 'mg',
+                      medicineType: medicineType ?? 'Tablet',
+                      takingTimes: takingTimesStr,
+                      startDate: startDateStr,
+                      endDate: endDateStr,
+                      beforeMeal: beforeMealFlag,
+                      notification: notificationFlag,
+                      notifyBefore: notificationFlag == 1 ? notifyBeforeMinutes : 0,
+                      doctorNote: doctorNotesController.text,
+                    );
+                  }
+                  EasyLoading.dismiss();
+
+                  if (success) {
+                    NavigationService.navigateToWithArgs(
+                      Routes.addMedicineSuccessScreen,
+                      {'isEdit': widget.isEdit},
+                    );
+                  }
                 },
               ),
               UIHelper.verticalSpace(30.h),

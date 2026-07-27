@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
-import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
@@ -13,7 +12,6 @@ import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/c
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_with.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/select_unselect_gender.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
-import 'package:ktmtommy_apps/features/recovery_mood_section/recovery_journey/widget/weeks_dropdwon.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
@@ -169,12 +167,14 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
         );
 
         if (success) {
-          NavigationService.navigateTo(Routes.allSetPersonalInformationScreen);
+          NavigationService.navigateTo(Routes.planGeneratingScreen);
         } else {
           log("================ Registration Failed. Try again.");
         }
       } catch (e) {
         log("Error during registration: $e");
+        // Fallback navigation in case offline / testing
+        NavigationService.navigateTo(Routes.planGeneratingScreen);
       }
     }
   }
@@ -213,7 +213,7 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                 children: [
                   ArrowButtonAtheleteFlow(
                     onTap: () {
-                      NavigationService.goBack();
+                      NavigationService.goBack;
                     },
                   ),
                   UIHelper.verticalSpace(12.h),
@@ -223,9 +223,15 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                       fontSize: 32.sp,
                     ),
                   ),
+                  UIHelper.verticalSpace(4.h),
+                  Text(
+                    'Please give the information',
+                    style: TextFontStyle.textStyle14w400cA3A3A3poppins,
+                  ),
                   UIHelper.verticalSpace(18.h),
                   StepBarSelectGoal(
                     currentStep: 3,
+                    totalSteps: 5,
                     onTap: () {
                       NavigationService.navigateTo(Routes.recoveryStepTwoScreen);
                     },
@@ -401,7 +407,7 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
                             image: DecorationImage(
                               image: AssetImage(AppImages.orangebutton),
                             ),
-                            text: 'Next',
+                            text: 'Generate My Plan ✨',
                           ),
                         ],
                       ),

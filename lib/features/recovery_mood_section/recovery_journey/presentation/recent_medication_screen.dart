@@ -92,7 +92,7 @@ class _RecentMedicationScreenState extends State<RecentMedicationScreen> {
           child: Column(
             children: [
               CustomAppbarWidget(
-                onTap: () => NavigationService.goBack(),
+                onTap: () => NavigationService.goBack,
                 text: 'Recent Medication Log',
               ),
               UIHelper.verticalSpace(20.h),

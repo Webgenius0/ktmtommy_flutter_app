@@ -1,27 +1,45 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/select_goal_screen.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'firebase_options.dart';
 import 'package:ktmtommy_apps/features/chat/presentation/chat_screen.dart';
 import 'package:ktmtommy_apps/loading_screen.dart';
 import 'package:provider/provider.dart';
+import 'athlet_bottom_navigation_bar.dart';
 import 'features/athlet_flow/athlet_section/auth/presentation/personal_information_sign_up_screen.dart';
 import 'features/recovery_mood_section/auth/sign_up/presentation/sign_up_screen.dart';
 import 'helpers/all_routes.dart';
 import 'helpers/di.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
+import 'helpers/notification/notification_service.dart';
 import 'helpers/register_provider.dart';
 import 'networks/dio/dio.dart';
 import 'networks/internet_checker/internet_checker_controller.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   Get.put(InternetController(), permanent: true);
   await GetStorage.init();
   diSetup();
   DioSingleton.instance.create();
+  // Initialize subscription system (RevenueCat config and status check)
+  await subscriptionRxObj.init();
+  await NotificationService().initNotification();
+
+
 
   // EasyLoading setup
   configEasyLoading();
@@ -65,7 +83,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class UtillScreenMobile extends StatelessWidget {
   const UtillScreenMobile({
     super.key,
@@ -91,7 +108,8 @@ class UtillScreenMobile extends StatelessWidget {
           ),
           navigatorKey: NavigationService.navigatorKey,
           onGenerateRoute: RouteGenerator.generateRoute,
-          home: Loading(),
+          home: SelectGoalScreen(),
+          // home: AthletBottomNavigationBar() ,
           // home: PersonalInformationSignUpScreen(),
         );
       },

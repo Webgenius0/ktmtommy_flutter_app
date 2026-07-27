@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/helpers/notification/notification_service.dart';
+import 'package:ktmtommy_apps/helpers/social_login/social_login_api.dart';
+import 'package:ktmtommy_apps/networks/dio/dio.dart';
+import 'package:ktmtommy_apps/networks/exception_handler/data_source.dart';
+import 'package:ktmtommy_apps/networks/rx_base.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:s_castor_flutter/constants/app_constants.dart';
-import 'package:s_castor_flutter/helpers/di.dart';
-import 'package:s_castor_flutter/helpers/social_login/social_login_api.dart';
-import 'package:s_castor_flutter/networks/dio/dio.dart';
-import 'package:s_castor_flutter/networks/exception_handler/data_source.dart';
-import 'package:s_castor_flutter/networks/rx_base.dart';
 
 final class PostSocialLoginRX extends RxResponseInt<Map> {
   final api = PostGoogleLoginApi.instance;
@@ -36,7 +37,7 @@ final class PostSocialLoginRX extends RxResponseInt<Map> {
   Future<Map> handleSuccessWithReturn(Map data) async {
     message = data["message"];
     if (data["success"] == true) {
-      String accesstoken = data["token"];
+      String accesstoken = data["access_token"] ?? data["token"] ?? "";
       log('rx token $accesstoken');
       String id = data["data"]["id"].toString();
 
@@ -47,6 +48,7 @@ final class PostSocialLoginRX extends RxResponseInt<Map> {
 
       // * Update Dio Singleton with new access token
       DioSingleton.instance.update(accesstoken);
+      NotificationService.sendFcmTokenToServer();
       dataFetcher.sink.add(data);
       return data;
     } else {

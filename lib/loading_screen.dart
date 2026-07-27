@@ -11,6 +11,7 @@ import 'constants/app_constants.dart';
 import 'features/log_in_selection_mode/log_in_selection_mode_screen.dart';
 import 'helpers/di.dart';
 import 'helpers/helper_methods.dart';
+import 'helpers/notification/notification_service.dart';
 import 'networks/dio/dio.dart';
 
 
@@ -72,6 +73,7 @@ class _LoadingState extends State<Loading> {
 
       // Token Update Dio
       DioSingleton.instance.update(token);
+      NotificationService.sendFcmTokenToServer();
 
       if (userMode == "athlete") {
         Navigator.pushReplacement(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 // Custom Balance Option Button Widget
 class BalanceOptionButton extends StatelessWidget {
@@ -38,31 +41,37 @@ class BalanceOptionButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(icon, color: Colors.white, ),
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                icon,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -121,8 +130,17 @@ class BalanceDialog extends StatelessWidget {
                   color: Colors.amber,
                   textColor: Colors.black,
                   onPressed: () {
-                    print("Best tapped");
-                    // Add your best option logic here
+                    EasyLoading.show(status: 'Saving...');
+                    final todayStr =
+                        DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    scheduleFeedbackRxObj
+                        .postScheduleFeedback(todayStr, 'best')
+                        .then((_) {
+                      EasyLoading.showSuccess('Feedback saved! 🎉');
+                      Navigator.of(context).pop();
+                    }).catchError((error) {
+                      EasyLoading.showError('Failed to save feedback');
+                    });
                   },
                 ),
                 const SizedBox(height: 12),
@@ -134,8 +152,17 @@ class BalanceDialog extends StatelessWidget {
                   color: Colors.green,
                   textColor: Colors.white,
                   onPressed: () {
-                    print("Good tapped");
-                    // Add your good option logic here
+                    EasyLoading.show(status: 'Saving...');
+                    final todayStr =
+                        DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    scheduleFeedbackRxObj
+                        .postScheduleFeedback(todayStr, 'good')
+                        .then((_) {
+                      EasyLoading.showSuccess('Feedback saved! 🎉');
+                      Navigator.of(context).pop();
+                    }).catchError((error) {
+                      EasyLoading.showError('Failed to save feedback');
+                    });
                   },
                 ),
                 const SizedBox(height: 12),
@@ -147,8 +174,17 @@ class BalanceDialog extends StatelessWidget {
                   color: Colors.grey,
                   textColor: Colors.white,
                   onPressed: () {
-                    print("Poor tapped");
-                    // Add your poor option logic here
+                    EasyLoading.show(status: 'Saving...');
+                    final todayStr =
+                        DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    scheduleFeedbackRxObj
+                        .postScheduleFeedback(todayStr, 'poor')
+                        .then((_) {
+                      EasyLoading.showSuccess('Feedback saved! 🎉');
+                      Navigator.of(context).pop();
+                    }).catchError((error) {
+                      EasyLoading.showError('Failed to save feedback');
+                    });
                   },
                 ),
               ],

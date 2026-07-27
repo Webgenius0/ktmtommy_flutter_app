@@ -296,7 +296,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                             "Tom is typing...",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 16,
                             ),
                           ),
                         ],

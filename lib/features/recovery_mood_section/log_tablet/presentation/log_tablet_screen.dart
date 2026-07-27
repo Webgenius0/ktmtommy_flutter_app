@@ -168,7 +168,7 @@ class _LogTabletScreenState extends State<LogTabletScreen> {
                 ///========== Appbar with back button and title=================
                 CustomAppbarWidget(
                   onTap: () {
-                    NavigationService.goBack();
+                    NavigationService.goBack;
                   },
                   text: 'Log Tablet',
                 ),

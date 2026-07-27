@@ -115,123 +115,134 @@ class _MyProfileSettingScreenState extends State<MyProfileSettingScreen> {
               ///===============Manage Subscription===================///
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Container( 
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.c87B842),
-                    color: AppColors.c181818,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.w),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Subscription Status",
-                                style: TextFontStyle
-                                    .textStyle16w400c757575poppins
-                                    .copyWith(
-                                  color: AppColors.primaryColor,
-                                  height: 0.h,
-                                  fontSize: 20.sp,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        UIHelper.verticalSpace(15.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: StreamBuilder<bool>(
+                  stream: subscriptionRxObj.isPremiumStream,
+                  initialData: subscriptionRxObj.isPremium,
+                  builder: (context, snapshot) {
+                    final isPremium = snapshot.data ?? false;
+                    return Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.c87B842),
+                        color: AppColors.c181818,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SvgPicture.asset(
-                                  AppIcons.premium,
-                                  width: 24.w,
-                                  height: 24.h,
-                                ),
-                                UIHelper.horizontalSpace(8.w),
-                                Text(
-                                  "Premium Plan",
-                                  style: TextFontStyle
-                                      .textStyle24w600cFFFFFFpoppins
-                                      .copyWith(
-                                          color: AppColors.primaryColor,
-                                          fontSize: 15.sp,
-                                          fontWeight: FontWeight.w500),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                Expanded(
+                                  child: Text(
+                                    "Subscription Status",
+                                    style: TextFontStyle
+                                        .textStyle16w400c757575poppins
+                                        .copyWith(
+                                      color: AppColors.primaryColor,
+                                      height: 0.h,
+                                      fontSize: 20.sp,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             ),
+                            UIHelper.verticalSpace(15.h),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SvgPicture.asset(
-                                  AppIcons.check_icon,
-                                  width: 24.w,
-                                  height: 24.h,
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppIcons.premium,
+                                      width: 24.w,
+                                      height: 24.h,
+                                      colorFilter: isPremium
+                                          ? null
+                                          : const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                                    ),
+                                    UIHelper.horizontalSpace(8.w),
+                                    Text(
+                                      isPremium ? "Premium Plan" : "Free Plan",
+                                      style: TextFontStyle
+                                          .textStyle24w600cFFFFFFpoppins
+                                          .copyWith(
+                                              color: AppColors.primaryColor,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
                                 ),
-                                UIHelper.horizontalSpace(8.w),
-                                Text(
-                                  "Active",
-                                  style: TextFontStyle
-                                      .textStyle24w600cFFFFFFpoppins
-                                      .copyWith(
-                                          color: AppColors.c87B842,
-                                          fontSize: 15.sp,
-                                          fontWeight: FontWeight.w500),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppIcons.check_icon,
+                                      width: 24.w,
+                                      height: 24.h,
+                                    ),
+                                    UIHelper.horizontalSpace(8.w),
+                                    Text(
+                                      "Active",
+                                      style: TextFontStyle
+                                          .textStyle24w600cFFFFFFpoppins
+                                          .copyWith(
+                                              color: AppColors.c87B842,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.w500),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            UIHelper.verticalSpace(10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    isPremium
+                                        ? "Manage your subscription details"
+                                        : "Unlock premium logging, AI insights & scanning",
+                                    style: TextFontStyle
+                                        .textStyle24w600cFFFFFFpoppins
+                                        .copyWith(
+                                            color: AppColors.cA3A3A3,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 ),
                               ],
-                            )
-                          ],
-                        ),
-                        UIHelper.verticalSpace(10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Next billing date: June 30, 2025",
-                                style: TextFontStyle
-                                    .textStyle24w600cFFFFFFpoppins
-                                    .copyWith(
-                                        color: AppColors.cA3A3A3,
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w400),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
+                            ),
+                            UIHelper.verticalSpace(30.h),
+                            CustomButton(
+                              name: isPremium ? "Manage Subscription" : "Upgrade Plan",
+                              onCallBack: () {
+                                NavigationService.navigateTo(Routes.subscriptionTbiModeScreen);
+                              },
+                              borderColor: AppColors.c87B842,
+                              context: context,
+                              color: AppColors.c87B842,
+                              height: 40.h,
+                              borderRadius: 999.r,
+                              textStyle: TextFontStyle.textStyle16w400c757575poppins
+                                  .copyWith(
+                                      color: AppColors.cFFFFFF,
+                                      fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
-                        UIHelper.verticalSpace(30.h),
-                        CustomButton(
-                          name: "Manage Subscription",
-                          onCallBack: () {
-                            print(
-                                "=====================>>>Manage Subscription click");
-                          },
-                          borderColor: AppColors.c87B842,
-                          context: context,
-                          color: AppColors.c87B842,
-                          height: 40.h,
-                          borderRadius: 999.r,
-                          textStyle: TextFontStyle.textStyle16w400c757575poppins
-                              .copyWith(
-                                  color: AppColors.cFFFFFF,
-                                  fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  }
                 ),
               ),
 
@@ -404,9 +415,10 @@ class _MyProfileSettingScreenState extends State<MyProfileSettingScreen> {
                               message:
                                   "Are you sure you want to permanently delete your account?",
                               confirmButtonText: "Confirm",
-                              onConfirm: () {
+                              onConfirm: () async {
                                 log("================>>> Delete Account Confirmed");
                                 Navigator.pop(context);
+                                await deleteAccountRxObj.deleteAccount();
                               },
                               onCancel: () {
                                 Navigator.pop(context);

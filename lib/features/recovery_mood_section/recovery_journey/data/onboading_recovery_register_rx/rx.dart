@@ -3,6 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/streams.dart';
 import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/networks/rx_base.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/helpers/notification/notification_service.dart';
+import 'package:ktmtommy_apps/networks/dio/dio.dart';
 
 import 'api.dart';
 
@@ -24,11 +28,8 @@ final class OnboardingRecoverySignUpRx extends RxResponseInt<Map<String, dynamic
     required dynamic injuryName,
     required dynamic injuryLevel,
     required dynamic injuryDate,
-    required dynamic currentRecoverySage,
-    required dynamic physicalSymptom,
-    required dynamic physicalSymptomDetails,
-    required dynamic physicalSymptomDurationHour,
-    required dynamic physicalSymptomFrequency,
+    required dynamic currentRecoveryStage,
+    required List<Map<String, dynamic>> physicalSymptoms,
     required dynamic emotionalSymptoms,
     required dynamic recoveryGoal,
     required dynamic recoveryGoalTime,
@@ -40,15 +41,12 @@ final class OnboardingRecoverySignUpRx extends RxResponseInt<Map<String, dynamic
       // Call the sign-in API
       Map<String, dynamic> data =
       await api.onboardingRecoverySignUpApi(
-       currentRecoverySage: currentRecoverySage,
+        currentRecoveryStage: currentRecoveryStage,
         emotionalSymptoms: emotionalSymptoms,
         injuryDate: injuryDate,
         injuryLevel: injuryLevel,
         injuryName: injuryName,
-        physicalSymptom: physicalSymptom,
-        physicalSymptomDetails: physicalSymptomDetails,
-        physicalSymptomDurationHour: physicalSymptomDurationHour,
-        physicalSymptomFrequency: physicalSymptomFrequency,
+        physicalSymptoms: physicalSymptoms,
         progressTimeline: progressTimeline,
         recoveryGoal: recoveryGoal,
         recoveryGoalTime: recoveryGoalTime,
@@ -73,7 +71,38 @@ final class OnboardingRecoverySignUpRx extends RxResponseInt<Map<String, dynamic
 
   @override
   handleSuccessWithReturn(Map<String, dynamic> data) {
+    String? token = data['access_token'];
 
+    if (token != null) {
+      appData.write(kKeyAccessToken, token);
+      appData.write(kKeyIsLoggedIn, true);
+      // Update DioSingleton with the new token
+      DioSingleton.instance.update(token);
+      NotificationService.sendFcmTokenToServer();
+    }
+
+    final userData = data['data'] ?? data['user'] ?? data;
+    if (userData is Map<String, dynamic>) {
+      if (userData['id'] != null) {
+        appData.write(kKeyUserID, userData['id']);
+      }
+      final name = userData['name'] ?? userData['full_name'];
+      if (name != null) {
+        appData.write(kKeyuserFullName, name.toString());
+      }
+      final goal = userData['recovery_goal'] ?? userData['goal'];
+      if (goal != null) {
+        appData.write(kKRecoveryGoal, goal.toString());
+      }
+      final reminderFrom = userData['reminder_from'] ?? userData['reminder_start_time'];
+      if (reminderFrom != null) {
+        appData.write(kKeyuserReminderStartTime, reminderFrom.toString());
+      }
+      final reminderTo = userData['reminder_to'] ?? userData['reminder_end_time'];
+      if (reminderTo != null) {
+        appData.write(kKeyuserReminderEndTime, reminderTo.toString());
+      }
+    }
 
     dataFetcher.sink.add(data);
 

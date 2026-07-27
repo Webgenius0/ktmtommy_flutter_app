@@ -39,7 +39,7 @@ class AdminChatWidget extends StatelessWidget {
             spans.add(
               TextSpan(
                 text: '•$bulletContent',
-                style: TextStyle(color: Colors.white,fontSize: 14),
+                style: TextStyle(color: Colors.white,fontSize: 16),
               ),
             );
           } else if (line.isNotEmpty) {
@@ -65,35 +65,30 @@ class AdminChatWidget extends StatelessWidget {
       text.splitMapJoin(
         regex,
         onMatch: (Match match) {
-          // ** এর আগের টেক্সট যোগ করুন (বুলেট সহ)
           if (currentIndex < match.start) {
             String beforeText = text.substring(currentIndex, match.start);
             addTextWithBullets(beforeText, spans);
           }
 
-          // ** এর ভিতরের টেক্সট (বোল্ড)
           spans.add(
             TextSpan(
               text: match.group(1),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontSize: 15
+                fontSize: 16
               ),
             ),
           );
 
-          // কারেন্ট ইনডেক্স আপডেট করুন
           currentIndex = match.end;
           return '';
         },
         onNonMatch: (String nonMatch) {
-          // এটি পুরো টেক্সট ফিরিয়ে দেয়, তাই আমরা currentIndex ব্যবহার করব
           return '';
         },
       );
 
-      // লাস্টে অবশিষ্ট টেক্সট যোগ করুন
       if (currentIndex < text.length) {
         String remainingText = text.substring(currentIndex);
         addTextWithBullets(remainingText, spans);

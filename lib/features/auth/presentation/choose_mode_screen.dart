@@ -140,11 +140,9 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
                   ),
                   onTap: () {
                     if (selectedIndex == -1) {
-                      appData.write(kKeyUserType, selectedIndex.toString());
-
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please select a mode to continue',style: TextStyle(color: Colors.black),),
+                        const SnackBar(
+                          content: Text('Please select a mode to continue', style: TextStyle(color: Colors.black)),
                           backgroundColor: Colors.white,
                           duration: Duration(seconds: 2),
                         ),
@@ -152,26 +150,19 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
                       return;
                     }
 
+                    // Save selected mode to local storage
+                    String userMode = selectedIndex == 0 ? "recovery" : "athlete";
+                    appData.write(kKeyUserType, userMode);
+
                     log("======> User kKeyUserType: ${appData.read(kKeyUserType)}");
 
                     // Navigate based on selection
                     if (selectedIndex == 0) {
-                      log("==========>>>>>>>go to signUpScreen");
-                      if(widget.isSocialLogin == true ){
-                        NavigationService.navigateTo(Routes.tellUsAboutScreen);
-                      }else{
-                        NavigationService.navigateTo(Routes.signUpScreen);
-                      }
-
+                      log("==========>>>>>>>go to tellUsAboutScreen");
+                      NavigationService.navigateTo(Routes.tellUsAboutScreen);
                     } else {
-                      log("==========>>>>>>>go to personalInformationSignUpScreen");
-
-                      if(widget.isSocialLogin == true ){
-                        NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
-                      }else{
-                        NavigationService.navigateTo(Routes.personalInformationSignUpScreen);
-                      }
-
+                      log("==========>>>>>>>go to welcomeAtheleteScreen");
+                      NavigationService.navigateTo(Routes.welcomeAtheleteScreen);
                     }
                   },
                   text: 'GET STARTED',

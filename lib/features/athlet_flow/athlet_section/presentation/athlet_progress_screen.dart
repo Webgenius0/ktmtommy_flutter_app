@@ -62,16 +62,23 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
 
                         //=================================== Line chart ======================================//
 
+                        
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            buildButton('Workout Volume'),
-                            // UIHelper.horizontalSpace(8.w),
-                            // buildButton('VO2 Max'),
-                            // UIHelper.horizontalSpace(8.w),
-                            // buildButton('Heart Rate'),
+                            Text("Workout Volume", style: TextFontStyle.textStyle24w700cFFFFFFTeko,),
                           ],
                         ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     buildButton('Workout Volume'),
+                        //     // UIHelper.horizontalSpace(8.w),
+                        //     // buildButton('VO2 Max'),
+                        //     // UIHelper.horizontalSpace(8.w),
+                        //     // buildButton('Heart Rate'),
+                        //   ],
+                        // ),
                         UIHelper.verticalSpace(18.h),
 
                         SizedBox(

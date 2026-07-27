@@ -28,8 +28,13 @@ import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class AthletMealAnalyzeScreen extends StatefulWidget {
   final String imagePath;
+  final String meal_type;
 
-  const AthletMealAnalyzeScreen({super.key, required this.imagePath});
+  const AthletMealAnalyzeScreen({
+    super.key,
+    required this.imagePath,
+    this.meal_type = 'snack',
+  });
   @override
   State<AthletMealAnalyzeScreen> createState() => _AthletMealAnalyzeScreenState();
 }
@@ -260,7 +265,9 @@ class _AthletMealAnalyzeScreenState extends State<AthletMealAnalyzeScreen> {
                                     potassium: appData.read(kKeyPotassium) ?? "0mg",
                                     ingredient_breakdown: ingredientBreakdownJson,
                                     nutritional_insights: nutritionalInsightsJson,
-                                    taken_at: currentDateTime, notes: '',
+                                    taken_at: currentDateTime,
+                                    notes: '',
+                                    meal_type: widget.meal_type,
                                   );
 
                                   if (!mounted) return;

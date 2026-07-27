@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:s_castor_flutter/networks/dio/dio.dart';
-import 'package:s_castor_flutter/networks/endpoints.dart';
-import 'package:s_castor_flutter/networks/exception_handler/data_source.dart';
+import 'package:ktmtommy_apps/networks/dio/dio.dart';
+import 'package:ktmtommy_apps/networks/endpoints.dart';
+import 'package:ktmtommy_apps/networks/exception_handler/data_source.dart';
 
 final class PostGoogleLoginApi {
   static final PostGoogleLoginApi _singleton = PostGoogleLoginApi._internal();
@@ -18,7 +18,7 @@ final class PostGoogleLoginApi {
         "token": token,
         "provider": provider,
       };
-      Response response = await postHttp(Endpoints.googleLogin(), data);
+      Response response = await postHttp(Endpoints.socialLogin(), data);
       if (response.statusCode == 200) {
         Map data = json.decode(json.encode(response.data));
         return data;

@@ -26,9 +26,11 @@ class SelectGoalScreen extends StatefulWidget {
 
 class _SelectGoalScreenState extends State<SelectGoalScreen> {
   final List<String> title = [
-    'COMPLETE\nTRAITHLON',
+    'COMPLETE\nTRIATHLON',
     'IMPROVE 5K\nPACE',
     'BUILD MUSCLE\nMASS',
+    'IMPROVE\nENDURANCE',
+    'MONITOR ENERGY &\nPERFORMANCE',
   ];
 
   int? selectedIndex;
@@ -54,8 +56,8 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
 
     // Print the saved goal from appData
     log('++++++++++++goal: ${appData.read(kKeyAthleteSelectGoal)}');
-    log("========>>>>>Next Button Clicked go to selectSupportScreen ");
-    NavigationService.navigateTo(Routes.selectSupportScreen);
+    log("========>>>>>Next Button Clicked go to personalSetupScreen ");
+    NavigationService.navigateTo(Routes.personalSetupScreen);
   }
 
   @override
@@ -77,7 +79,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
 
                 ArrowButtonAtheleteFlow(
                   onTap: () {
-                    NavigationService.goBack;
+                    NavigationService.goBack();
                   },
                 ),
                 UIHelper.verticalSpace(12.h),
@@ -86,6 +88,11 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                   style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
                     fontSize: 32.sp,
                   ),
+                ),
+                UIHelper.verticalSpace(4.h),
+                Text(
+                  'Tell us about yourself so we can personalise your plan',
+                  style: TextFontStyle.textStyle14w400cA3A3A3poppins,
                 ),
                 UIHelper.verticalSpace(18.h),
                 StepBarSelectGoal(
@@ -97,10 +104,12 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                 ),
                 UIHelper.verticalSpace(18.h),
                 Text(
-                  'What do you want to\nachieve?',
-                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins,
+                  'Tell us what do you want to achieve',
+                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                    fontSize: 18.sp,
+                  ),
                 ),
-                UIHelper.verticalSpace(28.h),
+                UIHelper.verticalSpace(24.h),
 
    //================================= Listview ===========================//
                 ListView.separated(
@@ -123,8 +132,14 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) {
-                    return UIHelper.verticalSpace(24.h);
+                    return UIHelper.verticalSpace(16.h);
                   },
+
+
+
+
+
+
                   itemCount: title.length,
                 ),
                 // Error message
@@ -135,18 +150,22 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                     style: TextStyle(color: Colors.red, fontSize: 14.sp),
                   ),
                 ],
-                UIHelper.verticalSpace(63.h),
+                UIHelper.verticalSpace(36.h),
+
+
+
+
 
                   //============================= Button =========================================//
-
 
                 CustomButtonWidget(
                   onTap: _onNext,
                   textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                   image: DecorationImage(
                       image: AssetImage(AppImages.orangebutton)),
-                  text: 'Next',
+                  text: 'Set My Target',
                 ),
+                UIHelper.verticalSpace(24.h),
               ],
             ),
           ),

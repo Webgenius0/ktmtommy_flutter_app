@@ -131,10 +131,8 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
 
                     GestureDetector(
                       onTap: (){
-                        NavigationService.navigateTo(Routes.chooseModeScreen);
-                        log("=============Register now clicked go to chooseModeScreen ");
-
-
+                        NavigationService.navigateTo(Routes.signUpScreen);
+                        log("=============Register now clicked go to signUpScreen ");
                         },
                       child: Text(' Register now',style: TextFontStyle.textStyle14w400cF55216poppins.copyWith(
                         decoration: TextDecoration.underline,

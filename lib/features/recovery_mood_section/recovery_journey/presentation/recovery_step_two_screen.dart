@@ -48,7 +48,7 @@
 //                 children: [
 //                   CustomAppbarWidget(
 //                     onTap: () {
-//                       NavigationService.goBack();
+//                       NavigationService.goBack;
 //                     },
 //                     text: 'Your Recovery Journey',
 //                   ),
@@ -416,7 +416,7 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                 children: [
                   CustomAppbarWidget(
                     onTap: () {
-                      NavigationService.goBack();
+                      NavigationService.goBack;
                     },
                     text: 'Your Recovery Journey',
                   ),
@@ -440,9 +440,6 @@ class _RecoveryStepTwoScreenState extends State<RecoveryStepTwoScreen> {
                 child: Column(
                   children: [
                     /// ===================== Physical Symptoms Selection =====================
-                    
-                    
-                    
                     Align(
                         alignment: AlignmentGeometry.centerLeft,
                         child: Text("Physical Symptoms",style: TextFontStyle.textStyle18w500c333333.copyWith(color: Colors.white,fontSize: 18),)),

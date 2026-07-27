@@ -199,7 +199,7 @@ class _LogInRecoveryModeScreenState extends State<LogInRecoveryModeScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          NavigationService.navigateTo(Routes.chooseModeScreen);
+                          NavigationService.navigateTo(Routes.signUpScreen);
                         },
                         child: Text('Register now',
                             style: TextFontStyle.textStyle14w400cF55216poppins

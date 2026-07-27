@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ktmtommy_apps/helpers/toast.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
@@ -90,7 +91,7 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
             children: [
               CustomAppbarWidget(
                 onTap: () {
-                  NavigationService.goBack();
+                  NavigationService.goBack;
                 },
                 text: 'Your Recovery Journey',
               ),
@@ -302,6 +303,120 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                 onTap: _isLoading
                     ? null
                     : () async {
+                  // 1. Prepare physical symptoms list
+                  List<Map<String, dynamic>> physicalSymptomsList = [];
+                  String formatDuration(dynamic rawDuration) {
+                    if (rawDuration == null) return "";
+                    String durationStr = rawDuration.toString();
+                    if (durationStr.toLowerCase().contains("hour") || durationStr.toLowerCase().contains("constant")) {
+                      return durationStr;
+                    }
+                    return "$durationStr hour";
+                  }
+
+                  // Read Headache
+                  final headachesLevel = appData.read('headaches_level');
+                  final headachesFrequency = appData.read('headaches_frequency');
+                  final headachesDuration = appData.read('headaches_duration');
+                  if (headachesFrequency != null && headachesFrequency.toString().toLowerCase() != 'not selected') {
+                    physicalSymptomsList.add({
+                      "name": "Headaches",
+                      "details": double.tryParse(headachesLevel?.toString() ?? '') ?? 0.0,
+                      "duration_hour": formatDuration(headachesDuration),
+                      "frequency": headachesFrequency.toString(),
+                    });
+                  }
+
+                  // Read Dizziness
+                  final dizzinessLevel = appData.read('dizziness_level');
+                  final dizzinessFrequency = appData.read('dizziness_frequency');
+                  final dizzinessDuration = appData.read('dizziness_duration');
+                  if (dizzinessFrequency != null && dizzinessFrequency.toString().toLowerCase() != 'not selected') {
+                    physicalSymptomsList.add({
+                      "name": "Dizziness",
+                      "details": double.tryParse(dizzinessLevel?.toString() ?? '') ?? 0.0,
+                      "duration_hour": formatDuration(dizzinessDuration),
+                      "frequency": dizzinessFrequency.toString(),
+                    });
+                  }
+
+                  // Read Vision
+                  final visionLevel = appData.read('vision_level');
+                  final visionFrequency = appData.read('vision_frequency');
+                  final visionDuration = appData.read('vision_duration');
+                  if (visionFrequency != null && visionFrequency.toString().toLowerCase() != 'not selected') {
+                    physicalSymptomsList.add({
+                      "name": "Vision Problems",
+                      "details": double.tryParse(visionLevel?.toString() ?? '') ?? 0.0,
+                      "duration_hour": formatDuration(visionDuration),
+                      "frequency": visionFrequency.toString(),
+                    });
+                  }
+
+                  // Read Balance
+                  final balanceLevel = appData.read('balance_level');
+                  final balanceFrequency = appData.read('balance_frequency');
+                  final balanceDuration = appData.read('balance_duration');
+                  if (balanceFrequency != null && balanceFrequency.toString().toLowerCase() != 'not selected') {
+                    physicalSymptomsList.add({
+                      "name": "Balance Issues",
+                      "details": double.tryParse(balanceLevel?.toString() ?? '') ?? 0.0,
+                      "duration_hour": formatDuration(balanceDuration),
+                      "frequency": balanceFrequency.toString(),
+                    });
+                  }
+
+                  // 2. Read and Validate
+                  final userName = appData.read(kKeyuserFullName);
+                  final userEmail = appData.read(kKeyuserEmail);
+                  final userPassword = appData.read(kKeyuserPassword);
+                  final userAge = appData.read(kKeyuserAge);
+                  final userGender = appData.read(kKeyuserGender);
+                  final rawReminderFrom = appData.read(kKeyuserReminderStartTime);
+                  final rawReminderTo = appData.read(kKeyuserReminderEndTime);
+                  final injuryName = appData.read(kKeyInjuryName);
+                  final injuryLevel = appData.read(kKeyInjuryLevel);
+                  final injuryDate = appData.read(kKeyInjuryDate);
+                  final recoveryStage = appData.read(kKeyRecoveryStage);
+                  final emotionalSymptom = appData.read(kKeyEmotionalSymptom);
+
+                  if (userAge == null) {
+                    ToastUtil.showShortToast('Age is required. Please complete "Tell us about you".');
+                    return;
+                  }
+                  if (userGender == null || userGender.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Gender is required. Please complete "Tell us about you".');
+                    return;
+                  }
+                  if (rawReminderFrom == null || rawReminderTo == null) {
+                    ToastUtil.showShortToast('Reminder time is required. Please complete "Tell us about you".');
+                    return;
+                  }
+                  if (injuryName == null || injuryName.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Injury name is required. Please complete Step 1.');
+                    return;
+                  }
+                  if (injuryLevel == null || injuryLevel.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Injury level is required. Please complete Step 1.');
+                    return;
+                  }
+                  if (injuryDate == null || injuryDate.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Injury date is required. Please complete Step 1.');
+                    return;
+                  }
+                  if (recoveryStage == null || recoveryStage.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Recovery stage is required. Please complete Step 1.');
+                    return;
+                  }
+                  if (physicalSymptomsList.isEmpty) {
+                    ToastUtil.showShortToast('Physical symptoms details are required. Please complete Step 2.');
+                    return;
+                  }
+                  if (emotionalSymptom == null || emotionalSymptom.toString().trim().isEmpty) {
+                    ToastUtil.showShortToast('Emotional symptoms are required. Please complete Step 2.');
+                    return;
+                  }
+
                   setState(() {
                     _isLoading = true;
                   });
@@ -312,24 +427,8 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                   appData.write(ProgressTimelines, progressLabel);
                   appData.write(TargetDuration, selectedDuration);
 
-                  // Read data
-                  final userName = appData.read(kKeyuserFullName);
-                  final userEmail = appData.read(kKeyuserEmail) ;
-                  final userPassword = appData.read(kKeyuserPassword) ;
-                  final userAge = appData.read(kKeyuserAge)?.toString() ; // Convert to String
-                  final userGender = appData.read(kKeyuserGender);
-                  final reminderFrom = formatTime(appData.read(kKeyuserReminderStartTime));
-                  final reminderTo = formatTime(appData.read(kKeyuserReminderEndTime) );
-                  final injuryName = appData.read(kKeyInjuryName) ;
-                  final injuryLevel = appData.read(kKeyInjuryLevel) ;
-                  final injuryDate = appData.read(kKeyInjuryDate) ;
-                  final recoveryStage = appData.read(kKeyRecoveryStage);
-                  final physicalSymptom = appData.read(kKeyPhysicalSymptom);
-                  final symptomLevelRaw = appData.read(kKeySymptomLevel) ;
-                  final symptomLevel = symptomLevelRaw is double ? symptomLevelRaw.toString() : symptomLevelRaw.toString();
-                  final frequency = appData.read(kKeyFrequency) ;
-                  final duration = appData.read(kKeyDuration) ;
-                  final emotionalSymptom = appData.read(kKeyEmotionalSymptom) ;
+                  final reminderFrom = formatTime(rawReminderFrom);
+                  final reminderTo = formatTime(rawReminderTo);
 
                   // Print all data to console
                   log('==============================');
@@ -351,10 +450,7 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
                   log('current_recovery_stage: $recoveryStage');
                   log('------------------------------');
                   log('======⚕️ RECOVERY STEP TWO:=============');
-                  log('physical_symptom: $physicalSymptom');
-                  log('physical_symptom_details: $symptomLevel');
-                  log('physical_symptom_frequency: $frequency');
-                  log('physical_symptom_duration: $duration');
+                  log('physical_symptoms: $physicalSymptomsList');
                   log('emotional_symptoms: $emotionalSymptom');
                   log('------------------------------');
                   log('🕐 FINAL RECOVERY DATA:');
@@ -366,20 +462,16 @@ class _RecoveryStepThreeScreenState extends State<RecoveryStepThreeScreen> {
 
                   try {
                     bool success = await onboardingRecoverySignUpRx.onboardingRecoverySignUpApiInfo(
-
-                      age: appData.read(kKeyuserAge),// String
-                      gender: appData.read(kKeyuserGender),
+                      age: userAge,
+                      gender: userGender,
                       reminderFrom: reminderFrom,
                       reminderTo: reminderTo,
                       userMode: 'recovery',
                       injuryName: injuryName,
                       injuryLevel: injuryLevel,
                       injuryDate: injuryDate,
-                      currentRecoverySage: recoveryStage,
-                      physicalSymptom: physicalSymptom,
-                      physicalSymptomDetails: symptomLevel, // String
-                      physicalSymptomDurationHour: duration,
-                      physicalSymptomFrequency: frequency,
+                      currentRecoveryStage: recoveryStage,
+                      physicalSymptoms: physicalSymptomsList,
                       emotionalSymptoms: emotionalSymptom,
                       recoveryGoal: selectedRecoveryGoal,
                       recoveryGoalTime: getFormattedTimePeriod(selectedTimePeriod),

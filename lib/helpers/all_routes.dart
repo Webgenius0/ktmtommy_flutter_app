@@ -11,7 +11,6 @@ import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/my_profile_setting_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/profile_section_athlet/screen/notification_screen_athlet.dart';
 import 'package:ktmtommy_apps/features/chat/presentation/chat_screen.dart';
-import 'package:ktmtommy_apps/features/log_in_selection_mode/log_in_selection_mode_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/add_equipment_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/presentation/home_screen.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/presentation/daily_summary_settings_screen.dart';
@@ -42,10 +41,14 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/a
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/athlet_progress_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/presentation/experience_level_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/auth/presentation/personal_information_sign_up_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/define_target_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/personal_setup_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/personalized_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/plan_generating_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/select_goal_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/select_support_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/welcome_athelete_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/your_12_week_plan_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_empty_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_scan_one_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/athlets_meal_screen.dart';
@@ -144,9 +147,13 @@ final class Routes {
   static const String personalInformationSignUpScreen = '/personalInformationSignUpScreen';
   static const String welcomeAtheleteScreen = '/welcomeAtheleteScreen';
   static const String selectGoalScreen = '/selectGoalScreen';
+  static const String personalSetupScreen = '/personalSetupScreen';
+  static const String defineTargetScreen = '/defineTargetScreen';
   static const String selectSupportScreen = '/selectSupportScreen';
   static const String experienceLevelScreen = '/experienceLevelScreen';
   static const String personalizedScreen = '/personalizedScreen';
+  static const String planGeneratingScreen = '/planGeneratingScreen';
+  static const String your12WeekPlanScreen = '/your12WeekPlanScreen';
   static const String allSetPersonalInformationScreen = '/allSetPersonalInformationScreen';
   static const String dailySummeryScreen = '/dailySummeryScreen';
   static const String athletDailySummeryScreen = '/athletDailySummeryScreen';
@@ -308,13 +315,14 @@ final class RouteGenerator {
 
 // ===================== OTP ======================================//
       case Routes.verifyOtpScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final isFromSignUp = args?['isFromSignUp'] ?? false;
         if (Platform.isAndroid) {
           return FadedTransitionRoute(
-              widget: VerifyOtpScreen(), settings: settings);
+              widget: VerifyOtpScreen(isFromSignUp: isFromSignUp), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => VerifyOtpScreen());
-          //================= Done ========================//
-        }
+          return CupertinoPageRoute(builder: (context) => VerifyOtpScreen(isFromSignUp: isFromSignUp));
+        }  //================= Done ========================//
 
       case Routes.backToResentPasswordScreen:
         if (Platform.isAndroid) {
@@ -532,20 +540,25 @@ final class RouteGenerator {
       case Routes.addMedicineBasicInfoScreen:
         final args = settings.arguments as Map<String, dynamic>?;
         bool isEdit = args?['isEdit'] ?? false;
+        final int? id = args?['id'];
         if (Platform.isAndroid) {
           return FadedTransitionRoute(widget: AddMedicineBasicInfoScreen(
+            id: id,
             name: args?['name'],
             dosage: args?['dosage'],
+            dosageType: args?['dosage_type'],
             type: args?['type'],
             isEdit: isEdit,
           ), settings: settings);
         } else {
           return CupertinoPageRoute(builder: (context) => AddMedicineBasicInfoScreen(
+            id: id,
             name: args?['name'],
             dosage: args?['dosage'],
+            dosageType: args?['dosage_type'],
             type: args?['type'],
             isEdit: isEdit,
-          ));
+          ), settings: settings);
         }
 
       case Routes.addMedicineTakingScheduleScreen:
@@ -554,7 +567,7 @@ final class RouteGenerator {
         if (Platform.isAndroid) {
           return FadedTransitionRoute(widget: AddMedicineTakingScheduleScreen(isEdit: isEdit), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => AddMedicineTakingScheduleScreen(isEdit: isEdit));
+          return CupertinoPageRoute(builder: (context) => AddMedicineTakingScheduleScreen(isEdit: isEdit), settings: settings);
         }
 
       case Routes.addMedicineDurationScreen:
@@ -563,7 +576,7 @@ final class RouteGenerator {
         if (Platform.isAndroid) {
           return FadedTransitionRoute(widget: AddMedicineDurationScreen(isEdit: isEdit), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => AddMedicineDurationScreen(isEdit: isEdit));
+          return CupertinoPageRoute(builder: (context) => AddMedicineDurationScreen(isEdit: isEdit), settings: settings);
         }
 
       case Routes.addMedicineAdditionalInfoScreen:
@@ -572,7 +585,7 @@ final class RouteGenerator {
         if (Platform.isAndroid) {
           return FadedTransitionRoute(widget: AddMedicineAdditionalInfoScreen(isEdit: isEdit), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => AddMedicineAdditionalInfoScreen(isEdit: isEdit));
+          return CupertinoPageRoute(builder: (context) => AddMedicineAdditionalInfoScreen(isEdit: isEdit), settings: settings);
         }
 
       case Routes.addMedicineSuccessScreen:
@@ -581,14 +594,24 @@ final class RouteGenerator {
         if (Platform.isAndroid) {
           return FadedTransitionRoute(widget: AddMedicineSuccessScreen(isEdit: isEdit), settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => AddMedicineSuccessScreen(isEdit: isEdit));
+          return CupertinoPageRoute(builder: (context) => AddMedicineSuccessScreen(isEdit: isEdit), settings: settings);
         }
 
       case Routes.medicineDetailsScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final int id = args?['id'] ?? 3;
         if (Platform.isAndroid) {
-          return FadedTransitionRoute(widget: MedicineDetailsScreen(), settings: settings);
+          return FadedTransitionRoute(
+              widget: MedicineDetailsScreen(
+                id: id,
+              ),
+              settings: settings);
         } else {
-          return CupertinoPageRoute(builder: (context) => MedicineDetailsScreen());
+          return CupertinoPageRoute(
+              builder: (context) => MedicineDetailsScreen(
+                    id: id,
+                  ),
+              settings: settings);
         }
 
       case Routes.mealAnalyzeScreen:
@@ -683,6 +706,22 @@ final class RouteGenerator {
           return CupertinoPageRoute(builder: (context) => SelectGoalScreen());
         }
 
+      case Routes.personalSetupScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: PersonalSetupScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => PersonalSetupScreen());
+        }
+
+      case Routes.defineTargetScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: DefineTargetScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(builder: (context) => DefineTargetScreen());
+        }
+
       case Routes.selectSupportScreen:
         if (Platform.isAndroid) {
           return FadedTransitionRoute(
@@ -707,6 +746,24 @@ final class RouteGenerator {
               widget: PersonalizedScreen(), settings: settings);
         } else {
           return CupertinoPageRoute(builder: (context) => PersonalizedScreen());
+        }
+
+      case Routes.planGeneratingScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: PlanGeneratingScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => PlanGeneratingScreen());
+        }
+
+      case Routes.your12WeekPlanScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: Your12WeekPlanScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => Your12WeekPlanScreen());
         }
 
       case Routes.allSetPersonalInformationScreen:

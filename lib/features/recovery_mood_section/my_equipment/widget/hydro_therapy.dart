@@ -13,7 +13,9 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
 class HydroTherapy extends StatefulWidget {
-  const HydroTherapy({super.key});
+  final ValueChanged<String>? onRepeatSelected;
+
+  const HydroTherapy({super.key, this.onRepeatSelected});
 
   @override
   State<HydroTherapy> createState() => _HydroTherapyState();
@@ -89,21 +91,12 @@ class _HydroTherapyState extends State<HydroTherapy> {
                     UIHelper.verticalSpace(24.h),
 
                     // Row of weekdays
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildDayContainer('Sun', tempSelectedDays, (day) {
-                          if (tempSelectedDays.contains(day)) {
-                            tempSelectedDays.remove(day);
-                          } else {
-                            tempSelectedDays.add(day);
-                          }
-                          validationMessage = null;
-                          setStateDialog(() {});
-                        }),
-                        ...weekdays.map((day) => Padding(
-                          padding: EdgeInsets.only(left: 8.w),
-                          child: _buildDayContainer(day, tempSelectedDays, (day) {
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildDayContainer('Sun', tempSelectedDays, (day) {
                             if (tempSelectedDays.contains(day)) {
                               tempSelectedDays.remove(day);
                             } else {
@@ -112,8 +105,20 @@ class _HydroTherapyState extends State<HydroTherapy> {
                             validationMessage = null;
                             setStateDialog(() {});
                           }),
-                        )).toList(),
-                      ],
+                          ...weekdays.map((day) => Padding(
+                            padding: EdgeInsets.only(left: 8.w),
+                            child: _buildDayContainer(day, tempSelectedDays, (day) {
+                              if (tempSelectedDays.contains(day)) {
+                                tempSelectedDays.remove(day);
+                              } else {
+                                tempSelectedDays.add(day);
+                              }
+                              validationMessage = null;
+                              setStateDialog(() {});
+                            }),
+                          )).toList(),
+                        ],
+                      ),
                     ),
 
                     UIHelper.verticalSpace(24.h),
@@ -198,6 +203,9 @@ class _HydroTherapyState extends State<HydroTherapy> {
       setState(() {
         selectedUnit = confirmedDays;
       });
+      if (widget.onRepeatSelected != null) {
+        widget.onRepeatSelected!(confirmedDays);
+      }
     }
   }
 
@@ -246,6 +254,9 @@ class _HydroTherapyState extends State<HydroTherapy> {
             setState(() {
               selectedUnit = value;
             });
+            if (widget.onRepeatSelected != null) {
+              widget.onRepeatSelected!(value);
+            }
           }
         },
         itemBuilder: (BuildContext context) {

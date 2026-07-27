@@ -68,7 +68,7 @@ class _RecoveryStepOneScreenState extends State<RecoveryStepOneScreen> {
             children: [
               CustomAppbarWidget(
                 onTap: () {
-                  NavigationService.goBack();
+                  NavigationService.goBack;
                 },
                 text: 'Your Recovery Journey',
               ),

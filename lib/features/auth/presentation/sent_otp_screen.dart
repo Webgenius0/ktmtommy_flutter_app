@@ -11,6 +11,8 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ktmtommy_apps/helpers/di.dart';
+import 'package:ktmtommy_apps/constants/app_constants.dart';
 
 
 
@@ -111,6 +113,7 @@ class _SentOtpScreenState extends State<SentOtpScreen> {
                  CustomButtonWidget(
                     onTap: () {
                       if (_formKey.currentState?.validate() ?? false) {
+                        appData.write(kKeyuserEmail, emailController.text);
                         NavigationService.navigateTo(Routes.verifyOtpScreen);
 
                       }

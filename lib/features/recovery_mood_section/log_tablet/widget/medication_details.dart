@@ -193,34 +193,34 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 UIHelper.verticalSpace(16.h),
 
                 // Prescribed Switch
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Prescribed',
-                      style:
-                          TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Transform.scale(
-                      scale: 0.90,
-                      child: Switch(
-                        activeColor: AppColors.cFFFFFF,
-                        activeTrackColor: AppColors.cCC1F28,
-                        inactiveTrackColor: Colors.white,
-                        inactiveThumbColor: AppColors.c87B842,
-                        value: isOn,
-                        onChanged: (bool value) {
-                          setState(() {
-                            isOn = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'Prescribed',
+                //       style:
+                //           TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
+                //         fontSize: 16.sp,
+                //         fontWeight: FontWeight.w400,
+                //       ),
+                //     ),
+                //     Transform.scale(
+                //       scale: 0.90,
+                //       child: Switch(
+                //         activeColor: AppColors.cFFFFFF,
+                //         activeTrackColor: AppColors.cCC1F28,
+                //         inactiveTrackColor: Colors.white,
+                //         inactiveThumbColor: AppColors.c87B842,
+                //         value: isOn,
+                //         onChanged: (bool value) {
+                //           setState(() {
+                //             isOn = value;
+                //           });
+                //         },
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

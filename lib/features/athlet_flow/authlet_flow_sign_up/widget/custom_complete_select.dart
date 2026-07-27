@@ -19,7 +19,7 @@ class CustomCompleteSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(10.sp),
+      padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 16.w),
       decoration: ShapeDecoration(
         color: isSelected ? AppColors.c111111 : AppColors.c1C1C1C,
         shape: RoundedRectangleBorder(
@@ -27,20 +27,20 @@ class CustomCompleteSelect extends StatelessWidget {
             width: 2,
             color: isSelected ? AppColors.orangeColor : Colors.transparent,
           ),
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(16.r),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextFontStyle.textStyle24w600cF55216poppins.copyWith(
-              color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
-            ),
+      child: Center(
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
+            fontSize: 22.sp,
+            color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
+            letterSpacing: 1.1,
+            height: 1.1,
           ),
-        ],
+        ),
       ),
     );
   }

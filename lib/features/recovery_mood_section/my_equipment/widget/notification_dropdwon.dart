@@ -12,8 +12,11 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
 
 class NotificationDropdwon extends StatefulWidget {
+  final ValueChanged<String>? onNotificationSelected;
+
   const NotificationDropdwon({
     super.key,
+    this.onNotificationSelected,
   });
 
   @override
@@ -42,6 +45,9 @@ class _NotificationDropdwonState extends State<NotificationDropdwon> {
           setState(() {
             selectedUnit = value;
           });
+          if (widget.onNotificationSelected != null) {
+            widget.onNotificationSelected!(value);
+          }
         },
         itemBuilder: (BuildContext context) {
           return durationList.map((String value) {

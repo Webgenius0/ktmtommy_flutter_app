@@ -35,12 +35,15 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///========== Appbar with back button and title=================
-              ArrowButtonAtheleteFlow(
-                text: 'My Profile & Settings',
-                noBack: true,
-                onTap: () {
-                  Navigator.pop(context);
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ArrowButtonAtheleteFlow(
+                  text: 'My Profile & Settings',
+                  noBack: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
               UIHelper.verticalSpace(20.h),
 
@@ -256,7 +259,6 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Container(
-                  height: 510.h,
                   width: double.infinity,
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
@@ -298,9 +300,38 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
                           iconColor: AppColors.cF55216,
                         ),
                       ),
+                      UIHelper.verticalSpace(10.h),
+                      GestureDetector(
+                        onTap: () {
+                          NavigationService.navigateTo(Routes.notificationScreenAthlet);
+                          log("================>>> Notification Settings Clicked");
+                        },
+                        child: _buildMenuRow(
+                          title: "Notification Settings",
+                          textColor: Colors.white,
+                          iconPath: AppIcons.notification_icon,
+                          trailing: Icons.arrow_forward_ios_rounded,
+                          iconColor: AppColors.cF55216,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(10.h),
+                      GestureDetector(
+                        onTap: () {
+                          NavigationService.navigateToWithArgs(
+                              Routes.your12WeekPlanScreen, {'isFromProgress': true});
+                          log("================>>> My Goal Clicked");
+                        },
+                        child: _buildMenuRow(
+                          title: "My Goal",
+                          textColor: Colors.white,
+                          iconPath: AppIcons.linecharticon,
+                          trailing: Icons.arrow_forward_ios_rounded,
+                          iconColor: AppColors.cF55216,
+                        ),
+                      ),
 
-                      UIHelper.verticalSpace(20.h),
-
+                      // UIHelper.verticalSpace(20.h),
+                      //
                       // GestureDetector(
                       //   onTap: () {
                       //     NavigationService.navigateTo(Routes.notificationScreenAthlet);

@@ -10,6 +10,8 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/custom_circular_progress.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/widget/custom_shedul.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/widget/custom_daystrike_calander.dart';
+import 'package:ktmtommy_apps/helpers/all_routes.dart';
+import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 
@@ -43,7 +45,15 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomShedul(text: 'My Progress'),
+                CustomShedul(
+                  text: 'My Progress',
+                  onPillTap: () {
+                    NavigationService.navigateToWithArgs(
+                      Routes.your12WeekPlanScreen,
+                      {'isFromProgress': true},
+                    );
+                  },
+                ),
                 UIHelper.verticalSpace(24.h),
 
                 Expanded(
@@ -231,13 +241,13 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) =>
             FlLine(
-              color: AppColors.cFFFFFF.withOpacity(0.2),
+              color: AppColors.cFFFFFF.withValues(alpha: 0.2),
               strokeWidth: 1,
               dashArray: [4, 4],
             ),
         getDrawingVerticalLine: (value) =>
             FlLine(
-              color: AppColors.cFFFFFF.withOpacity(0.2),
+              color: AppColors.cFFFFFF.withValues(alpha: 0.2),
               strokeWidth: 1,
               dashArray: [4, 4],
             ),
@@ -273,7 +283,7 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(color: AppColors.c666666.withOpacity(0.2)),
+        border: Border.all(color: AppColors.c666666.withValues(alpha: 0.2)),
       ),
       minX: 0,
       maxX: 6,
@@ -293,7 +303,7 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                AppColors.orangeColor.withOpacity(0.4),
+                AppColors.orangeColor.withValues(alpha: 0.4),
                 Colors.transparent,
               ],
             ),

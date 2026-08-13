@@ -51,7 +51,7 @@ class _MyProfileSettingScreenAthletState extends State<MyProfileSettingScreenAth
 
               GestureDetector(
                 onTap: () {
-                  log("================>>> Profile Section Clicked");
+                  log("======= =========>>> Profile Section Clicked");
                   NavigationService.navigateTo(Routes.editProfileScreenAthlet);
                 },
                 child: Container(

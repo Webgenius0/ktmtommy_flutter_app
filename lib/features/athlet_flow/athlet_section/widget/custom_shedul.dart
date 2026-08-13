@@ -4,56 +4,55 @@ import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-
-
-
-
-
 class CustomShedul extends StatelessWidget {
   final String text;
+  final VoidCallback? onPillTap;
 
   const CustomShedul({
-    super.key, required this.text,
+    super.key,
+    required this.text,
+    this.onPillTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return   Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-            text,
-            // 'My schedule',
-            textAlign: TextAlign.center,
-            style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                fontSize: 20.sp,fontWeight: FontWeight.w500
-            )
+          text,
+          textAlign: TextAlign.start,
+          style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
+            fontSize: 28.sp,
+            fontWeight: FontWeight.bold,
+            height: 1.1,
+          ),
         ),
         UIHelper.verticalSpace(8.h),
-
-        Container(
-          padding:  EdgeInsets.all(10.sp),
-          decoration: ShapeDecoration(
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  width: 1.w,
-                  color: AppColors.orangeColor
+        GestureDetector(
+          onTap: onPillTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.c181818,
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: AppColors.orangeColor,
+                width: 1.0,
               ),
-              borderRadius: BorderRadius.circular(80.r),
+            ),
+            child: Text(
+              '🏁 TRIATHLON — Week 2 • Day 8 >',
+              textAlign: TextAlign.center,
+              style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
+                fontSize: 12.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          child: Text(
-              '🏁 TRIATHLON — 12 WEEKS TO GO',
-              textAlign: TextAlign.center,
-              style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                  fontSize: 14.sp,fontWeight: FontWeight.w400
-              )
-          ),
         ),
-
-
       ],
     );
-
   }
 }

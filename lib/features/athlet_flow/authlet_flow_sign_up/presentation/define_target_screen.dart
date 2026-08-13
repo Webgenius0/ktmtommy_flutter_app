@@ -1,13 +1,12 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
-import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
-import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_athlete_app_bar.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/define_target_widgets.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
@@ -21,9 +20,8 @@ class DefineTargetScreen extends StatefulWidget {
 }
 
 class _DefineTargetScreenState extends State<DefineTargetScreen> {
-  // Triathlon target state
   int selectedFormatIndex = 0;
-  final List<Map<String, String>> triathlonFormats = [
+  final List<Map<String, String>> triathlonFormats = const [
     {
       'title': '⚡ SPRINT',
       'hours': '~1-2 hrs/day',
@@ -50,25 +48,23 @@ class _DefineTargetScreenState extends State<DefineTargetScreen> {
     },
   ];
 
-  // 5K Pace state
-  int targetTime = 25;
-
-  // Muscle Mass state
-  String targetGain = '+4 kg';
-  final List<String> gainOptions = ['+2 kg', '+4 kg', '+6 kg', '+8 kg'];
-
-  // Endurance state
-  String targetDistance = 'Half Marathon';
-  final List<String> distanceOptions = ['10K', 'Half Marathon', 'Full Marathon', 'Ultra'];
-
-  // Energy & Performance state
-  String targetFocus = 'Energy Optimization';
-  final List<String> focusOptions = ['Energy Optimization', 'Recovery Tracking', 'Peak Performance', 'Stress Management'];
+  int target5kTime = 25;
+  int targetWeight = 80;
+  int targetLongestSession = 45;
+  int targetEnergyScore = 80;
 
   void _onNext() {
     String? goal = appData.read(kKeyAthleteSelectGoal);
     log("Define Target submitted for Goal: $goal");
-    NavigationService.navigateTo(Routes.personalizedScreen);
+    bool isMuscle = (goal ?? '').toUpperCase().contains('MUSCLE');
+    bool isEndurance = (goal ?? '').toUpperCase().contains('ENDURANCE');
+    bool isEnergy = (goal ?? '').toUpperCase().contains('ENERGY');
+
+    if (isMuscle || isEndurance || isEnergy) {
+      NavigationService.navigateTo(Routes.planGeneratingScreen);
+    } else {
+      NavigationService.navigateTo(Routes.personalizedScreen);
+    }
   }
 
   @override
@@ -95,272 +91,53 @@ class _DefineTargetScreenState extends State<DefineTargetScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ArrowButtonAtheleteFlow(
-                  onTap: () {
-                    NavigationService.goBack();
-                  },
-                ),
                 UIHelper.verticalSpace(12.h),
-                Text(
-                  'Define Your Target',
-                  style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                    fontSize: 32.sp,
-                  ),
-                ),
-                UIHelper.verticalSpace(4.h),
-                Text(
-                  'Set a measurable outcome for your 12-week plan',
-                  style: TextFontStyle.textStyle14w400cA3A3A3poppins,
-                ),
-                UIHelper.verticalSpace(18.h),
-                StepBarSelectGoal(
+                const CustomAthleteAppBar(
+                  title: 'Define Your Target',
+                  subtitle: 'Set a measurable outcome for your 12-week plan',
                   currentStep: 2,
-                  totalSteps: 5,
-                  onTap: () {},
-                  onStepTap: (int index) {},
+                  totalSteps: 4,
                 ),
                 UIHelper.verticalSpace(24.h),
-
-                // DYNAMIC GOAL CONTENT
                 if (isTriathlon) ...[
-                  Column(
-                    children: List.generate(triathlonFormats.length, (index) {
-                      bool isSelected = selectedFormatIndex == index;
-                      var format = triathlonFormats[index];
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedFormatIndex = index;
-                          });
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(bottom: 12.h),
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.c181818,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(
-                              color: isSelected ? AppColors.orangeColor : AppColors.c2F2F2F,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    format['title']!,
-                                    style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                                      fontSize: 20.sp,
-                                      color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
-                                    ),
-                                  ),
-                                  Text(
-                                    format['hours']!,
-                                    style: TextFontStyle.textStyle14w400cA3A3A3poppins.copyWith(
-                                      fontSize: 12.sp,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              UIHelper.verticalSpace(4.h),
-                              Text(
-                                format['desc']!,
-                                style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
-                                  fontSize: 13.sp,
-                                  color: AppColors.cA3A3A3,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                  UIHelper.verticalSpace(16.h),
-                  // Note box for Triathlon
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(14.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.c181818.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: AppColors.c2F2F2F),
-                    ),
-                    child: Text(
-                      'Your AI coach will structure swim, bike, and run sessions with brick workouts to prepare you for ${triathlonFormats[selectedFormatIndex]['name']}.',
-                      style: TextFontStyle.textStyle14w400cA3A3A3poppins.copyWith(
-                        fontSize: 13.sp,
-                        color: AppColors.cA3A3A3,
-                        height: 1.4,
-                      ),
-                    ),
+                  DefineTargetTriathlonWidget(
+                    selectedFormatIndex: selectedFormatIndex,
+                    onSelectFormat: (idx) => setState(() => selectedFormatIndex = idx),
+                    formats: triathlonFormats,
                   ),
                 ] else if (is5kPace) ...[
-                  Text(
-                    'Target time',
-                    style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontSize: 16.sp),
-                  ),
-                  UIHelper.verticalSpace(16.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.c181818,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: AppColors.c2F2F2F),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (targetTime > 5) setState(() => targetTime--);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.c2F2F2F,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Icon(Icons.remove, color: AppColors.cFFFFFF, size: 20.sp),
-                          ),
-                        ),
-                        Text(
-                          '$targetTime min',
-                          style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(fontSize: 32.sp),
-                        ),
-                        GestureDetector(
-                          onTap: () => setState(() => targetTime++),
-                          child: Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.c2F2F2F,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Icon(Icons.add, color: AppColors.cFFFFFF, size: 20.sp),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  UIHelper.verticalSpace(30.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(14.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.c181818,
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: AppColors.c2F2F2F),
-                    ),
-                    child: Text(
-                      'Your AI coach will structure interval training, tempo runs, and threshold sessions to reach your target time of $targetTime min.',
-                      style: TextFontStyle.textStyle14w400cA3A3A3poppins.copyWith(fontSize: 13.sp),
-                    ),
+                  DefineTargetCounterWidget(
+                    title: 'Target time',
+                    value: target5kTime,
+                    unit: 'min',
+                    onChange: (val) => setState(() => target5kTime = val),
                   ),
                 ] else if (isMuscle) ...[
-                  Text('Target Weight Gain', style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontSize: 16.sp)),
-                  UIHelper.verticalSpace(16.h),
-                  Row(
-                    children: gainOptions.map((opt) {
-                      bool isSelected = targetGain == opt;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => targetGain = opt),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.w),
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            decoration: BoxDecoration(
-                              color: AppColors.c181818,
-                              borderRadius: BorderRadius.circular(10.r),
-                              border: Border.all(
-                                color: isSelected ? AppColors.orangeColor : AppColors.c2F2F2F,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                opt,
-                                style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                                  fontSize: 20.sp,
-                                  color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                  DefineTargetCounterWidget(
+                    title: 'Target Weight',
+                    value: targetWeight,
+                    unit: 'kg',
+                    subtitle: 'Target Weight: ${targetWeight} kg (current: 75 kg)',
+                    onChange: (val) => setState(() => targetWeight = val),
                   ),
                 ] else if (isEndurance) ...[
-                  Text('Target Event / Distance', style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontSize: 16.sp)),
-                  UIHelper.verticalSpace(16.h),
-                  Column(
-                    children: distanceOptions.map((opt) {
-                      bool isSelected = targetDistance == opt;
-                      return GestureDetector(
-                        onTap: () => setState(() => targetDistance = opt),
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.c181818,
-                            borderRadius: BorderRadius.circular(10.r),
-                            border: Border.all(
-                              color: isSelected ? AppColors.orangeColor : AppColors.c2F2F2F,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Text(
-                            opt,
-                            style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                              fontSize: 20.sp,
-                              color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                  DefineTargetCounterWidget(
+                    title: 'Target longest session',
+                    value: targetLongestSession,
+                    unit: 'min',
+                    subtitle: 'Target longest session: ${targetLongestSession}min (current: 30 min)',
+                    onChange: (val) => setState(() => targetLongestSession = val),
                   ),
                 ] else ...[
-                  Text('Primary Optimization Focus', style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(fontSize: 16.sp)),
-                  UIHelper.verticalSpace(16.h),
-                  Column(
-                    children: focusOptions.map((opt) {
-                      bool isSelected = targetFocus == opt;
-                      return GestureDetector(
-                        onTap: () => setState(() => targetFocus = opt),
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.c181818,
-                            borderRadius: BorderRadius.circular(10.r),
-                            border: Border.all(
-                              color: isSelected ? AppColors.orangeColor : AppColors.c2F2F2F,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Text(
-                            opt,
-                            style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                              fontSize: 18.sp,
-                              color: isSelected ? AppColors.orangeColor : AppColors.cFFFFFF,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                  DefineTargetCounterWidget(
+                    title: 'Daily Energy Score Target',
+                    value: targetEnergyScore,
+                    unit: 'pts',
+                    subtitle: 'Target Score: ${targetEnergyScore} pts(current: 50 pts)',
+                    onChange: (val) => setState(() => targetEnergyScore = val),
                   ),
                 ],
-
-                UIHelper.verticalSpace(40.h),
+                UIHelper.verticalSpace(36.h),
                 CustomButtonWidget(
                   onTap: _onNext,
                   textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,

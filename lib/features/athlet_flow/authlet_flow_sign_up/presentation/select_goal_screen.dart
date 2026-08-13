@@ -1,21 +1,16 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
-import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_athlete_app_bar.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_complete_select.dart';
-import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/stepbar_select_goal.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
-
 
 class SelectGoalScreen extends StatefulWidget {
   const SelectGoalScreen({super.key});
@@ -48,15 +43,8 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
       errorMessage = null;
     });
 
-    // Save only the selected goal's title as a string in appData
     appData.write(kKeyAthleteSelectGoal, title[selectedIndex!]);
-
-    // Print the selected goal's title
-    log("=========>>>>>>>>>>>>>>Selected Goal: ${title[selectedIndex!]}");
-
-    // Print the saved goal from appData
-    log('++++++++++++goal: ${appData.read(kKeyAthleteSelectGoal)}');
-    log("========>>>>>Next Button Clicked go to personalSetupScreen ");
+    log("Selected Goal: ${title[selectedIndex!]}");
     NavigationService.navigateTo(Routes.personalSetupScreen);
   }
 
@@ -68,7 +56,9 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(AppImages.bacroundimage), fit: BoxFit.cover),
+            image: AssetImage(AppImages.bacroundimage),
+            fit: BoxFit.cover,
+          ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -76,45 +66,17 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                ArrowButtonAtheleteFlow(
-                  onTap: () {
-                    NavigationService.goBack();
-                  },
-                ),
                 UIHelper.verticalSpace(12.h),
-                Text(
-                  'Select Goal',
-                  style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                    fontSize: 32.sp,
-                  ),
-                ),
-                UIHelper.verticalSpace(4.h),
-                Text(
-                  'Tell us about yourself so we can personalise your plan',
-                  style: TextFontStyle.textStyle14w400cA3A3A3poppins,
-                ),
-                UIHelper.verticalSpace(18.h),
-                StepBarSelectGoal(
+                const CustomAthleteAppBar(
+                  title: 'Select Goal',
+                  subtitle: 'Tell us what do you want to achieve',
                   currentStep: 0,
-                  onTap: () {
-                    NavigationService.navigateTo(Routes.recoveryStepTwoScreen);
-                  },
-                  onStepTap: (int index) {},
-                ),
-                UIHelper.verticalSpace(18.h),
-                Text(
-                  'Tell us what do you want to achieve',
-                  style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-                    fontSize: 18.sp,
-                  ),
+                  totalSteps: 4,
                 ),
                 UIHelper.verticalSpace(24.h),
-
-   //================================= Listview ===========================//
                 ListView.separated(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     final isSelected = selectedIndex == index;
                     return GestureDetector(
@@ -122,9 +84,7 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                         setState(() {
                           selectedIndex = index;
                         });
-                        log("Selected Goal: ${title[index]}");
                       },
-
                       child: CustomCompleteSelect(
                         title: title[index],
                         isSelected: isSelected,
@@ -134,15 +94,8 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                   separatorBuilder: (BuildContext context, int index) {
                     return UIHelper.verticalSpace(16.h);
                   },
-
-
-
-
-
-
                   itemCount: title.length,
                 ),
-                // Error message
                 if (errorMessage != null) ...[
                   UIHelper.verticalSpace(12.h),
                   Text(
@@ -151,18 +104,12 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
                   ),
                 ],
                 UIHelper.verticalSpace(36.h),
-
-
-
-
-
-                  //============================= Button =========================================//
-
                 CustomButtonWidget(
                   onTap: _onNext,
                   textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                   image: DecorationImage(
-                      image: AssetImage(AppImages.orangebutton)),
+                    image: AssetImage(AppImages.orangebutton),
+                  ),
                   text: 'Set My Target',
                 ),
                 UIHelper.verticalSpace(24.h),

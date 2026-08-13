@@ -66,7 +66,7 @@ class _SubscriptionAthletModeScreenState
                   children: [
                     GestureDetector(
                       onTap: () {
-                        NavigationService.goBack();
+                        NavigationService.goBack;
                       },
                       child: SvgPicture.asset(
                         AppIcons.arrwButton,
@@ -97,21 +97,21 @@ class _SubscriptionAthletModeScreenState
                         ),
                       ),
                     ),
-                    UIHelper.horizontalSpace(16.w),
-                    GestureDetector(
-                      onTap: () {
-                        NavigationService.navigateTo(
-                            Routes.athletBottomNavigationBar);
-                      },
-                      child: Text(
-                        'Skip',
-                        style: TextFontStyle.textStyle24w600cF55216poppins
-                            .copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ),
+                    // UIHelper.horizontalSpace(16.w),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     NavigationService.navigateTo(
+                    //         Routes.athletBottomNavigationBar);
+                    //   },
+                    //   child: Text(
+                    //     'Skip',
+                    //     style: TextFontStyle.textStyle24w600cF55216poppins
+                    //         .copyWith(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 14.sp,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 Text(

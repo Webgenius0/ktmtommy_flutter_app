@@ -92,12 +92,11 @@ class _AthletDateCalanderState extends State<AthletDateCalander> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
-      decoration: ShapeDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+      decoration: BoxDecoration(
         color: AppColors.c181818,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFF2F2F2F)),
       ),
       child: Column(
         children: [

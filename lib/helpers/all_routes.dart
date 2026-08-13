@@ -49,6 +49,8 @@ import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presenta
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/select_support_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/welcome_athelete_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/your_12_week_plan_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/athlete_daily_check_in_screen.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/presentation/athlete_building_plan_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_empty_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/log_food/athlet_log_food_empty/presentation/athlet_log_food_scan_one_screen.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/presentation/athlets_meal_screen.dart';
@@ -154,6 +156,8 @@ final class Routes {
   static const String personalizedScreen = '/personalizedScreen';
   static const String planGeneratingScreen = '/planGeneratingScreen';
   static const String your12WeekPlanScreen = '/your12WeekPlanScreen';
+  static const String athletDailyCheckInScreen = '/athletDailyCheckInScreen';
+  static const String athletBuildingPlanScreen = '/athletBuildingPlanScreen';
   static const String allSetPersonalInformationScreen = '/allSetPersonalInformationScreen';
   static const String dailySummeryScreen = '/dailySummeryScreen';
   static const String athletDailySummeryScreen = '/athletDailySummeryScreen';
@@ -758,12 +762,34 @@ final class RouteGenerator {
         }
 
       case Routes.your12WeekPlanScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        bool isFromProgress = args?['isFromProgress'] ?? false;
         if (Platform.isAndroid) {
           return FadedTransitionRoute(
-              widget: Your12WeekPlanScreen(), settings: settings);
+              widget: Your12WeekPlanScreen(isFromProgress: isFromProgress),
+              settings: settings);
         } else {
           return CupertinoPageRoute(
-              builder: (context) => Your12WeekPlanScreen());
+              builder: (context) =>
+                  Your12WeekPlanScreen(isFromProgress: isFromProgress));
+        }
+
+      case Routes.athletDailyCheckInScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AthleteDailyCheckInScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => AthleteDailyCheckInScreen());
+        }
+
+      case Routes.athletBuildingPlanScreen:
+        if (Platform.isAndroid) {
+          return FadedTransitionRoute(
+              widget: AthleteBuildingPlanScreen(), settings: settings);
+        } else {
+          return CupertinoPageRoute(
+              builder: (context) => AthleteBuildingPlanScreen());
         }
 
       case Routes.allSetPersonalInformationScreen:

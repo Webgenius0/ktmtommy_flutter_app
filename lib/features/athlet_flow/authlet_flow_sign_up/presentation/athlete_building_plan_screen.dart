@@ -1,31 +1,31 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
-import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/custom_athlete_app_bar.dart';
+import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
-class PlanGeneratingScreen extends StatefulWidget {
-  const PlanGeneratingScreen({super.key});
+class AthleteBuildingPlanScreen extends StatefulWidget {
+  const AthleteBuildingPlanScreen({super.key});
 
   @override
-  State<PlanGeneratingScreen> createState() => _PlanGeneratingScreenState();
+  State<AthleteBuildingPlanScreen> createState() =>
+      _AthleteBuildingPlanScreenState();
 }
 
-class _PlanGeneratingScreenState extends State<PlanGeneratingScreen>
+class _AthleteBuildingPlanScreenState extends State<AthleteBuildingPlanScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
   final List<String> _processSteps = const [
     'Analysing your fitness profile',
+    'Generating plan based on previous day',
     'Calculating optimal training load',
-    'Structuring 12-week periodisation',
-    'Personalising daily tasks',
+    'Personalizing daily tasks',
   ];
 
   @override
@@ -46,7 +46,8 @@ class _PlanGeneratingScreenState extends State<PlanGeneratingScreen>
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
-            NavigationService.navigateTo(Routes.your12WeekPlanScreen);
+            NavigationService.navigateToReplacement(
+                Routes.athletBottomNavigationBar);
           }
         });
       }
@@ -77,17 +78,23 @@ class _PlanGeneratingScreenState extends State<PlanGeneratingScreen>
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UIHelper.verticalSpace(12.h),
-                const CustomAthleteAppBar(
-                  title: 'Plan Generating',
-                  currentStep: 3,
-                  totalSteps: 4,
+                ArrowButtonAtheleteFlow(
+                  onTap: () => NavigationService.goBack(),
                 ),
-                UIHelper.verticalSpace(50.h),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  "Today's plan",
+                  style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
+                    fontSize: 28.sp,
+                    height: 1.1,
+                  ),
+                ),
+                UIHelper.verticalSpace(40.h),
+
                 Center(
                   child: Stack(
                     alignment: Alignment.center,
@@ -116,9 +123,10 @@ class _PlanGeneratingScreenState extends State<PlanGeneratingScreen>
                   ),
                 ),
                 UIHelper.verticalSpace(40.h),
+
                 Center(
                   child: Text(
-                    'AI is building your plan...',
+                    "AI is building today's plan...",
                     style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w600,
@@ -126,6 +134,7 @@ class _PlanGeneratingScreenState extends State<PlanGeneratingScreen>
                   ),
                 ),
                 UIHelper.verticalSpace(28.h),
+
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Column(

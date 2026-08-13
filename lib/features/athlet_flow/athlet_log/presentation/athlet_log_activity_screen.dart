@@ -193,6 +193,22 @@ class _AthletLogActivityScreenState extends State<AthletLogActivityScreen> {
                                 CustomDuration(),
                                 UIHelper.verticalSpace(18.h),
                                 Text(
+                                    'Average Heart Rate',
+                                    style:  TextFontStyle.textStyle14w400cA3A3A3poppins
+                                ),
+                                UIHelper.verticalSpace(4.h),
+
+                                CustomTextfield(
+                                  textAlign: TextAlign.start, 
+                                  suffixIcon: Center(child: Text("BPM",style: TextStyle(color: Colors.white),)),
+                                  borderRadius: 20.r,
+                                  fillColor: AppColors.c2A2A2A,
+                                  hintText: 'Add heart rate',
+                                  hintTextSyle: TextFontStyle.textStyle14w400cA3A3A3poppins,
+                                  style: TextStyle(color: AppColors.cFFFFFF),
+                                ),
+                                UIHelper.verticalSpace(18.h),
+                                Text(
                                     'Notification',
                                     style:  TextFontStyle.textStyle14w400cA3A3A3poppins
                                 ),

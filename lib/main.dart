@@ -108,8 +108,8 @@ class UtillScreenMobile extends StatelessWidget {
           ),
           navigatorKey: NavigationService.navigatorKey,
           onGenerateRoute: RouteGenerator.generateRoute,
-          home: SelectGoalScreen(),
-          // home: AthletBottomNavigationBar() ,
+          // home: SelectGoalScreen(),
+          home: AthletBottomNavigationBar() ,
           // home: PersonalInformationSignUpScreen(),
         );
       },

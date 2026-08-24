@@ -66,18 +66,65 @@ class _PersonalSetupScreenState extends State<PersonalSetupScreen> {
   }
 
   void _onNext() {
-    String? goal = appData.read(kKeyAthleteSelectGoal);
-    log("Personal Setup submitted for Goal: $goal");
+    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
+    bool isTriathlon = selectedGoal == 'COMPLETE_TRIATHLON' || selectedGoal.toUpperCase().contains('TRIATHLON');
+    bool is5kPace = selectedGoal == 'IMPROVE_5K_PACE' || selectedGoal.toUpperCase().contains('5K');
+    bool isMuscle = selectedGoal == 'BUILD_MUSCLE_MASS' || selectedGoal.toUpperCase().contains('MUSCLE');
+    bool isEndurance = selectedGoal == 'IMPROVE_ENDURANCE' || selectedGoal.toUpperCase().contains('ENDURANCE');
+
+    Map<String, dynamic> setupData = {};
+
+    if (isTriathlon) {
+      setupData = {
+        "swimming_level": swimLevel,
+        "cycling_level": bikeLevel,
+        "running_level": runLevel,
+        "weekly_training_availability_hours": weeklyAvailability.toInt(),
+        "previous_race_experience": previousRaceExperience == 'Yes',
+      };
+    } else if (is5kPace) {
+      int freq = int.tryParse(selectedFrequency5k.replaceAll(RegExp(r'[^0-9]'), '')) ?? 3;
+      setupData = {
+        "running_experience": runningExperience,
+        "current_5k_time_minutes": current5kTime,
+        "weekly_running_frequency": freq,
+        "current_injury": hasInjury == 'Yes',
+      };
+    } else if (isMuscle) {
+      setupData = {
+        "training_experience": liftingExperience,
+        "gym_access": hasGymAccess,
+        "weekly_training_days": weeklyTrainingDays,
+      };
+    } else if (isEndurance) {
+      int freq = int.tryParse(selectedFrequencyEndurance.replaceAll(RegExp(r'[^0-9]'), '')) ?? 3;
+      setupData = {
+        "current_activity_level": activityLevel,
+        "longest_cardio_duration_minutes": longestCardio,
+        "weekly_running_frequency": freq,
+        "primary_sport": primarySport,
+      };
+    } else {
+      setupData = {
+        "average_sleep_hours": averageSleep,
+        "daily_activity": dailyActivity,
+        "stress_level": stressLevel,
+        "work_training_intensity": workIntensity,
+      };
+    }
+
+    appData.write('athleteSetupData', setupData);
+    log("Personal Setup submitted for Goal: $selectedGoal with setup_data: $setupData");
     NavigationService.navigateTo(Routes.defineTargetScreen);
   }
 
   @override
   Widget build(BuildContext context) {
-    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON';
-    bool isTriathlon = selectedGoal.toUpperCase().contains('TRIATHLON');
-    bool is5kPace = selectedGoal.toUpperCase().contains('5K');
-    bool isMuscle = selectedGoal.toUpperCase().contains('MUSCLE');
-    bool isEndurance = selectedGoal.toUpperCase().contains('ENDURANCE');
+    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
+    bool isTriathlon = selectedGoal == 'COMPLETE_TRIATHLON' || selectedGoal.toUpperCase().contains('TRIATHLON');
+    bool is5kPace = selectedGoal == 'IMPROVE_5K_PACE' || selectedGoal.toUpperCase().contains('5K');
+    bool isMuscle = selectedGoal == 'BUILD_MUSCLE_MASS' || selectedGoal.toUpperCase().contains('MUSCLE');
+    bool isEndurance = selectedGoal == 'IMPROVE_ENDURANCE' || selectedGoal.toUpperCase().contains('ENDURANCE');
 
     return Scaffold(
       body: Container(
@@ -129,17 +176,9 @@ class _PersonalSetupScreenState extends State<PersonalSetupScreen> {
                   ),
                 ] else if (isMuscle) ...[
                   PersonalSetupMuscleSection(
-                    selectedGender: selectedGender,
-                    heightController: heightController,
-                    weightController: weightController,
-                    heightUnit: heightUnit,
-                    isLbs: isLbs,
                     liftingExperience: liftingExperience,
                     hasGymAccess: hasGymAccess,
                     weeklyDays: weeklyTrainingDays,
-                    onGenderChange: (val) => setState(() => selectedGender = val),
-                    onHeightUnitChange: (val) => setState(() => heightUnit = val),
-                    onWeightUnitChange: (val) => setState(() => isLbs = val),
                     onExpChange: (val) => setState(() => liftingExperience = val),
                     onGymChange: (val) => setState(() => hasGymAccess = val),
                     onDaysChange: (val) => setState(() => weeklyTrainingDays = val),

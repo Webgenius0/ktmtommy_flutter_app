@@ -54,26 +54,57 @@ class _DefineTargetScreenState extends State<DefineTargetScreen> {
   int targetEnergyScore = 80;
 
   void _onNext() {
-    String? goal = appData.read(kKeyAthleteSelectGoal);
-    log("Define Target submitted for Goal: $goal");
-    bool isMuscle = (goal ?? '').toUpperCase().contains('MUSCLE');
-    bool isEndurance = (goal ?? '').toUpperCase().contains('ENDURANCE');
-    bool isEnergy = (goal ?? '').toUpperCase().contains('ENERGY');
+    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
+    bool isTriathlon = selectedGoal == 'COMPLETE_TRIATHLON' || selectedGoal.toUpperCase().contains('TRIATHLON');
+    bool is5kPace = selectedGoal == 'IMPROVE_5K_PACE' || selectedGoal.toUpperCase().contains('5K');
+    bool isMuscle = selectedGoal == 'BUILD_MUSCLE_MASS' || selectedGoal.toUpperCase().contains('MUSCLE');
+    bool isEndurance = selectedGoal == 'IMPROVE_ENDURANCE' || selectedGoal.toUpperCase().contains('ENDURANCE');
 
-    if (isMuscle || isEndurance || isEnergy) {
-      NavigationService.navigateTo(Routes.planGeneratingScreen);
+    Map<String, dynamic> targetData = {};
+
+    if (isTriathlon) {
+      String formatName = triathlonFormats[selectedFormatIndex]['name'] ?? 'Sprint';
+      String targetType = 'SPRINT';
+      if (formatName.toUpperCase().contains('OLYMPIC')) {
+        targetType = 'OLYMPIC';
+      } else if (formatName.toUpperCase().contains('HALF')) {
+        targetType = 'HALF_IRONMAN';
+      } else if (formatName.toUpperCase().contains('FULL')) {
+        targetType = 'FULL_IRONMAN';
+      }
+      targetData = {
+        "target_type": targetType,
+      };
+    } else if (is5kPace) {
+      targetData = {
+        "target_time_minutes": target5kTime,
+      };
+    } else if (isMuscle) {
+      targetData = {
+        "target_weight": targetWeight,
+      };
+    } else if (isEndurance) {
+      targetData = {
+        "target_longest_session_minutes": targetLongestSession,
+      };
     } else {
-      NavigationService.navigateTo(Routes.personalizedScreen);
+      targetData = {
+        "daily_energy_score_target": targetEnergyScore,
+      };
     }
+
+    appData.write('athleteTargetData', targetData);
+    log("Define Target submitted for Goal: $selectedGoal with target_data: $targetData");
+    NavigationService.navigateTo(Routes.personalizedScreen);
   }
 
   @override
   Widget build(BuildContext context) {
-    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON';
-    bool isTriathlon = selectedGoal.toUpperCase().contains('TRIATHLON');
-    bool is5kPace = selectedGoal.toUpperCase().contains('5K');
-    bool isMuscle = selectedGoal.toUpperCase().contains('MUSCLE');
-    bool isEndurance = selectedGoal.toUpperCase().contains('ENDURANCE');
+    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
+    bool isTriathlon = selectedGoal == 'COMPLETE_TRIATHLON' || selectedGoal.toUpperCase().contains('TRIATHLON');
+    bool is5kPace = selectedGoal == 'IMPROVE_5K_PACE' || selectedGoal.toUpperCase().contains('5K');
+    bool isMuscle = selectedGoal == 'BUILD_MUSCLE_MASS' || selectedGoal.toUpperCase().contains('MUSCLE');
+    bool isEndurance = selectedGoal == 'IMPROVE_ENDURANCE' || selectedGoal.toUpperCase().contains('ENDURANCE');
 
     return Scaffold(
       body: Container(

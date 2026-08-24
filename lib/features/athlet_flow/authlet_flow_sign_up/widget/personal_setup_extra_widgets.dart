@@ -9,34 +9,18 @@ import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/p
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 class PersonalSetupMuscleSection extends StatelessWidget {
-  final String selectedGender;
-  final TextEditingController heightController;
-  final TextEditingController weightController;
-  final String heightUnit;
-  final bool isLbs;
   final String liftingExperience;
   final bool hasGymAccess;
   final int weeklyDays;
-  final Function(String) onGenderChange;
-  final Function(String) onHeightUnitChange;
-  final Function(bool) onWeightUnitChange;
   final Function(String) onExpChange;
   final Function(bool) onGymChange;
   final Function(int) onDaysChange;
 
   const PersonalSetupMuscleSection({
     super.key,
-    required this.selectedGender,
-    required this.heightController,
-    required this.weightController,
-    required this.heightUnit,
-    required this.isLbs,
     required this.liftingExperience,
     required this.hasGymAccess,
     required this.weeklyDays,
-    required this.onGenderChange,
-    required this.onHeightUnitChange,
-    required this.onWeightUnitChange,
     required this.onExpChange,
     required this.onGymChange,
     required this.onDaysChange,
@@ -47,23 +31,6 @@ class PersonalSetupMuscleSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PersonalizedGenderSelector(
-          selectedGender: selectedGender,
-          onSelectGender: onGenderChange,
-        ),
-        UIHelper.verticalSpace(20.h),
-        CustomHeight(
-          controller: heightController,
-          heightUnit: heightUnit,
-          onUnitChange: onHeightUnitChange,
-        ),
-        UIHelper.verticalSpace(20.h),
-        CustomWith(
-          controller: weightController,
-          isLbs: isLbs,
-          onUnitChange: onWeightUnitChange,
-        ),
-        UIHelper.verticalSpace(20.h),
         PersonalSetupLevelSelector(
           title: 'Training Experience',
           icon: Icons.fitness_center,

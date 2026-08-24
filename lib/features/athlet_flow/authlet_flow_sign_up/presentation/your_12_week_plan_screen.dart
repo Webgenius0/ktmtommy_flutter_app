@@ -6,13 +6,15 @@ import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/arrow_button_athelete_flow.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/model/generate_macro_plan_model.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/widget/plan_summary_widgets.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
-class Your12WeekPlanScreen extends StatelessWidget {
+class Your12WeekPlanScreen extends StatefulWidget {
   final bool isFromProgress;
 
   const Your12WeekPlanScreen({
@@ -21,24 +23,27 @@ class Your12WeekPlanScreen extends StatelessWidget {
   });
 
   @override
+  State<Your12WeekPlanScreen> createState() => _Your12WeekPlanScreenState();
+}
+
+class _Your12WeekPlanScreenState extends State<Your12WeekPlanScreen> {
+  @override
+  void initState() {
+    super.initState();
+    generateMacroPlanRxObj.fetchGenerateMacroPlan();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON';
+    String selectedGoal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
     String reminderTime = appData.read(kKeyAthleteDailyReminder) ?? '6-10 AM';
+    Map<String, dynamic> setupData = Map<String, dynamic>.from(appData.read('athleteSetupData') ?? {});
+    Map<String, dynamic> targetData = Map<String, dynamic>.from(appData.read('athleteTargetData') ?? {});
 
-    bool isTriathlon = selectedGoal.toUpperCase().contains('TRIATHLON');
-    bool is5kPace = selectedGoal.toUpperCase().contains('5K');
-    bool isMuscle = selectedGoal.toUpperCase().contains('MUSCLE');
-    bool isEndurance = selectedGoal.toUpperCase().contains('ENDURANCE');
-
-    String screenTitle = 'Your 12-Week Complete\nTriathlon Plan';
-    if (is5kPace) {
-      screenTitle = 'Your 12-Week Complete\nImprove 5k pace Plan';
-    } else if (isMuscle || isEndurance || !isTriathlon) {
-      screenTitle = 'Your 12-Week Build Muscle\nMass Plan';
-    }
-
-    List<Map<String, String>> stats = _getStats(isTriathlon, is5kPace, isMuscle, isEndurance, reminderTime);
-    List<Map<String, String>> phases = _getPhases(isTriathlon, is5kPace, isMuscle, isEndurance);
+    bool isTriathlon = selectedGoal == 'COMPLETE_TRIATHLON' || selectedGoal.toUpperCase().contains('TRIATHLON');
+    bool is5kPace = selectedGoal == 'IMPROVE_5K_PACE' || selectedGoal.toUpperCase().contains('5K');
+    bool isMuscle = selectedGoal == 'BUILD_MUSCLE_MASS' || selectedGoal.toUpperCase().contains('MUSCLE');
+    bool isEndurance = selectedGoal == 'IMPROVE_ENDURANCE' || selectedGoal.toUpperCase().contains('ENDURANCE');
 
     return Scaffold(
       body: Container(
@@ -51,99 +56,154 @@ class Your12WeekPlanScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ArrowButtonAtheleteFlow(
-                  onTap: () => NavigationService.goBack,
-                ),
-                UIHelper.verticalSpace(12.h),
-                Text(
-                  screenTitle,
-                  style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                    fontSize: 28.sp,
-                    height: 1.1,
-                  ),
-                ),
-                UIHelper.verticalSpace(12.h),
-                const PlanAiBadgeWidget(),
-                UIHelper.verticalSpace(20.h),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.c181818,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.c2F2F2F),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
+          child: StreamBuilder<GenerateMacroPlanModel>(
+            stream: generateMacroPlanRxObj.getMacroPlanStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.orangeColor),
+                );
+              }
+
+              GenerateMacroPlanModel? planModel = snapshot.data;
+              int totalWeeks = planModel?.data?.totalWeeks ?? 12;
+
+              String goalTitle = 'Complete Triathlon';
+              if (is5kPace) {
+                goalTitle = 'Improve 5K Pace';
+              } else if (isMuscle) {
+                goalTitle = 'Build Muscle Mass';
+              } else if (isEndurance) {
+                goalTitle = 'Improve Endurance';
+              } else if (!isTriathlon) {
+                goalTitle = 'Monitor Energy';
+              }
+
+              String screenTitle = 'Your $totalWeeks-Week $goalTitle Plan';
+
+              List<Map<String, String>> stats = _getStats(
+                isTriathlon,
+                is5kPace,
+                isMuscle,
+                isEndurance,
+                reminderTime,
+                setupData,
+                targetData,
+                totalWeeks,
+              );
+
+              List<Map<String, String>> phases = [];
+              if (planModel?.data?.phases != null && planModel!.data!.phases!.isNotEmpty) {
+                phases = planModel.data!.phases!.map((p) {
+                  String w = p.weeks ?? '';
+                  if (!w.toLowerCase().contains('wk') && !w.toLowerCase().contains('wks')) {
+                    w = 'Wks $w';
+                  }
+                  return {
+                    'title': p.name ?? '',
+                    'weeks': w,
+                    'sub': p.description ?? '',
+                  };
+                }).toList();
+              } else {
+                phases = _getFallbackPhases(isTriathlon, is5kPace, isMuscle, isEndurance);
+              }
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ArrowButtonAtheleteFlow(
+                      onTap: () => NavigationService.goBack,
+                    ),
+                    UIHelper.verticalSpace(12.h),
+                    Text(
+                      screenTitle,
+                      style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
+                        fontSize: 28.sp,
+                        height: 1.1,
+                      ),
+                    ),
+                    UIHelper.verticalSpace(12.h),
+                    const PlanAiBadgeWidget(),
+                    UIHelper.verticalSpace(20.h),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.c181818,
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(color: AppColors.c2F2F2F),
+                      ),
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: PlanMetricTileWidget(
-                              label: stats[0]['label']!,
-                              val: stats[0]['val']!,
-                              isHighlight: stats[0]['highlight'] == 'true',
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: PlanMetricTileWidget(
+                                  label: stats[0]['label']!,
+                                  val: stats[0]['val']!,
+                                  isHighlight: stats[0]['highlight'] == 'true',
+                                ),
+                              ),
+                              UIHelper.horizontalSpace(12.w),
+                              Expanded(
+                                child: PlanMetricTileWidget(
+                                  label: stats[1]['label']!,
+                                  val: stats[1]['val']!,
+                                  isHighlight: stats[1]['highlight'] == 'true',
+                                ),
+                              ),
+                            ],
                           ),
-                          UIHelper.horizontalSpace(12.w),
-                          Expanded(
-                            child: PlanMetricTileWidget(
-                              label: stats[1]['label']!,
-                              val: stats[1]['val']!,
-                              isHighlight: stats[1]['highlight'] == 'true',
-                            ),
+                          UIHelper.verticalSpace(12.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: PlanMetricTileWidget(
+                                  label: stats[2]['label']!,
+                                  val: stats[2]['val']!,
+                                  isHighlight: stats[2]['highlight'] == 'true',
+                                ),
+                              ),
+                              UIHelper.horizontalSpace(12.w),
+                              Expanded(
+                                child: PlanMetricTileWidget(
+                                  label: stats[3]['label']!,
+                                  val: stats[3]['val']!,
+                                  isHighlight: stats[3]['highlight'] == 'true',
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      UIHelper.verticalSpace(12.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: PlanMetricTileWidget(
-                              label: stats[2]['label']!,
-                              val: stats[2]['val']!,
-                              isHighlight: stats[2]['highlight'] == 'true',
-                            ),
-                          ),
-                          UIHelper.horizontalSpace(12.w),
-                          Expanded(
-                            child: PlanMetricTileWidget(
-                              label: stats[3]['label']!,
-                              val: stats[3]['val']!,
-                              isHighlight: stats[3]['highlight'] == 'true',
-                            ),
-                          ),
-                        ],
+                    ),
+                    UIHelper.verticalSpace(24.h),
+                    PlanTrainingPhasesWidget(phases: phases),
+                    UIHelper.verticalSpace(20.h),
+                    const PlanWhatsIncludedWidget(),
+                    UIHelper.verticalSpace(28.h),
+                    CustomButtonWidget(
+                      onTap: () {
+                        if (widget.isFromProgress) {
+                          _showResetGoalDialog(context);
+                        } else {
+                          _showYourPlanAwaitsDialog(context);
+                        }
+                      },
+                      textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
+                      image: DecorationImage(
+                        image: AssetImage(AppImages.orangebutton),
                       ),
-                    ],
-                  ),
+                      text: widget.isFromProgress ? 'Reset My Goal' : 'Start My Plan',
+                    ),
+                    UIHelper.verticalSpace(24.h),
+                  ],
                 ),
-                UIHelper.verticalSpace(24.h),
-                PlanTrainingPhasesWidget(phases: phases),
-                UIHelper.verticalSpace(20.h),
-                const PlanWhatsIncludedWidget(),
-                UIHelper.verticalSpace(28.h),
-                CustomButtonWidget(
-                  onTap: () {
-                    if (isFromProgress) {
-                      _showResetGoalDialog(context);
-                    } else {
-                      _showYourPlanAwaitsDialog(context);
-                    }
-                  },
-                  textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
-                  image: DecorationImage(
-                    image: AssetImage(AppImages.orangebutton),
-                  ),
-                  text: isFromProgress ? 'Reset My Goal' : 'Start My Plan',
-                ),
-                UIHelper.verticalSpace(24.h),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
@@ -244,13 +304,11 @@ class Your12WeekPlanScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24.r),
-                      border:
-                          Border.all(color: const Color(0xFFE8E8E8), width: 1),
+                      border: Border.all(color: const Color(0xFFE8E8E8), width: 1),
                     ),
                     child: Text(
                       'Skip for Now',
-                      style:
-                          TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
+                      style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -341,8 +399,7 @@ class Your12WeekPlanScreen extends StatelessWidget {
                           ),
                           child: Text(
                             'Cancel',
-                            style: TextFontStyle.textStyle14w400cE8E8E8poppins
-                                .copyWith(
+                            style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -369,8 +426,7 @@ class Your12WeekPlanScreen extends StatelessWidget {
                           ),
                           child: Text(
                             'Confirm',
-                            style: TextFontStyle.textStyle14w400cE8E8E8poppins
-                                .copyWith(
+                            style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -389,46 +445,64 @@ class Your12WeekPlanScreen extends StatelessWidget {
     );
   }
 
-  List<Map<String, String>> _getStats(bool isTriathlon, bool is5kPace, bool isMuscle, bool isEndurance, String reminderTime) {
+  List<Map<String, String>> _getStats(
+    bool isTriathlon,
+    bool is5kPace,
+    bool isMuscle,
+    bool isEndurance,
+    String reminderTime,
+    Map<String, dynamic> setupData,
+    Map<String, dynamic> targetData,
+    int totalWeeks,
+  ) {
     if (isTriathlon) {
+      String format = targetData['target_type'] ?? 'Sprint';
       return [
         {'label': 'Goal', 'val': 'Complete Triathlon', 'highlight': 'true'},
-        {'label': 'Race format', 'val': 'Sprint', 'highlight': 'false'},
+        {'label': 'Race format', 'val': format, 'highlight': 'false'},
         {'label': 'Reminder Time', 'val': reminderTime.contains('Morning') ? '6-10 AM' : reminderTime, 'highlight': 'false'},
-        {'label': 'Duration', 'val': '12 Weeks', 'highlight': 'false'},
+        {'label': 'Duration', 'val': '$totalWeeks Weeks', 'highlight': 'false'},
       ];
     } else if (is5kPace) {
+      String curr5k = setupData['current_5k_time_minutes'] != null ? '${setupData['current_5k_time_minutes']} min' : '28 min';
+      String target5k = targetData['target_time_minutes'] != null ? '${targetData['target_time_minutes']} min' : '25 min';
       return [
         {'label': 'Goal', 'val': 'Improve 5K Pace', 'highlight': 'true'},
-        {'label': 'Current 5K', 'val': '28:00 min', 'highlight': 'false'},
-        {'label': 'Target 5K', 'val': '25:00 min', 'highlight': 'false'},
-        {'label': 'Duration', 'val': '12 Weeks', 'highlight': 'false'},
+        {'label': 'Current 5K', 'val': curr5k, 'highlight': 'false'},
+        {'label': 'Target 5K', 'val': target5k, 'highlight': 'false'},
+        {'label': 'Duration', 'val': '$totalWeeks Weeks', 'highlight': 'false'},
       ];
     } else if (isMuscle) {
+      String days = setupData['weekly_training_days'] != null ? '${setupData['weekly_training_days']} days/wk' : '3 days/wk';
+      String targetW = targetData['target_weight'] != null ? '${targetData['target_weight']} kg' : '80 kg';
       return [
         {'label': 'Goal', 'val': 'Build Muscle Mass', 'highlight': 'true'},
-        {'label': 'Current Weight', 'val': '75 kg', 'highlight': 'false'},
-        {'label': 'Target Weight', 'val': '80 kg', 'highlight': 'false'},
-        {'label': 'Duration', 'val': '12 Weeks', 'highlight': 'false'},
+        {'label': 'Training Days', 'val': days, 'highlight': 'false'},
+        {'label': 'Target Weight', 'val': targetW, 'highlight': 'false'},
+        {'label': 'Duration', 'val': '$totalWeeks Weeks', 'highlight': 'false'},
       ];
     } else if (isEndurance) {
+      String currCardio = setupData['longest_cardio_duration_minutes'] != null ? '${setupData['longest_cardio_duration_minutes']} min' : '30 min';
+      String targetSession = targetData['target_longest_session_minutes'] != null ? '${targetData['target_longest_session_minutes']} min' : '45 min';
       return [
         {'label': 'Goal', 'val': 'Improve Endurance', 'highlight': 'true'},
-        {'label': 'Longest Session', 'val': '30 min', 'highlight': 'false'},
-        {'label': 'Target Duration', 'val': '45 min', 'highlight': 'false'},
-        {'label': 'Duration', 'val': '12 Weeks', 'highlight': 'false'},
+        {'label': 'Longest Session', 'val': currCardio, 'highlight': 'false'},
+        {'label': 'Target Duration', 'val': targetSession, 'highlight': 'false'},
+        {'label': 'Duration', 'val': '$totalWeeks Weeks', 'highlight': 'false'},
       ];
     } else {
+      String sleep = setupData['average_sleep_hours'] != null ? '${setupData['average_sleep_hours']} hrs' : '6 hrs';
+      String targetScore = targetData['daily_energy_score_target'] != null ? '${targetData['daily_energy_score_target']} pts' : '80 pts';
       return [
         {'label': 'Goal', 'val': 'Monitor Energy', 'highlight': 'true'},
-        {'label': 'Current Score', 'val': '50 pts', 'highlight': 'false'},
-        {'label': 'Target Score', 'val': '80 pts', 'highlight': 'false'},
-        {'label': 'Duration', 'val': '12 Weeks', 'highlight': 'false'},
+        {'label': 'Sleep', 'val': sleep, 'highlight': 'false'},
+        {'label': 'Target Score', 'val': targetScore, 'highlight': 'false'},
+        {'label': 'Duration', 'val': '$totalWeeks Weeks', 'highlight': 'false'},
       ];
     }
   }
 
-  List<Map<String, String>> _getPhases(bool isTriathlon, bool is5kPace, bool isMuscle, bool isEndurance) {
+  List<Map<String, String>> _getFallbackPhases(bool isTriathlon, bool is5kPace, bool isMuscle, bool isEndurance) {
     if (isTriathlon) {
       return [
         {'title': 'Individual Discipline', 'weeks': 'Wks 1-4', 'sub': 'Swim, bike, and run base separately'},
@@ -499,17 +573,14 @@ class BotIconPainter extends CustomPainter {
 
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Antenna dot & line
     canvas.drawCircle(Offset(center.dx, 10), 4.0, fillOrangePaint);
     canvas.drawLine(Offset(center.dx, 14), Offset(center.dx, 22), orangePaint);
 
-    // Head Box
     final headRect = Rect.fromLTWH(center.dx - 22, 22, 44, 34);
     final headRRect =
         RRect.fromRectAndRadius(headRect, const Radius.circular(10));
     canvas.drawRRect(headRRect, orangePaint);
 
-    // Ears
     final leftEar = RRect.fromRectAndRadius(
       Rect.fromLTWH(center.dx - 27, 32, 5, 14),
       const Radius.circular(2),
@@ -521,7 +592,6 @@ class BotIconPainter extends CustomPainter {
     canvas.drawRRect(leftEar, orangePaint);
     canvas.drawRRect(rightEar, orangePaint);
 
-    // Eyes
     final leftEye = RRect.fromRectAndRadius(
       Rect.fromLTWH(center.dx - 12, 32, 7, 7),
       const Radius.circular(2),
@@ -533,7 +603,6 @@ class BotIconPainter extends CustomPainter {
     canvas.drawRRect(leftEye, fillOrangePaint);
     canvas.drawRRect(rightEye, fillOrangePaint);
 
-    // Mouth (Smile arc)
     final mouthPath = Path();
     mouthPath.addArc(
       Rect.fromLTWH(center.dx - 10, 38, 20, 10),

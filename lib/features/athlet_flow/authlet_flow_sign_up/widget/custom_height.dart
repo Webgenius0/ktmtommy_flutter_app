@@ -40,8 +40,12 @@ class CustomHeight extends StatelessWidget {
       if (value == null || value.isEmpty) {
         return "Please enter your height";
       }
-      if (!RegExp(r'^\d*\.?\d*$').hasMatch(value)) {
+      double? h = double.tryParse(value);
+      if (h == null) {
         return "Height must be a number";
+      }
+      if (heightUnit == 'cm' && h < 40) {
+        return "The height must be at least 40 cm";
       }
       return null;
     };

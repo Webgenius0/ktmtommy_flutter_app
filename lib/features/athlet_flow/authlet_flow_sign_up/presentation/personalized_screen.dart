@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
@@ -35,6 +36,7 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
   String selectedGender = 'male';
   String? selectedTime;
   String? timeError;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -45,6 +47,8 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
   }
 
   void _submit() async {
+    if (isLoading) return;
+
     setState(() {
       timeError = null;
     });
@@ -57,59 +61,91 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
         return;
       }
 
-      Map<String, Map<String, String>> reminderTimes = {
-        'Morning': {'reminder_from': '06:00:00', 'reminder_to': '10:00:00'},
-        'Afternoon': {'reminder_from': '11:00:00', 'reminder_to': '17:00:00'},
-        'Evening': {'reminder_from': '18:00:00', 'reminder_to': '22:00:00'},
-      };
-
       Map<String, String> timeDisplay = {
-        'Morning': 'Morning 6 AM-10 AM',
-        'Afternoon': 'Afternoon 11 AM-5 PM',
-        'Evening': 'Evening 6 PM-10 PM',
+        'Morning': 'Morning 6-10 AM',
+        'Afternoon': 'Afternoon 11 AM - 5 PM',
+        'Evening': 'Evening 5-10 PM',
       };
-
-      String reminderFrom = reminderTimes[selectedTime]!['reminder_from']!;
-      String reminderTo = reminderTimes[selectedTime]!['reminder_to']!;
 
       int? age = int.tryParse(ageController.text);
-      double? height = double.tryParse(heightController.text);
-      double? weight = double.tryParse(weightController.text);
+      double? rawHeight = double.tryParse(heightController.text);
+      double? rawWeight = double.tryParse(weightController.text);
 
-      if (age == null || height == null || weight == null) {
+      if (age == null || rawHeight == null || rawWeight == null) {
         ToastUtil.showShortToast("Please enter valid age, height, and weight");
         return;
       }
 
-      String heightUnitDefault = 'cm';
-      String weightUnitDefault = isSelectedWeight ? 'lbs' : 'kg';
+      String formattedHeightUnit = heightUnit.toLowerCase();
+      if (formattedHeightUnit == 'in') {
+        formattedHeightUnit = 'inch';
+      }
+      if (formattedHeightUnit.isEmpty) {
+        formattedHeightUnit = 'cm';
+      }
 
-      appData.write(kKeyAthleteDailyReminder, timeDisplay[selectedTime!]);
+      if (formattedHeightUnit == 'cm' && rawHeight < 40) {
+        ToastUtil.showShortToast("Height must be at least 40 cm");
+        return;
+      }
+
+      dynamic heightVal = (rawHeight % 1 == 0) ? rawHeight.toInt() : rawHeight;
+      dynamic weightVal = (rawWeight % 1 == 0) ? rawWeight.toInt() : rawWeight;
+
+      String formattedGender = selectedGender.toLowerCase() == 'male'
+          ? 'Male'
+          : selectedGender.toLowerCase() == 'female'
+              ? 'Female'
+              : 'Other';
+
+      String weightUnitDefault = isSelectedWeight ? 'lbs' : 'kg';
+      String reminderTimeStr = timeDisplay[selectedTime!] ?? 'Morning 6-10 AM';
+
+      appData.write(kKeyAthleteDailyReminder, reminderTimeStr);
+
+      Map<String, dynamic> setupData = Map<String, dynamic>.from(appData.read('athleteSetupData') ?? {});
+      Map<String, dynamic> targetData = Map<String, dynamic>.from(appData.read('athleteTargetData') ?? {});
+      String goal = appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE_TRIATHLON';
+
+      Map<String, dynamic> payload = {
+        "user_mode": "athlete",
+        "goal": goal,
+        "age": age,
+        "gender": formattedGender,
+        "height": heightVal,
+        "height_unit": formattedHeightUnit,
+        "weight": weightVal,
+        "weight_unit": weightUnitDefault,
+        "reminder_time": reminderTimeStr,
+        "setup_data": setupData,
+        "target_data": targetData,
+      };
+
+      log("Submitting Athlete Onboarding Payload to /onboarding/athlete: $payload");
+
+      setState(() {
+        isLoading = true;
+      });
 
       try {
-        bool success = await onboardingAthleteSignUpRx.onboardingAthleteSignUpApiInfo(
-          age: age.toString(),
-          gender: selectedGender,
-          goal: appData.read(kKeyAthleteSelectGoal) ?? 'COMPLETE TRIATHLON',
-          sport: appData.read(kKeyAthleteSelectSport) ?? 'GYM',
-          experienceLevel: appData.read(kKeyAthleteExperiencelevel) ?? 'ADVANCED',
-          height: height,
-          heightUnit: heightUnitDefault,
-          weight: weight,
-          weightUnit: weightUnitDefault,
-          reminderFrom: reminderFrom,
-          reminderTo: reminderTo,
-          userMode: "athlete",
-        );
+        bool success = await onboardingAthleteSignUpRx.onboardingAthleteSignUpApiInfo(payload);
+
+        setState(() {
+          isLoading = false;
+        });
 
         if (success) {
+          log("Athlete onboarding successful! Navigating to planGeneratingScreen...");
           NavigationService.navigateTo(Routes.planGeneratingScreen);
         } else {
-          NavigationService.navigateTo(Routes.planGeneratingScreen);
+          log("Athlete onboarding failed! Staying on personalizedScreen to show error toast.");
         }
       } catch (e) {
-        log("Error during registration: $e");
-        NavigationService.navigateTo(Routes.planGeneratingScreen);
+        setState(() {
+          isLoading = false;
+        });
+        log("Error during athlete onboarding: $e");
+        ToastUtil.showShortToast("Failed to submit onboarding. Please try again.");
       }
     }
   }
@@ -127,66 +163,80 @@ class _PersonalizedScreenState extends State<PersonalizedScreen> {
           ),
         ),
         child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.verticalSpace(12.h),
-                  const CustomAthleteAppBar(
-                    title: 'Tell us about you',
-                    subtitle: 'Please give the information',
-                    currentStep: 3,
-                    totalSteps: 4,
-                  ),
-                  UIHelper.verticalSpace(18.h),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomAge(controller: ageController),
-                          UIHelper.verticalSpace(12.h),
-                          PersonalizedGenderSelector(
-                            selectedGender: selectedGender,
-                            onSelectGender: (gen) => setState(() => selectedGender = gen),
-                          ),
-                          UIHelper.verticalSpace(24.h),
-                          CustomHeight(
-                            controller: heightController,
-                            heightUnit: heightUnit,
-                            onUnitChange: (val) => setState(() => heightUnit = val),
-                          ),
-                          UIHelper.verticalSpace(24.h),
-                          CustomWith(
-                            controller: weightController,
-                            isLbs: isSelectedWeight,
-                            onUnitChange: (val) => setState(() => isSelectedWeight = val),
-                          ),
-                          UIHelper.verticalSpace(24.h),
-                          PersonalizedReminderSelector(
-                            selectedTime: selectedTime,
-                            timeError: timeError,
-                            onSelectTime: (t) => setState(() => selectedTime = t),
-                          ),
-                          UIHelper.verticalSpace(38.h),
-                          CustomButtonWidget(
-                            onTap: _submit,
-                            textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
-                            image: DecorationImage(
-                              image: AssetImage(AppImages.orangebutton),
-                            ),
-                            text: 'Generate My Plan ✨',
-                          ),
-                        ],
+          child: Stack(
+            children: [
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UIHelper.verticalSpace(12.h),
+                      const CustomAthleteAppBar(
+                        title: 'Tell us about you',
+                        subtitle: 'Please give the information',
+                        currentStep: 3,
+                        totalSteps: 4,
                       ),
+                      UIHelper.verticalSpace(18.h),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomAge(controller: ageController),
+                              UIHelper.verticalSpace(12.h),
+                              PersonalizedGenderSelector(
+                                selectedGender: selectedGender,
+                                onSelectGender: (gen) => setState(() => selectedGender = gen),
+                              ),
+                              UIHelper.verticalSpace(24.h),
+                              CustomHeight(
+                                controller: heightController,
+                                heightUnit: heightUnit,
+                                onUnitChange: (val) => setState(() => heightUnit = val),
+                              ),
+                              UIHelper.verticalSpace(24.h),
+                              CustomWith(
+                                controller: weightController,
+                                isLbs: isSelectedWeight,
+                                onUnitChange: (val) => setState(() => isSelectedWeight = val),
+                              ),
+                              UIHelper.verticalSpace(24.h),
+                              PersonalizedReminderSelector(
+                                selectedTime: selectedTime,
+                                timeError: timeError,
+                                onSelectTime: (t) => setState(() => selectedTime = t),
+                              ),
+                              UIHelper.verticalSpace(38.h),
+                              CustomButtonWidget(
+                                onTap: isLoading ? () {} : _submit,
+                                textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
+                                image: DecorationImage(
+                                  image: AssetImage(AppImages.orangebutton),
+                                ),
+                                text: isLoading ? 'Generating Plan...' : 'Generate My Plan ✨',
+                              ),
+                              UIHelper.verticalSpace(24.h),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black54,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.orangeColor,
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+            ],
           ),
         ),
       ),

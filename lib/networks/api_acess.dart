@@ -9,6 +9,8 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/log_supplime
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/althelete_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/onboading_althelete_register_rx/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/data/generate_macro_plan_rx/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/model/generate_macro_plan_model.dart';
 import 'package:ktmtommy_apps/features/auth/data/login_rx.dart';
 import 'package:ktmtommy_apps/features/auth/data/verify_otp_rx.dart';
 import 'package:ktmtommy_apps/features/chat/data/rx_get_chat/rx.dart';
@@ -80,6 +82,11 @@ AthleteAuthRegisterRx athleteAuthRegisterRxObj = AthleteAuthRegisterRx(
 OnboardingAthleteSignUpRx onboardingAthleteSignUpRx = OnboardingAthleteSignUpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+GenerateMacroPlanRx generateMacroPlanRxObj = GenerateMacroPlanRx(
+  empty: GenerateMacroPlanModel(),
+  dataFetcher: BehaviorSubject<GenerateMacroPlanModel>(),
 );
 
 ///================== Medication Section Tablet , Food, Steps, Activity===== ///

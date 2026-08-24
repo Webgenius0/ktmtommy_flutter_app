@@ -13,47 +13,16 @@ final class OnboardingAthleteSignUpRx extends RxResponseInt<Map<String, dynamic>
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<bool> onboardingAthleteSignUpApiInfo({
-
-    required String userMode,
-    required String age,
-    required dynamic gender,
-    required dynamic experienceLevel,
-    required dynamic goal,
-    required dynamic sport,
-    required dynamic height,
-    required dynamic heightUnit,
-    required dynamic weight,
-    required dynamic weightUnit,
-    required dynamic reminderTo,
-    required dynamic reminderFrom,
-
-  }) async {
+  Future<bool> onboardingAthleteSignUpApiInfo(Map<String, dynamic> payload) async {
     try {
-      // Call the sign-in API
-      Map<String, dynamic> data =
-      await api.onboardingAthleteSignUpApi(
-        weight: weight,
-        height: height,
-        age: age,
-        experienceLevel: experienceLevel,
-        gender: gender,
-        goal: goal,
-        heightUnit: heightUnit,
-        reminderFrom: reminderFrom,
-        reminderTo: reminderTo,
-        sport: sport,
-        userMode: userMode,
-        weightUnit: weightUnit
-      );
+      Map<String, dynamic> data = await api.onboardingAthleteSignUpApi(payload);
 
-      String message = data['message'];
-      log(">>>>>>>>>>>>>>> massage : $message");
+      String message = data['message'] ?? 'Success';
+      log(">>>>>>>>>>>>>>> message : $message");
       await handleSuccessWithReturn(data);
 
       return true;
     } catch (error) {
-      // Handle error
       return await handleErrorWithReturn(error);
     }
   }
@@ -71,28 +40,37 @@ final class OnboardingAthleteSignUpRx extends RxResponseInt<Map<String, dynamic>
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {
       if (error.response != null) {
+        var responseData = error.response!.data;
         if (error.response!.statusCode == 422) {
-          var errors = error.response!.data["errors"];
-          if (errors is Map<String, dynamic>) {
-            // Combine all error messages into a single string
+          var errors = responseData is Map ? responseData["errors"] : null;
+          String? message = responseData is Map ? responseData["message"] : null;
+
+          if (errors is Map<String, dynamic> && errors.isNotEmpty) {
             StringBuffer buffer = StringBuffer();
             errors.forEach((key, value) {
               if (value is List) {
                 for (var msg in value) {
-                  buffer.writeln(msg); // Add each error message
+                  buffer.writeln(msg);
                 }
+              } else if (value is String) {
+                buffer.writeln(value);
               }
             });
-            ToastUtil.showShortToast(buffer.toString());
+            ToastUtil.showShortToast(buffer.toString().trim());
+          } else if (message != null && message.isNotEmpty) {
+            ToastUtil.showShortToast(message);
           } else {
-            ToastUtil.showShortToast("Something went wrong!");
+            ToastUtil.showShortToast("Validation Error");
           }
         } else {
-          ToastUtil.showShortToast(error.response!.data["errors"] ?? "Unknown error");
+          String? msg = responseData is Map ? (responseData["message"] ?? responseData["errors"]?.toString()) : null;
+          ToastUtil.showShortToast(msg ?? "Server error occurred (${error.response!.statusCode})");
         }
       } else {
-        ToastUtil.showShortToast("No response data available");
+        ToastUtil.showShortToast("No response data available from server");
       }
+    } else {
+      ToastUtil.showShortToast(error.toString());
     }
 
     log(error.toString());

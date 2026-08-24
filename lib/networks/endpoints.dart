@@ -27,6 +27,7 @@ class Endpoints {
   static String signUpAltheleteApiLink() => "/api/register";
   static String verifyOtp() => "/api/verify-otp";
   static String onboardingAthleteSignUpApiLink() => "/api/onboarding/athlete";
+  static String generateMacroPlanApiLink() => "/api/athlete/generate-macro-plan";
   static String onboardingRecoverySignUpApiLink() => "/api/onboarding/recovery";
   static String changePasswordScreenApi() => "/api/password/update";
   static String postEditProfileApiLink() => "/api/onboarding/recovery";

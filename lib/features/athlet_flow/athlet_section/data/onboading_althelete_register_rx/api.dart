@@ -12,45 +12,14 @@ final class OnboardingAthleteSignUpApi {
 
   static OnboardingAthleteSignUpApi get instance => _singleton;
 
-  Future<Map<String, dynamic>> onboardingAthleteSignUpApi(
-      {
-        required String userMode,
-      required String age,
-      required dynamic gender,
-      required dynamic experienceLevel,
-      required dynamic goal,
-      required dynamic sport,
-      required dynamic height,
-      required dynamic heightUnit,
-      required dynamic weight,
-      required dynamic weightUnit,
-      required dynamic reminderTo,
-      required dynamic reminderFrom,
-      }) async {
+  Future<Map<String, dynamic>> onboardingAthleteSignUpApi(Map<String, dynamic> data) async {
     try {
-      // Create the request data map
-      Map<String, dynamic> data = {
-        "user_mode": userMode,
-        "age": age,
-        "gender":gender,
-        "experience_level": experienceLevel,
-        "sport":sport,
-        "goal":goal,
-        "weight":weight,
-        "weight_unit":weightUnit,
-        "height":height,
-        "height_unit":heightUnit,
-        "reminder_from":reminderFrom,
-        "reminder_to":reminderTo,
+      Response response = await postHttp(Endpoints.onboardingAthleteSignUpApiLink(), data);
 
-      };
-      // Make the POST request
-      Response response = (await postHttp(Endpoints.onboardingAthleteSignUpApiLink(), data));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(json.encode(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final resData = response.data is String ? json.decode(response.data) : response.data;
         ToastUtil.showShortToast('Register Successfully');
-        return data;
+        return Map<String, dynamic>.from(resData);
       } else {
         throw DataSource.DEFAULT.getFailure();
       }

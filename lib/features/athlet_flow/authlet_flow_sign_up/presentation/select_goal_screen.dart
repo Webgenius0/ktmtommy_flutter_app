@@ -28,6 +28,14 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
     'MONITOR ENERGY &\nPERFORMANCE',
   ];
 
+  final List<String> goalKeys = const [
+    'COMPLETE_TRIATHLON',
+    'IMPROVE_5K_PACE',
+    'BUILD_MUSCLE_MASS',
+    'IMPROVE_ENDURANCE',
+    'MONITOR_ENERGY',
+  ];
+
   int? selectedIndex;
   String? errorMessage;
 
@@ -43,8 +51,9 @@ class _SelectGoalScreenState extends State<SelectGoalScreen> {
       errorMessage = null;
     });
 
-    appData.write(kKeyAthleteSelectGoal, title[selectedIndex!]);
-    log("Selected Goal: ${title[selectedIndex!]}");
+    String selectedGoalKey = goalKeys[selectedIndex!];
+    appData.write(kKeyAthleteSelectGoal, selectedGoalKey);
+    log("Selected Goal Key: $selectedGoalKey");
     NavigationService.navigateTo(Routes.personalSetupScreen);
   }
 

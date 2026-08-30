@@ -9,6 +9,9 @@ import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
+import 'package:intl/intl.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
+
 class AthleteDailyCheckInScreen extends StatefulWidget {
   const AthleteDailyCheckInScreen({super.key});
 
@@ -23,6 +26,7 @@ class _AthleteDailyCheckInScreenState
   String selectedEnergy = 'High';
   String selectedRecovery = 'Fully Recovered';
   String selectedFeeling = 'Fully Recovered';
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +105,37 @@ class _AthleteDailyCheckInScreenState
 
                 // Generate Plan button
                 CustomButtonWidget(
-                  onTap: () {
-                    NavigationService.navigateTo(Routes.athletBuildingPlanScreen);
-                  },
+                  isLoading: _isLoading,
+                  onTap: _isLoading
+                      ? null
+                      : () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+
+                          String currentDate =
+                              DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                          bool isSuccess =
+                              await generateDailyPlanRxObj.generateDailyPlan(
+                            date: currentDate,
+                            sleepQuality: selectedSleep,
+                            energyLevel: selectedEnergy,
+                            recoveryFeeling: selectedRecovery,
+                            overallFeeling: selectedFeeling,
+                          );
+
+                          if (mounted) {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+
+                          if (isSuccess) {
+                            NavigationService.navigateTo(
+                                Routes.athletBuildingPlanScreen);
+                          }
+                        },
                   textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
                   image: DecorationImage(
                     image: AssetImage(AppImages.orangebutton),

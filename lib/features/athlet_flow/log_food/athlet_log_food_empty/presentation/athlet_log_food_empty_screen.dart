@@ -392,13 +392,17 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                           children: [
                                             Column(
                                               children: [
-                                                Text(
-                                                  meal.foodName ?? "Just now",
-                                                  style: TextFontStyle
-                                                      .textStyle24w600cFFFFFFpoppins
-                                                      .copyWith(fontSize: 18.sp),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
+                                                SizedBox(
+                                                  width: 145.w,
+
+                                                  child: Text(
+                                                    meal.foodName ?? "Just now",
+                                                    style: TextFontStyle
+                                                        .textStyle24w600cFFFFFFpoppins
+                                                        .copyWith(fontSize: 18.sp),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 ),
                                                 UIHelper.verticalSpace(8.h),
                                               ],

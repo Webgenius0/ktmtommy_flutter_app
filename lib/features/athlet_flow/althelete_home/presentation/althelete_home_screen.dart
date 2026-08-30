@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:intl/intl.dart';
 import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
+import 'package:ktmtommy_apps/common_widgets/custom_button_widget.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/athlete_daily_progress_card.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/athlete_home_header.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/athlete_task_card.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/athlete_today_goal_card.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/custom_send.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/model/generate_daily_plan_model.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
@@ -29,6 +32,12 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
   void initState() {
     super.initState();
     _updateTimezone();
+    _fetchDailyPlan();
+  }
+
+  void _fetchDailyPlan() {
+    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    generateDailyPlanRxObj.generateDailyPlan(date: todayDate);
   }
 
   Future<void> _updateTimezone() async {
@@ -38,6 +47,86 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
     } catch (e) {
       log("Error updating timezone: $e");
     }
+  }
+
+  Widget _buildTaskCard(DailyTaskModel task) {
+    final category = (task.category ?? '').toLowerCase();
+    Widget iconWidget;
+    Color iconBgColor;
+    Color buttonColor;
+    String routeName;
+
+    if (category.contains('activity')) {
+      iconWidget = SvgPicture.asset(
+        AppIcons.logactivity,
+        colorFilter: const ColorFilter.mode(
+          AppColors.orangeColor,
+          BlendMode.srcIn,
+        ),
+        height: 20.h,
+      );
+      iconBgColor = AppColors.orangeColor;
+      buttonColor = AppColors.orangeColor;
+      routeName = Routes.athletLogActivityScreen;
+    } else if (category.contains('food')) {
+      iconWidget = SvgPicture.asset(
+        AppIcons.logfoodicon,
+        colorFilter: const ColorFilter.mode(
+          Color(0xFF87B842),
+          BlendMode.srcIn,
+        ),
+        height: 20.h,
+      );
+      iconBgColor = const Color(0xFF87B842);
+      buttonColor = const Color(0xFF87B842);
+      routeName = Routes.athletLogFoodEmptyScreen;
+    } else if (category.contains('sleep')) {
+      iconWidget = SvgPicture.asset(
+        AppIcons.logsleepicon,
+        colorFilter: const ColorFilter.mode(
+          Color(0xFF3B82F6),
+          BlendMode.srcIn,
+        ),
+        height: 20.h,
+      );
+      iconBgColor = const Color(0xFF3B82F6);
+      buttonColor = const Color(0xFF3B82F6);
+      routeName = Routes.logSleepScreen;
+    } else {
+      // supplement
+      iconWidget = SvgPicture.asset(
+        AppIcons.logTableticon,
+        colorFilter: const ColorFilter.mode(
+          AppColors.orangeColor,
+          BlendMode.srcIn,
+        ),
+        height: 20.h,
+      );
+      iconBgColor = AppColors.orangeColor;
+      buttonColor = AppColors.orangeColor;
+      routeName = Routes.logSupplementScreen;
+    }
+
+    String targetStr = task.targetValue != null && task.targetUnit != null
+        ? 'Target: ${task.targetValue} ${task.targetUnit}'
+        : (task.targetValue != null ? 'Target: ${task.targetValue}' : '');
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: AthleteTaskCard(
+        icon: iconWidget,
+        iconBgColor: iconBgColor,
+        title: task.title ?? '',
+        targetText: targetStr,
+        progress: (task.isCompleted ?? false) ? 1.0 : 0.0,
+        loggedText: (task.isCompleted ?? false) ? 'Completed' : 'Not completed',
+        weightText: '',
+        buttonColor: buttonColor,
+        onLogTap: () {
+          NavigationService.navigateTo(routeName);
+        },
+      ),
+    );
   }
 
   @override
@@ -53,167 +142,138 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Header Row
-                AthleteHomeHeader(
-                  title: "LET'S GRIND, ALEX. NO EXCUSES TODAY.",
-                  goalText: '🏁 TRIATHLON — Week 2 • Day 8 >',
-                  onProfileTap: () {
-                    NavigationService.navigateTo(
-                        Routes.myProfileSettingScreenAthlet);
-                  },
-                ),
-                UIHelper.verticalSpace(18.h),
+          child: StreamBuilder<GenerateDailyPlanModel>(
+            stream: generateDailyPlanRxObj.getDailyPlanStream,
+            builder: (context, snapshot) {
+              String dateText =
+                  DateFormat('EEEE, d MMMM yyyy').format(DateTime.now());
+              String aiSummaryText =
+                  "Yesterday you slept only 5.5 hours and recovery was low. Today's running volume has been reduced by 20%.";
+              List<DailyTaskModel>? tasks;
 
-                // 2. Today's Goal Plan Card
-                const AthleteTodayGoalCard(
-                  dateText: 'Monday, 19 May 2026',
-                  aiSummaryText:
-                      "Yesterday you slept only 5.5 hours and recovery was low. Today's running volume has been reduced by 20%.",
-                ),
-                UIHelper.verticalSpace(18.h),
+              if (snapshot.hasData && snapshot.data?.data != null) {
+                final planData = snapshot.data!.data!;
+                if (planData.summary != null && planData.summary!.isNotEmpty) {
+                  aiSummaryText = planData.summary!;
+                }
+                tasks = planData.tasks;
+              }
 
-                // 3. Daily Progress Gauge Card ("READY TO START")
-                const AthleteDailyProgressCard(
-                  completedTasks: 0,
-                  totalTasks: 4,
-                  activityProgress: 0.0,
-                  foodProgress: 0.0,
-                  sleepProgress: 0.0,
-                  suppsProgress: 0.0,
-                ),
-                UIHelper.verticalSpace(22.h),
+              int totalTasks = tasks?.length ?? 4;
+              int completedTasks =
+                  tasks?.where((t) => t.isCompleted == true).length ?? 0;
 
-                // 4. AI GENERATED TASKS Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'AI GENERATED TASKS',
-                      style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
+                    // 1. Header Row
+                    AthleteHomeHeader(
+                      title: "LET'S GRIND, ALEX. NO EXCUSES TODAY.",
+                      goalText: '🏁 TRIATHLON — Week 2 • Day 8 >',
+                      onProfileTap: () {
+                        NavigationService.navigateTo(
+                            Routes.myProfileSettingScreenAthlet);
+                      },
                     ),
-                    Text(
-                      'Improve 5K Pace • Wk 2',
-                      style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
-                        fontSize: 12.sp,
-                        color: const Color(0xFFA0A0A0),
-                      ),
+                    UIHelper.verticalSpace(18.h),
+
+                    // 2. Today's Goal Plan Card
+                    AthleteTodayGoalCard(
+                      dateText: dateText,
+                      aiSummaryText: aiSummaryText,
                     ),
+                    UIHelper.verticalSpace(14.h),
+
+                    // Generate Today's Plan Button
+                    CustomButtonWidget(
+                      onTap: () {
+                        NavigationService.navigateTo(
+                            Routes.athletDailyCheckInScreen);
+                      },
+                      textStyle: TextFontStyle.textStyle20w700cFFFFFFTeko,
+                      image: DecorationImage(
+                        image: AssetImage(AppImages.orangebutton),
+                      ),
+                      text: "Generate Today's Plan ✨",
+                    ),
+                    UIHelper.verticalSpace(18.h),
+
+                    // 3. Daily Progress Gauge Card ("READY TO START")
+                    AthleteDailyProgressCard(
+                      completedTasks: completedTasks,
+                      totalTasks: totalTasks,
+                      activityProgress: 0.0,
+                      foodProgress: 0.0,
+                      sleepProgress: 0.0,
+                      suppsProgress: 0.0,
+                    ),
+                    UIHelper.verticalSpace(22.h),
+
+                    // 4. AI GENERATED TASKS Header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'AI GENERATED TASKS',
+                          style: TextFontStyle.textStyle24w700cFFFFFFTeko.copyWith(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        Text(
+                          'Improve 5K Pace • Wk 2',
+                          style: TextFontStyle.textStyle14w400cE8E8E8poppins
+                              .copyWith(
+                            fontSize: 12.sp,
+                            color: const Color(0xFFA0A0A0),
+                          ),
+                        ),
+                      ],
+                    ),
+                    UIHelper.verticalSpace(12.h),
+
+                    // 5. Task Cards
+                    if (tasks != null && tasks.isNotEmpty)
+                      ...tasks.map((task) => _buildTaskCard(task))
+                    else if (snapshot.connectionState == ConnectionState.waiting)
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.h),
+                          child: const CircularProgressIndicator(
+                            color: AppColors.orangeColor,
+                          ),
+                        ),
+                      )
+                    else
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.h),
+                          child: Text(
+                            'No tasks found for today.',
+                            style: TextFontStyle.textStyle14w400cE8E8E8poppins
+                                .copyWith(
+                              color: const Color(0xFFA0A0A0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    UIHelper.verticalSpace(20.h),
+
+                    // 6. Ask your coach
+                    const CustomSend(),
+                    UIHelper.verticalSpace(24.h),
                   ],
                 ),
-                UIHelper.verticalSpace(12.h),
-
-                // 5. Task Cards
-                // Card 1: Activity
-                AthleteTaskCard(
-                  icon: SvgPicture.asset(
-                    AppIcons.logactivity,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.orangeColor,
-                      BlendMode.srcIn,
-                    ),
-                    height: 20.h,
-                  ),
-                  iconBgColor: AppColors.orangeColor,
-                  title: 'Run 1 KM',
-                  targetText: 'Target: 1 km',
-                  progress: 0.0,
-                  loggedText: '0.0 km',
-                  weightText: '40%',
-                  buttonColor: AppColors.orangeColor,
-                  onLogTap: () {
-                    NavigationService.navigateTo(Routes.athletLogActivityScreen);
-                  },
-                ),
-                UIHelper.verticalSpace(12.h),
-
-                // Card 2: Food
-                AthleteTaskCard(
-                  icon: SvgPicture.asset(
-                    AppIcons.logfoodicon,
-                    colorFilter: const ColorFilter.mode(
-                      Color(0xFF87B842),
-                      BlendMode.srcIn,
-                    ),
-                    height: 20.h,
-                  ),
-                  iconBgColor: const Color(0xFF87B842),
-                  title: 'Eat 120g Protein',
-                  targetText: 'Target: 120g protein • 2400 kcal',
-                  progress: 0.0,
-                  loggedText: '0g • 0 kcal',
-                  weightText: '25%',
-                  buttonColor: const Color(0xFF87B842),
-                  onLogTap: () {
-                    NavigationService.navigateTo(
-                        Routes.athletLogFoodEmptyScreen);
-                  },
-                ),
-                UIHelper.verticalSpace(12.h),
-
-                // Card 3: Sleep
-                AthleteTaskCard(
-                  icon: SvgPicture.asset(
-                    AppIcons.logsleepicon,
-                    colorFilter: const ColorFilter.mode(
-                      Color(0xFF3B82F6),
-                      BlendMode.srcIn,
-                    ),
-                    height: 20.h,
-                  ),
-                  iconBgColor: const Color(0xFF3B82F6),
-                  title: 'Sleep 8 Hours',
-                  targetText: 'Target: 8h',
-                  progress: 0.0,
-                  loggedText: 'Not logged',
-                  weightText: '25%',
-                  buttonColor: const Color(0xFF3B82F6),
-                  onLogTap: () {
-                    NavigationService.navigateTo(Routes.logSleepScreen);
-                  },
-                ),
-                UIHelper.verticalSpace(12.h),
-
-                // Card 4: Supplements
-                AthleteTaskCard(
-                  icon: SvgPicture.asset(
-                    AppIcons.logTableticon,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.orangeColor,
-                      BlendMode.srcIn,
-                    ),
-                    height: 20.h,
-                  ),
-                  iconBgColor: AppColors.orangeColor,
-                  title: 'Take Supplements',
-                  targetText: 'Target: 4 supplements',
-                  progress: 0.0,
-                  loggedText: '0/4 taken',
-                  weightText: '10%',
-                  buttonColor: AppColors.orangeColor,
-                  onLogTap: () {
-                    NavigationService.navigateTo(Routes.logSupplementScreen);
-                  },
-                ),
-                UIHelper.verticalSpace(20.h),
-
-                // 6. Ask your coach
-                const CustomSend(),
-                UIHelper.verticalSpace(24.h),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 }
+

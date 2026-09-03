@@ -111,6 +111,21 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
         ? 'Target: ${task.targetValue} ${task.targetUnit}'
         : (task.targetValue != null ? 'Target: ${task.targetValue}' : '');
 
+    double progressVal = 0.0;
+    if (task.progressPercentage != null) {
+      progressVal = (task.progressPercentage!.toDouble() / 100.0).clamp(0.0, 1.0);
+    } else if (task.isCompleted == true) {
+      progressVal = 1.0;
+    }
+
+    String loggedText = (task.isCompleted ?? false)
+        ? 'Completed'
+        : (task.loggedValue != null && task.targetUnit != null
+            ? '${task.loggedValue} ${task.targetUnit}'
+            : (task.loggedValue != null ? '${task.loggedValue}' : '0 ${task.targetUnit ?? ''}'));
+
+    String weightText = task.weight != null ? '${task.weight}%' : '';
+
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: AthleteTaskCard(
@@ -118,9 +133,9 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
         iconBgColor: iconBgColor,
         title: task.title ?? '',
         targetText: targetStr,
-        progress: (task.isCompleted ?? false) ? 1.0 : 0.0,
-        loggedText: (task.isCompleted ?? false) ? 'Completed' : 'Not completed',
-        weightText: '',
+        progress: progressVal,
+        loggedText: loggedText,
+        weightText: weightText,
         buttonColor: buttonColor,
         onLogTap: () {
           NavigationService.navigateTo(routeName);
@@ -149,12 +164,29 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
                   DateFormat('EEEE, d MMMM yyyy').format(DateTime.now());
               String aiSummaryText =
                   "Yesterday you slept only 5.5 hours and recovery was low. Today's running volume has been reduced by 20%.";
+              String goalText = '🏁 TRIATHLON — Week 2 • Day 8 >';
               List<DailyTaskModel>? tasks;
+              double actProg = 0.0;
+              double foodProg = 0.0;
+              double sleepProg = 0.0;
+              double suppProg = 0.0;
 
               if (snapshot.hasData && snapshot.data?.data != null) {
                 final planData = snapshot.data!.data!;
                 if (planData.summary != null && planData.summary!.isNotEmpty) {
                   aiSummaryText = planData.summary!;
+                }
+                if (planData.planInfo != null) {
+                  final info = planData.planInfo!;
+                  final goalStr = info.goal?.replaceAll('_', ' ') ?? 'TRIATHLON';
+                  goalText = '🏁 $goalStr — Week ${info.week ?? 1} • Day ${info.day ?? 1} >';
+                }
+                if (planData.progress?.categories != null) {
+                  final cat = planData.progress!.categories!;
+                  actProg = ((cat.activity ?? 0) / 100.0).clamp(0.0, 1.0);
+                  foodProg = ((cat.food ?? 0) / 100.0).clamp(0.0, 1.0);
+                  sleepProg = ((cat.sleep ?? 0) / 100.0).clamp(0.0, 1.0);
+                  suppProg = ((cat.supplement ?? 0) / 100.0).clamp(0.0, 1.0);
                 }
                 tasks = planData.tasks;
               }
@@ -171,7 +203,7 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
                     // 1. Header Row
                     AthleteHomeHeader(
                       title: "LET'S GRIND, ALEX. NO EXCUSES TODAY.",
-                      goalText: '🏁 TRIATHLON — Week 2 • Day 8 >',
+                      goalText: goalText,
                       onProfileTap: () {
                         NavigationService.navigateTo(
                             Routes.myProfileSettingScreenAthlet);
@@ -204,10 +236,10 @@ class _AltheleteHomeScreenState extends State<AltheleteHomeScreen> {
                     AthleteDailyProgressCard(
                       completedTasks: completedTasks,
                       totalTasks: totalTasks,
-                      activityProgress: 0.0,
-                      foodProgress: 0.0,
-                      sleepProgress: 0.0,
-                      suppsProgress: 0.0,
+                      activityProgress: actProg,
+                      foodProgress: foodProg,
+                      sleepProgress: sleepProg,
+                      suppsProgress: suppProg,
                     ),
                     UIHelper.verticalSpace(22.h),
 

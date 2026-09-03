@@ -49,12 +49,17 @@ class AthleteHomeHeader extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      goalText,
-                      style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
-                        fontSize: 12.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Text(
+                        goalText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
+                          fontSize: 12.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],

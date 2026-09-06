@@ -24,7 +24,8 @@ enum StatusType { order, delivery }
 String language(String languageKey) {
   late String language;
 
-  switch (languageKey) {
+
+  switch  (languageKey) {
     case kKeyEnglish:
       language = "English";
       break;

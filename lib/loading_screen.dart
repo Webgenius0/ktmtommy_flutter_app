@@ -78,12 +78,12 @@ class _LoadingState extends State<Loading> {
       if (userMode == "athlete") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => AthletBottomNavigationBar()),
+          MaterialPageRoute(builder: (context) =>  AthletBottomNavigationBar()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => BottomNavScreen()),
+          MaterialPageRoute(builder: (context) =>  BottomNavScreen()),
         );
       }
     }

@@ -18,13 +18,13 @@ class FileDownloader {
     required String fileName,
     required BuildContext context,
     VoidCallback? onStart,
-    ValueChanged<double>? onProgress,
+    ValueChanged< double>? onProgress,
     VoidCallback? onComplete,
     ValueChanged<String>? onError,
   }) async {
     // Request permissions
     if (!await _requestPermissions()) {
-      onError?.call('Storage permission denied');
+      onError?.call('Storage  permission denied');
       return;
     }
 

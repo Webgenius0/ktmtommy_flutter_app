@@ -33,12 +33,12 @@ class _AtheleteSheduleScreenState extends State<AtheleteSheduleScreen> {
   }
 
   void _fetchDailyPlan() {
-    final dateStr = DateFormat('yyyy-MM-dd').format(selectedDate);
+    final dateStr =  DateFormat('yyyy-MM-dd').format(selectedDate);
     generateDailyPlanRxObj.generateDailyPlan(date: dateStr);
   }
 
   String getFormattedDate(DateTime date) {
-    return DateFormat('EEEE, d MMMM yyyy').format(date);
+    return DateFormat('EEEE,  d MMMM yyyy').format(date);
   }
 
   Widget _buildTaskCard(DailyTaskModel task) {

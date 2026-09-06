@@ -101,10 +101,10 @@ final class Routes {
   static const String navigationWithArgScreen = '/navigationScreen';
 //================ Khusbu ===================//
 
-  static const String splashScreen = '/splashScreen';
-  static const String loginScreenAthlet = '/loginScreenAthlet';
+  static const String splashScreen =  '/splashScreen';
+  static const String loginScreenAthlet  = '/loginScreenAthlet';
   static const String logInRecoveryModeScreen = '/logInRecoveryModeScreen';
-  static const String errorWithEmailScreen = '/errorWithEmailScreen';
+  static const String errorWithEmailScreen  = '/errorWithEmailScreen';
   static const String sentOtpScreen = '/sentOtpScreen';
   static const String verifyOtpScreen = '/verifyOtpScreen';
   static const String backToResentPasswordScreen =

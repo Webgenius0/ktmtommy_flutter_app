@@ -24,13 +24,13 @@ class AthletBottomNavigationBar extends StatefulWidget {
       _AthletBottomNavigationBarState();
 }
 
-class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
+class _AthletBottomNavigationBarState  extends State<AthletBottomNavigationBar> {
   late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex;
+    _selectedIndex =   widget.initialIndex;
   }
 
   final List<Widget> _screens = [
@@ -51,12 +51,12 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
   Widget build(BuildContext context) {
     return Scaffold(
      backgroundColor: AppColors.c0B0A0B,
-      body: _screens[_selectedIndex],
+      body:  _screens[_selectedIndex],
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: 15.h, left: 15.w, right: 15.w),
         child: Container(
           height: 70.h,
-          decoration: BoxDecoration(
+          decoration:  BoxDecoration(
             color: AppColors.c0B0A0B,
             borderRadius: BorderRadius.circular(80.r),
             border: Border.all(color: AppColors.cD1D1D1,width: 0.8.w),
@@ -71,7 +71,7 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, AppIcons.athlethomeactive, AppIcons.athlethomunactive, "My Day"),
+              _buildNavItem(0,  AppIcons.athlethomeactive, AppIcons.athlethomunactive, "My Day"),
               _buildNavItem(1, AppIcons.shedulactiveicon, AppIcons.athletsedulunactive, "My Schedule"),
               _buildNavItem(2, AppIcons.activeprogress, AppIcons.unactiveprogress, "My Progress"),
               _buildNavItem(3, AppIcons.athletactivetrainer, AppIcons.athletunactivetrainer, "225 Trainer"),
@@ -83,7 +83,7 @@ class _AthletBottomNavigationBarState extends State<AthletBottomNavigationBar> {
     );
   }
 
-  Widget _buildNavItem(int index, String activeIcon, String inactiveIcon, String label) {
+  Widget _buildNavItem(int index,  String activeIcon, String inactiveIcon, String label) {
     final bool isSelected = _selectedIndex == index;
 
     return GestureDetector(

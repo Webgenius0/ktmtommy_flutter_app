@@ -22,10 +22,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return  Scaffold(
 
       body: Container(
-        height: double.infinity,
-        width: double.infinity,
+        height:  double.infinity,
+        width:  double.infinity,
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(AppImages.restbacroundimage),fit: BoxFit.cover)
+          image:  DecorationImage(image: AssetImage(AppImages.restbacroundimage),fit: BoxFit.cover)
         ),
         child:  SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -68,10 +68,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 image: DecorationImage(
                   image: AssetImage(AppImages.withbacrounbutton),
                 ),
-                text: 'GET STARTED',
+                text: 'GET STARTED ',
                 onTap: () {
                   NavigationService.navigateTo(Routes.welcomeBackScreen);
-
                 },
               ),
             ],

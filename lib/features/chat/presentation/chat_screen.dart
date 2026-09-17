@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ktmtommy_apps/assets_helper/app_colors.dart';
 import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
@@ -25,23 +27,36 @@ class AiChatScreen extends StatefulWidget {
 class _AiChatScreenState extends State<AiChatScreen> {
   late TextEditingController messageController;
   late StreamSubscription _chatSubscription;
+  late StreamSubscription _sendingSubscription;
   List<Messages> _messages = [];
   bool _isLoading = true;
   bool _isSending = false;
-  ScrollController _scrollController = ScrollController();
+  XFile? _selectedImage;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     log(">>>>>>>>>>>>>>>>>> this is access token ${appData.read(kKeyAccessToken)}");
     super.initState();
     messageController = TextEditingController();
+    _isSending = sendMessageRx.isSending;
+
+    // Get immediate synchronous messages if available
+    final initialMsgs = getChatMessageRx.currentMessages;
+    if (initialMsgs.isNotEmpty || _isSending) {
+      _messages = initialMsgs;
+      _isLoading = false;
+    }
 
     // Subscribe to chat updates
     _chatSubscription = getChatMessageRx.combinedStream.listen((chatData) {
       if (mounted) {
+        final messages = chatData.data?.messages ?? [];
         setState(() {
-          _messages = chatData.data?.messages ?? [];
-          _isLoading = false;
+          _messages = messages;
+          if (_messages.isNotEmpty) {
+            _isLoading = false;
+          }
         });
 
         // Scroll to bottom when new messages arrive
@@ -49,7 +64,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
           if (_scrollController.hasClients) {
             _scrollController.animateTo(
               0,
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut,
             );
           }
@@ -63,15 +78,44 @@ class _AiChatScreenState extends State<AiChatScreen> {
       }
     });
 
+    // Subscribe to sending status updates
+    _sendingSubscription = sendMessageRx.isSendingStream.listen((isSending) {
+      if (mounted) {
+        setState(() {
+          _isSending = isSending;
+          if (isSending) {
+            _isLoading = false;
+          }
+        });
+        if (isSending) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          });
+        }
+      }
+    });
+
     // Load initial chat history
     _loadChatHistory();
   }
 
   Future<void> _loadChatHistory() async {
+    if (_messages.isEmpty && !_isSending) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     try {
       await getChatMessageRx.getChatList();
     } catch (error) {
       log("Error loading chat history: $error");
+    } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -80,30 +124,92 @@ class _AiChatScreenState extends State<AiChatScreen> {
     }
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 80,
+      );
+      if (image != null) {
+        setState(() {
+          _selectedImage = image;
+        });
+      }
+    } catch (e) {
+      log("Error picking image: $e");
+    }
+  }
+
+  void _showImagePickerModal() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.c181818,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            UIHelper.verticalSpace(12.h),
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: AppColors.c454545,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            UIHelper.verticalSpace(20.h),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Colors.deepOrange),
+              title: Text('Gallery', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Colors.deepOrange),
+              title: Text('Camera', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            UIHelper.verticalSpace(20.h),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _sendMessage() async {
     final String message = messageController.text.trim();
-    if (message.isEmpty || _isSending) return;
+    final XFile? imageToSend = _selectedImage;
 
-    setState(() {
-      _isSending = true;
-    });
+    if ((message.isEmpty && imageToSend == null) || _isSending) return;
 
     try {
-      await sendMessageRx.addChat(message: message);
+      messageController.clear();
+      setState(() {
+        _selectedImage = null;
+      });
+
+      await sendMessageRx.addChat(
+        message: message,
+        image: imageToSend,
+      );
     } catch (error) {
       log("Error sending message: $error");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to send message'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
       if (mounted) {
-        setState(() {
-          _isSending = false;
-          messageController.clear();
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to send message'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -126,6 +232,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
       return UserChatWidget(
         time: formattedTime,
         message: message.message ?? "",
+        image: message.image,
       );
     } else {
       return AdminChatWidget(
@@ -138,6 +245,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
   @override
   void dispose() {
     _chatSubscription.cancel();
+    _sendingSubscription.cancel();
     messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -178,13 +286,13 @@ class _AiChatScreenState extends State<AiChatScreen> {
                           decoration: ShapeDecoration(
                             color: const Color(0x99090809),
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
+                              side: const BorderSide(
                                 width: 1,
-                                color: const Color(0xFFF55216),
+                                color: Color(0xFFF55216),
                               ),
                               borderRadius: BorderRadius.circular(21),
                             ),
-                            shadows: [
+                            shadows: const [
                               BoxShadow(
                                 color: Color(0x2DF55216),
                                 blurRadius: 16,
@@ -193,7 +301,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.deepOrangeAccent,
                           ),
@@ -205,12 +313,12 @@ class _AiChatScreenState extends State<AiChatScreen> {
                         style: TextFontStyle.textStyle20w700c000000poppins
                             .copyWith(color: Colors.deepOrange),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       // Refresh button
                       if (!_isLoading)
                         IconButton(
                           onPressed: _loadChatHistory,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.refresh,
                             color: Colors.deepOrange,
                           ),
@@ -220,94 +328,104 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
                   // Chat Messages
                   Expanded(
-                    child: _isLoading
-                        ? Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.deepOrange,
-                      ),
-                    )
-                        : _messages.isEmpty
-                        ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 64,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            "Start a conversation with Tom!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
+                    child: (_isLoading && _messages.isEmpty && !_isSending)
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.deepOrange,
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Send a message to begin chatting",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                        : NotificationListener<ScrollNotification>(
-                      onNotification: (scrollNotification) {
-                        // Handle scroll events if needed
-                        return false;
-                      },
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        reverse: true, // New messages at bottom
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.only(
-                          top: 16.h,
-                          bottom: 16.h,
-                        ),
-                        itemCount: _messages.length,
-                        itemBuilder: (context, index) {
-                          return _buildMessageWidget(_messages[index]);
-                        },
-                      ),
-                    ),
+                          )
+                        : (_messages.isEmpty && !_isSending)
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chat_bubble_outline,
+                                      size: 64,
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      "Start a conversation with Tom!",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Send a message to begin chatting",
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : NotificationListener<ScrollNotification>(
+                                onNotification: (scrollNotification) {
+                                  return false;
+                                },
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  reverse: true, // New messages at bottom
+                                  physics: const BouncingScrollPhysics(),
+                                  padding: EdgeInsets.only(
+                                    top: 16.h,
+                                    bottom: 16.h,
+                                  ),
+                                  itemCount: _messages.length + (_isSending ? 1 : 0),
+                                  itemBuilder: (context, index) {
+                                    if (_isSending && index == 0) {
+                                      return const AiTypingShimmerWidget();
+                                    }
+                                    final messageIndex = _isSending ? index - 1 : index;
+                                    return _buildMessageWidget(_messages[messageIndex]);
+                                  },
+                                ),
+                              ),
                   ),
 
                   // Loading indicator when sending
-                  if (_isSending)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.deepOrange,
-                            ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Text(
-                            "Tom is typing...",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  // if (_isSending)
+                  //   Padding(
+                  //     padding: EdgeInsets.only(bottom: 8.h),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         const SizedBox(
+                  //           width: 20,
+                  //           height: 20,
+                  //           child: CircularProgressIndicator(
+                  //             strokeWidth: 2,
+                  //             color: Colors.deepOrange,
+                  //           ),
+                  //         ),
+                  //         SizedBox(width: 12.w),
+                  //         const Text(
+                  //           "Tom is typing...",
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 16,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
 
                   // Chat Bottom Bar - ALWAYS VISIBLE
                   ChatBottomBarWidget(
                     chatController: messageController,
                     onSendTap: _sendMessage,
                     isSending: _isSending,
+                    selectedImage: _selectedImage,
+                    onImagePickTap: _showImagePickerModal,
+                    onRemoveImageTap: () {
+                      setState(() {
+                        _selectedImage = null;
+                      });
+                    },
                   ),
                   SizedBox(height: 8.h),
                 ],
@@ -319,5 +437,3 @@ class _AiChatScreenState extends State<AiChatScreen> {
     );
   }
 }
-
-

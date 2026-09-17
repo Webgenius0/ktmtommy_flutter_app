@@ -49,14 +49,16 @@ class Messages {
   int? id;
   String? role;
   String? message;
+  String? image;
   String? createdAt;
 
-  Messages({this.id, this.role, this.message, this.createdAt});
+  Messages({this.id, this.role, this.message, this.image, this.createdAt});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     role = json['role'];
     message = json['message'];
+    image = json['image'];
     createdAt = json['created_at'];
   }
 
@@ -65,6 +67,7 @@ class Messages {
     data['id'] = this.id;
     data['role'] = this.role;
     data['message'] = this.message;
+    data['image'] = this.image;
     data['created_at'] = this.createdAt;
     return data;
   }

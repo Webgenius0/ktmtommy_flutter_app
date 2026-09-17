@@ -8,6 +8,7 @@ import 'package:ktmtommy_apps/common_widgets/custom_textfeild.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class CustomSend extends StatefulWidget {
   const CustomSend({
@@ -19,7 +20,6 @@ class CustomSend extends StatefulWidget {
 }
 
 class _CustomSendState extends State<CustomSend> {
-  bool _showSuccess = false;
   final TextEditingController _questionController = TextEditingController();
 
   @override
@@ -29,22 +29,12 @@ class _CustomSendState extends State<CustomSend> {
   }
 
   void _onSend() {
-    if (_questionController.text.isNotEmpty) {
-      setState(() {
-        _showSuccess = true;
-      });
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {
-            _showSuccess = false;
-          });
-        }
-      });
+    final String text = _questionController.text.trim();
+    if (text.isNotEmpty) {
+      sendMessageRx.addChat(message: text);
       _questionController.clear();
-      NavigationService.navigateTo(Routes.aiChatScreen);
-    } else {
-      NavigationService.navigateTo(Routes.aiChatScreen);
     }
+    NavigationService.navigateTo(Routes.aiChatScreen);
   }
 
   @override
@@ -110,16 +100,6 @@ class _CustomSendState extends State<CustomSend> {
               ),
             ),
           ),
-          if (_showSuccess) ...[
-            UIHelper.verticalSpace(8.h),
-            Text(
-              '✓ Sent successfully',
-              style: TextStyle(
-                color: AppColors.c87B842,
-                fontSize: 13.sp,
-              ),
-            ),
-          ],
         ],
       ),
     );

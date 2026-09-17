@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,13 +7,13 @@ import 'package:ktmtommy_apps/assets_helper/app_fonts.dart';
 import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 import 'package:ktmtommy_apps/assets_helper/app_image.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/althelete_home/widget/custom_circular_progress.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/model/athlete_weekly_progress_model.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/widget/custom_shedul.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/widget/custom_daystrike_calander.dart';
 import 'package:ktmtommy_apps/helpers/all_routes.dart';
 import 'package:ktmtommy_apps/helpers/navigation_service.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
-
-
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class AthletProgressScreen extends StatefulWidget {
   const AthletProgressScreen({super.key});
@@ -24,8 +23,98 @@ class AthletProgressScreen extends StatefulWidget {
 }
 
 class _AthletProgressScreenState extends State<AthletProgressScreen> {
-
   String selectedButton = 'Workout Volume';
+  int? _currentWeek;
+  bool _isFetching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProgress();
+  }
+
+  Future<void> _fetchProgress({int? week}) async {
+    setState(() {
+      _isFetching = true;
+    });
+    final response = await athleteWeeklyProgressRxObj.getWeeklyProgress(week: week);
+    if (mounted) {
+      setState(() {
+        _isFetching = false;
+        if (response?.data?.weekOverview?.selectedWeek != null) {
+          _currentWeek = response!.data!.weekOverview!.selectedWeek;
+        }
+      });
+    }
+  }
+
+  bool _checkIsFirstWeek(AthleteWeeklyProgressData? data) {
+    final current = _currentWeek ?? data?.weekOverview?.selectedWeek ?? 3;
+    final available = data?.availableWeeks;
+
+    if (available != null && available.isNotEmpty) {
+      final index = available.indexWhere((w) => w.week == current);
+      if (index != -1) {
+        return index == 0;
+      }
+    }
+    return current <= 1;
+  }
+
+  bool _checkIsLastWeek(AthleteWeeklyProgressData? data) {
+    final current = _currentWeek ?? data?.weekOverview?.selectedWeek ?? 3;
+    final available = data?.availableWeeks;
+
+    if (available != null && available.isNotEmpty) {
+      final index = available.indexWhere((w) => w.week == current);
+      if (index != -1) {
+        return index == available.length - 1;
+      }
+    }
+    return current >= 16;
+  }
+
+  void _onPreviousWeek(AthleteWeeklyProgressData? data) {
+    if (_isFetching || _checkIsFirstWeek(data)) return;
+
+    final current = _currentWeek ?? data?.weekOverview?.selectedWeek ?? 3;
+    final available = data?.availableWeeks;
+
+    if (available != null && available.isNotEmpty) {
+      final currentIndex = available.indexWhere((w) => w.week == current);
+      if (currentIndex > 0) {
+        final prevWeek = available[currentIndex - 1].week;
+        if (prevWeek != null) {
+          _fetchProgress(week: prevWeek);
+          return;
+        }
+      }
+    }
+
+    if (current > 1) {
+      _fetchProgress(week: current - 1);
+    }
+  }
+
+  void _onNextWeek(AthleteWeeklyProgressData? data) {
+    if (_isFetching || _checkIsLastWeek(data)) return;
+
+    final current = _currentWeek ?? data?.weekOverview?.selectedWeek ?? 3;
+    final available = data?.availableWeeks;
+
+    if (available != null && available.isNotEmpty) {
+      final currentIndex = available.indexWhere((w) => w.week == current);
+      if (currentIndex >= 0 && currentIndex < available.length - 1) {
+        final nextWeek = available[currentIndex + 1].week;
+        if (nextWeek != null) {
+          _fetchProgress(week: nextWeek);
+          return;
+        }
+      }
+    }
+
+    _fetchProgress(week: current + 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,110 +131,125 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomShedul(
-                  text: 'My Progress',
-                  onPillTap: () {
-                    NavigationService.navigateToWithArgs(
-                      Routes.your12WeekPlanScreen,
-                      {'isFromProgress': true},
-                    );
-                  },
-                ),
-                UIHelper.verticalSpace(24.h),
+            child: StreamBuilder<AthleteWeeklyProgressModel>(
+              stream: athleteWeeklyProgressRxObj.getWeeklyProgressStream,
+              builder: (context, snapshot) {
+                final progressData = snapshot.data?.data;
+                final planInfo = progressData?.planInfo;
+                final readiness = progressData?.readiness;
+                final weekOverview = progressData?.weekOverview;
+                final chartDataList = progressData?.chartData;
+                final aiInsight = progressData?.aiWeeklyInsight;
 
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
+                final bool isFirstWeek = _checkIsFirstWeek(progressData);
+                final bool isLastWeek = _checkIsLastWeek(progressData);
 
-                        CustomCircularProgress(title: 'RACE READINESS'),
-                        UIHelper.verticalSpace(24.h),
-
-                        //=============================== Date ================================//
-
-                        CustomDaystrikeCalander(),
-                        UIHelper.verticalSpace(24.h),
-
-
-                        //=================================== Line chart ======================================//
-
-                        
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Workout Volume", style: TextFontStyle.textStyle24w700cFFFFFFTeko,),
-                          ],
-                        ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   children: [
-                        //     buildButton('Workout Volume'),
-                        //     // UIHelper.horizontalSpace(8.w),
-                        //     // buildButton('VO2 Max'),
-                        //     // UIHelper.horizontalSpace(8.w),
-                        //     // buildButton('Heart Rate'),
-                        //   ],
-                        // ),
-                        UIHelper.verticalSpace(18.h),
-
-                        SizedBox(
-                          height: 204.h,
-                          width: 320.w,
-                          child: LineChart(getChartData()),
-                        ),
-
-
-
-                        UIHelper.verticalSpace(24.h),
-
-
-
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(16),
-                          decoration: ShapeDecoration(
-                            color: AppColors.c202020,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                  AppIcons.linecharticon, height: 40.h),
-                              UIHelper.horizontalSpace(8.w),
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    width: 215,
-                                    child: Text(
-                                        'AI Insight: Your training balance is excellent — risk of injury low.',
-                                        style: TextFontStyle
-                                            .textStyle24w600cFFFFFFpoppins
-                                            .copyWith(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400
-                                        )
-                                    ),
-                                  )
-                                ],
-                              )
-
-                            ],
-                          ),
-                        ),
-                        UIHelper.verticalSpace(20.h),
-
-
-                      ],
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomShedul(
+                      text: 'My Progress',
+                      subText: planInfo?.displayText,
+                      onPillTap: () {
+                        NavigationService.navigateToWithArgs(
+                          Routes.your12WeekPlanScreen,
+                          {'isFromProgress': true},
+                        );
+                      },
                     ),
-                  ),
-                ),
-              ],
+                    UIHelper.verticalSpace(24.h),
+                    Expanded(
+                      child: _isFetching && progressData == null
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.orangeColor,
+                              ),
+                            )
+                          : SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  CustomCircularProgress(
+                                    title: 'RACE READINESS',
+                                    score: readiness?.score,
+                                    readinessTitle: readiness?.title,
+                                    subtitle: readiness?.subtitle,
+                                  ),
+                                  UIHelper.verticalSpace(24.h),
+
+                                  // Date & Week Calendar
+                                  CustomDaystrikeCalander(
+                                    selectedWeek: weekOverview?.selectedWeek ?? _currentWeek,
+                                    daystreak: weekOverview?.daystreak,
+                                    dateRange: weekOverview?.dateRange,
+                                    days: weekOverview?.days,
+                                    isFirstWeek: isFirstWeek,
+                                    isLastWeek: isLastWeek,
+                                    isLoading: _isFetching,
+                                    onPreviousWeek: () => _onPreviousWeek(progressData),
+                                    onNextWeek: () => _onNextWeek(progressData),
+                                  ),
+                                  UIHelper.verticalSpace(24.h),
+
+                                  // Line Chart Section
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Workout Volume",
+                                        style: TextFontStyle.textStyle24w700cFFFFFFTeko,
+                                      ),
+                                    ],
+                                  ),
+                                  UIHelper.verticalSpace(18.h),
+                                  SizedBox(
+                                    height: 204.h,
+                                    width: 320.w,
+                                    child: LineChart(getChartData(chartDataList)),
+                                  ),
+                                  UIHelper.verticalSpace(24.h),
+
+                                  // AI Insight Box
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(16.r),
+                                    decoration: ShapeDecoration(
+                                      color: AppColors.c202020,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.r),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppIcons.linecharticon,
+                                          height: 40.h,
+                                        ),
+                                        UIHelper.horizontalSpace(8.w),
+                                        Expanded(
+                                          child: Text(
+                                            aiInsight?.insight ??
+                                                'AI Insight: Your training balance is excellent — risk of injury low.',
+                                            style: TextFontStyle
+                                                .textStyle24w600cFFFFFFpoppins
+                                                .copyWith(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  UIHelper.verticalSpace(20.h),
+                                ],
+                              ),
+                            ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -153,85 +257,26 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
     );
   }
 
+  LineChartData getChartData(List<ChartData>? chartDataList) {
+    List<FlSpot> spots = [];
+    List<String> xLabels = [];
 
-//============================== graphchart ===================================================//
-
-
-  Widget buildButton(String title) {
-    final isSelected = selectedButton == title;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedButton = title;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-        decoration: ShapeDecoration(
-          color: AppColors.c181818,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              width: 2,
-              color: isSelected ? AppColors.orangeColor : Colors.transparent,
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextFontStyle.textStyle24w600cFFFFFFpoppins.copyWith(
-              fontSize: 14.sp, fontWeight: FontWeight.w400),
-        ),
-      ),
-    );
-  }
-
-// Chart data for different metrics
-  LineChartData getChartData() {
-    List<FlSpot> spots;
-    double maxY;
-    double minY = 0;
-    List<String> xLabels;
-
-    if (selectedButton == 'Workout Volume') {
-      spots = [
-        FlSpot(0, 50),
-        FlSpot(1, 60),
-        FlSpot(2, 30),
-        FlSpot(3, 75),
-        FlSpot(4, 0),
-        FlSpot(5, 90),
-        FlSpot(6, 50),
-      ];
-      maxY = 100;
-      xLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    } else if (selectedButton == 'VO2 Max') {
-      spots = [
-        FlSpot(0, 30),
-        FlSpot(1, 35),
-        FlSpot(2, 32),
-        FlSpot(3, 40),
-        FlSpot(4, 38),
-        FlSpot(5, 45),
-        FlSpot(6, 42),
-      ];
-      maxY = 50;
-      xLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    if (chartDataList != null && chartDataList.isNotEmpty) {
+      for (int i = 0; i < chartDataList.length; i++) {
+        final item = chartDataList[i];
+        spots.add(FlSpot(i.toDouble(), (item.percentage ?? 0).toDouble()));
+        xLabels.add(item.dayShort ?? item.dayName ?? '');
+      }
     } else {
-      // Heart Rate
-      spots = [
-        FlSpot(0, 70),
-        FlSpot(1, 75),
-        FlSpot(2, 80),
-        FlSpot(3, 78),
-        FlSpot(4, 82),
-        FlSpot(5, 85),
-        FlSpot(6, 80),
+      spots = const [
+        FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0),
+        FlSpot(4, 0), FlSpot(5, 0), FlSpot(6, 0),
       ];
-      maxY = 200;
       xLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
     }
+
+    double maxY = 100;
+    double minY = 0;
 
     return LineChartData(
       gridData: FlGridData(
@@ -239,18 +284,16 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
         drawVerticalLine: true,
         horizontalInterval: maxY / 5,
         verticalInterval: 1,
-        getDrawingHorizontalLine: (value) =>
-            FlLine(
-              color: AppColors.cFFFFFF.withValues(alpha: 0.2),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
-        getDrawingVerticalLine: (value) =>
-            FlLine(
-              color: AppColors.cFFFFFF.withValues(alpha: 0.2),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
+        getDrawingHorizontalLine: (value) => FlLine(
+          color: AppColors.cFFFFFF.withValues(alpha: 0.2),
+          strokeWidth: 1,
+          dashArray: [4, 4],
+        ),
+        getDrawingVerticalLine: (value) => FlLine(
+          color: AppColors.cFFFFFF.withValues(alpha: 0.2),
+          strokeWidth: 1,
+          dashArray: [4, 4],
+        ),
       ),
       titlesData: FlTitlesData(
         leftTitles: AxisTitles(
@@ -258,25 +301,27 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
             showTitles: true,
             reservedSize: 30,
             interval: maxY / 5,
-            getTitlesWidget: (value, meta) =>
-                Text(
-                  value.toInt().toString(),
-                  style: TextStyle(color: AppColors.cFFFFFF, fontSize: 12.sp),
-                ),
+            getTitlesWidget: (value, meta) => Text(
+              value.toInt().toString(),
+              style: TextStyle(color: AppColors.cFFFFFF, fontSize: 12.sp),
+            ),
           ),
         ),
-        rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             interval: 1,
             getTitlesWidget: (value, meta) {
-              return Text(
-                xLabels[value.toInt()],
-                style: TextStyle(color: AppColors.cFFFFFF, fontSize: 12.sp),
-              );
+              int index = value.toInt();
+              if (index >= 0 && index < xLabels.length) {
+                return Text(
+                  xLabels[index],
+                  style: TextStyle(color: AppColors.cFFFFFF, fontSize: 12.sp),
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -286,7 +331,7 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
         border: Border.all(color: AppColors.c666666.withValues(alpha: 0.2)),
       ),
       minX: 0,
-      maxX: 6,
+      maxX: (xLabels.length - 1).toDouble() > 0 ? (xLabels.length - 1).toDouble() : 6,
       minY: minY,
       maxY: maxY,
       lineBarsData: [
@@ -312,6 +357,4 @@ class _AthletProgressScreenState extends State<AthletProgressScreen> {
       ],
     );
   }
-
-// In your build method, Row of buttons
 }

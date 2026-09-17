@@ -45,8 +45,8 @@ class _RecoveryStepOneScreenState extends State<RecoveryStepOneScreen> {
     'Ongoing Maintenance (Long Term)',
   ];
 
-  List<String> injuryList = ['Injury 1', 'Injury 2', 'Injury 3', 'Injury 4'];
-  String selectedInjury = 'Injury 1';
+  List<String> injuryList = ['TBI'];
+  String selectedInjury = 'TBI';
   String selectedInjuryLevel = 'Mid';
   int selectedIndex = -1;
 

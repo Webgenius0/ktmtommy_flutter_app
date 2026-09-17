@@ -407,7 +407,24 @@ class _AthletLogFoodEmptyScreenState extends State<AthletLogFoodEmptyScreen> {
                                                 UIHelper.verticalSpace(8.h),
                                               ],
                                             ),
-                                            IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,))
+                                            IconButton(
+                                              onPressed: () async {
+                                                if (meal.id != null) {
+                                                  bool success =
+                                                      await deleteFoodRxObj
+                                                          .deleteFoodApi(
+                                                              id: meal.id);
+                                                  if (success) {
+                                                    getAllFoodRxObj
+                                                        .getAllFoodApi();
+                                                  }
+                                                }
+                                              },
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Colors.white,
+                                              ),
+                                            )
                                           ],
                                         ),
                                         Text(

@@ -10,8 +10,11 @@ import 'package:ktmtommy_apps/assets_helper/app_icons.dart';
 
 
 class CustomDuration extends StatefulWidget {
+  final Function(int minutes)? onDurationSelected;
+
   const CustomDuration({
     super.key,
+    this.onDurationSelected,
   });
 
   @override
@@ -23,7 +26,13 @@ class _CustomDurationState extends State<CustomDuration> {
 
   late String selectedUnit = durationList[0];
 
-
+  int _parseMinutes(String text) {
+    try {
+      return int.parse(text.split(' ')[0]);
+    } catch (e) {
+      return 30;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +44,13 @@ class _CustomDurationState extends State<CustomDuration> {
           borderRadius: BorderRadius.circular(20.r),
         ),
       ),
-      child:
-
-
-      PopupMenuButton<String>(
-        color: Color(0xFF2A2A2A),
+      child: PopupMenuButton<String>(
+        color: const Color(0xFF2A2A2A),
         onSelected: (String value) {
           setState(() {
             selectedUnit = value;
           });
+          widget.onDurationSelected?.call(_parseMinutes(value));
         },
         itemBuilder: (BuildContext context) {
           return durationList.map((String value) {

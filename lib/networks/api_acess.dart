@@ -9,6 +9,8 @@ import 'package:ktmtommy_apps/features/athlet_flow/athlet_log/model/log_supplime
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/althelete_register_rx/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athelete_auth_register_data/athlete_auth_register_rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/onboading_althelete_register_rx/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/data/athlete_weekly_progress_rx/rx.dart';
+import 'package:ktmtommy_apps/features/athlet_flow/athlet_section/model/athlete_weekly_progress_model.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/data/generate_daily_plan_rx/rx.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/model/generate_daily_plan_model.dart';
 import 'package:ktmtommy_apps/features/athlet_flow/authlet_flow_sign_up/data/generate_macro_plan_rx/rx.dart';
@@ -23,6 +25,7 @@ import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/log_steps_screen_data/log_steps_screen_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/data/steps_delate_data/delate_steps_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/home/model/get_recent_step_model.dart';
+import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/delete_food_data/delete_food_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_scan_post_api/food_scan_post_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/food_store_post_api/food_store_rx.dart';
 import 'package:ktmtommy_apps/features/recovery_mood_section/log_food/log_food_empty/data/get_all_food_rx.dart';
@@ -94,6 +97,11 @@ GenerateMacroPlanRx generateMacroPlanRxObj = GenerateMacroPlanRx(
 GenerateDailyPlanRx generateDailyPlanRxObj = GenerateDailyPlanRx(
   empty: GenerateDailyPlanModel(),
   dataFetcher: BehaviorSubject<GenerateDailyPlanModel>(),
+);
+
+AthleteWeeklyProgressRx athleteWeeklyProgressRxObj = AthleteWeeklyProgressRx(
+  empty: AthleteWeeklyProgressModel(),
+  dataFetcher: BehaviorSubject<AthleteWeeklyProgressModel>(),
 );
 
 ///================== Medication Section Tablet , Food, Steps, Activity===== ///
@@ -311,3 +319,8 @@ final DailyActivityRx dailyActivityRxObj = DailyActivityRx(
 );
 
 final SubscriptionRx subscriptionRxObj = SubscriptionRx();
+
+DeleteFoodRx deleteFoodRxObj = DeleteFoodRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);

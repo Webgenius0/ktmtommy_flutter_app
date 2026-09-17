@@ -21,23 +21,22 @@ final class LogActivityApi {
 
   }) async {
     try {
-      Map<String, dynamic> data = {
+      FormData data = FormData.fromMap({
         "name": name,
         "date": date,
         "time": time,
         "duration_minutes": duration_minutes,
         "notify_before_minutes": notify_before_minutes,
         "notes": notes,
+      });
 
-      };
+      Response response = await postHttp(Endpoints.storeActivityApiPost(), data);
 
-      Response response = (await postHttp(Endpoints.storeActivityApiPost(), data));
-
-      if (response.statusCode == 201) {
-        final data = json.decode(json.encode(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final resData = json.decode(json.encode(response.data));
         EasyLoading.showSuccess('Successfully saved Activity! 🎉');
         log("=========>>>>>>>>>>>>Successfully saved Activity");
-        return data;
+        return resData;
       } else {
         throw DataSource.DEFAULT.getFailure();
       }

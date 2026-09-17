@@ -6,11 +6,13 @@ import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
 
 class CustomShedul extends StatelessWidget {
   final String text;
+  final String? subText;
   final VoidCallback? onPillTap;
 
   const CustomShedul({
     super.key,
     required this.text,
+    this.subText,
     this.onPillTap,
   });
 
@@ -42,7 +44,9 @@ class CustomShedul extends StatelessWidget {
               ),
             ),
             child: Text(
-              '🏁 TRIATHLON — Week 2 • Day 8 >',
+              subText != null && subText!.isNotEmpty
+                  ? '🏁 $subText >'
+                  : '🏁 TRIATHLON — Week 2 • Day 8 >',
               textAlign: TextAlign.center,
               style: TextFontStyle.textStyle14w400cE8E8E8poppins.copyWith(
                 fontSize: 12.sp,

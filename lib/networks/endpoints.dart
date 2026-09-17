@@ -29,6 +29,8 @@ class Endpoints {
   static String onboardingAthleteSignUpApiLink() => "/api/onboarding/athlete";
   static String generateMacroPlanApiLink() => "/api/athlete/generate-macro-plan";
   static String generateDailyPlanApiLink() => "/api/athlete/generate-daily-plan";
+  static String athleteWeeklyProgress({int? week}) =>
+      week != null ? "/api/athlete/weekly-progress?week=$week" : "/api/athlete/weekly-progress";
   static String onboardingRecoverySignUpApiLink() => "/api/onboarding/recovery";
   static String changePasswordScreenApi() => "/api/password/update";
   static String postEditProfileApiLink() => "/api/onboarding/recovery";
@@ -73,6 +75,7 @@ class Endpoints {
   static String getAllFoodDataApi() => "/api/food";
   static String pstFoodScanApi() => "/api/food/analyze";
   static String postFoodStoreApi() => "/api/food/store";
+  static String deleteFoodApi(dynamic id) => "/api/food/delete/$id";
 
   ///=================Add Equipments Section Api===============================
   static String addEquipments() => "/api/equipment/store";

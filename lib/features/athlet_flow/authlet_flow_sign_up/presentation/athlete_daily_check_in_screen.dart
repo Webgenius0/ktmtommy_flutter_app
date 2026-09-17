@@ -47,7 +47,7 @@ class _AthleteDailyCheckInScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ArrowButtonAtheleteFlow(
-                  onTap: () => NavigationService.goBack(),
+                  onTap: () => NavigationService.goBack,
                 ),
                 UIHelper.verticalSpace(16.h),
                 Text(

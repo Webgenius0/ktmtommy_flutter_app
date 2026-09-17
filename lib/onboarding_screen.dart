@@ -53,7 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               UIHelper.verticalSpace(18.h),
               Row(
                 children: [
-
                 ],
               ),
               Text(
@@ -77,8 +76,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       )
-
-
     );
   }
 }
+
+

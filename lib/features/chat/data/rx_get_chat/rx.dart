@@ -23,29 +23,28 @@ final class GetChatMessageRx extends RxResponseInt<AiChatHistoryDataModel> {
 
   GetChatMessageRx({required super.empty, required super.dataFetcher}) {
     // Combine both streams: server data and local updates
-    // Use asBroadcastStream() to allow multiple listeners
-    _combinedStream = Rx.combineLatest2<AiChatHistoryDataModel?, AiChatHistoryDataModel, AiChatHistoryDataModel>(
-      dataFetcher.stream,
+    // Use startWith(dataFetcher.valueOrNull) so combinedStream emits immediately upon subscription
+    _combinedStream = Rx.combineLatest2<AiChatHistoryDataModel?,
+        AiChatHistoryDataModel, AiChatHistoryDataModel>(
+      dataFetcher.stream
+          .cast<AiChatHistoryDataModel?>()
+          .startWith(dataFetcher.valueOrNull),
       _localDataFetcher.stream,
-          (AiChatHistoryDataModel? serverData, AiChatHistoryDataModel localData) {
+      (AiChatHistoryDataModel? serverData, AiChatHistoryDataModel localData) {
         if (serverData != null && serverData.success == true) {
-          // Merge server messages with local messages
           final serverMessages = serverData.data?.messages ?? [];
           final localMessages = localData.data?.messages ?? [];
 
-          // Combine and remove duplicates based on message content and timestamp
           final List<Messages> combinedMessages = <Messages>[...serverMessages];
 
-          // Add local messages that are not in server (temporary messages)
           for (final localMsg in localMessages) {
             if (!combinedMessages.any((serverMsg) =>
-            serverMsg.message == localMsg.message &&
+                serverMsg.message == localMsg.message &&
                 serverMsg.createdAt == localMsg.createdAt)) {
               combinedMessages.add(localMsg);
             }
           }
 
-          // Sort by timestamp (newest first)
           combinedMessages.sort((a, b) {
             try {
               final timeA = DateTime.parse(a.createdAt ?? '');
@@ -64,15 +63,48 @@ final class GetChatMessageRx extends RxResponseInt<AiChatHistoryDataModel> {
         }
         return localData;
       },
-    ).asBroadcastStream(); // This allows multiple listeners
+    ).asBroadcastStream();
   }
 
   Stream<AiChatHistoryDataModel> get combinedStream => _combinedStream;
+
+  List<Messages> get currentMessages {
+    final localData = _localDataFetcher.valueOrNull;
+    final serverData = dataFetcher.valueOrNull;
+
+    final localMessages = localData?.data?.messages ?? [];
+    final serverMessages = serverData?.data?.messages ?? [];
+
+    if (serverData != null &&
+        serverData.success == true &&
+        serverMessages.isNotEmpty) {
+      final List<Messages> combined = [...serverMessages];
+      for (final localMsg in localMessages) {
+        if (!combined.any((s) =>
+            s.message == localMsg.message &&
+            s.createdAt == localMsg.createdAt)) {
+          combined.add(localMsg);
+        }
+      }
+      combined.sort((a, b) {
+        try {
+          final timeA = DateTime.parse(a.createdAt ?? '');
+          final timeB = DateTime.parse(b.createdAt ?? '');
+          return timeB.compareTo(timeA);
+        } catch (e) {
+          return 0;
+        }
+      });
+      return combined;
+    }
+    return localMessages;
+  }
 
   // Add a new message locally (for instant UI update)
   void addLocalMessage({
     required String role,
     required String message,
+    String? image,
     bool isTemporary = false,
   }) {
     final currentData = _localDataFetcher.value;
@@ -80,6 +112,7 @@ final class GetChatMessageRx extends RxResponseInt<AiChatHistoryDataModel> {
       id: isTemporary ? -1 * DateTime.now().millisecondsSinceEpoch : null,
       role: role,
       message: message,
+      image: image,
       createdAt: DateTime.now().toIso8601String(),
     );
 
@@ -121,9 +154,17 @@ final class GetChatMessageRx extends RxResponseInt<AiChatHistoryDataModel> {
 
       // Update local stream with fresh data from server
       if (result != null) {
+        final currentLocalMsgs = _localDataFetcher.value.data?.messages ?? [];
+        final temporaryMsgs = currentLocalMsgs
+            .where((msg) => msg.id != null && msg.id! < 0)
+            .toList();
+        final serverMsgs = result.data?.messages ?? [];
+
+        final List<Messages> combined = [...temporaryMsgs, ...serverMsgs];
+
         final updatedData = AiChatHistoryDataModel(
           success: true,
-          data: Data(messages: result.data?.messages ?? []),
+          data: Data(messages: combined),
           message: result.message,
         );
         _localDataFetcher.add(updatedData);

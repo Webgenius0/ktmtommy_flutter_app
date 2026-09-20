@@ -15,25 +15,31 @@ final class EditProfileApi {
   static EditProfileApi get instance => _singleton;
 
   Future<Map<String, dynamic>> editProfileApi({
-
-
-    XFile? avatar,    String? name,
+    String? name,
+    String? email,
+    XFile? image,
+    XFile? avatar,
   }) async {
     try {
-      MultipartFile? avatarFile;
-      MultipartFile? coverFile;
+      MultipartFile? imageFile;
+      final fileToUpload = image ?? avatar;
 
-      if (avatar != null && await File(avatar.path).exists()) {
-        avatarFile = await MultipartFile.fromFile(avatar.path);
+      if (fileToUpload != null && await File(fileToUpload.path).exists()) {
+        imageFile = await MultipartFile.fromFile(fileToUpload.path);
       }
 
+      final Map<String, dynamic> map = {};
+      if (name != null && name.trim().isNotEmpty) {
+        map["name"] = name.trim();
+      }
+      if (email != null && email.trim().isNotEmpty) {
+        map["email"] = email.trim();
+      }
+      if (imageFile != null) {
+        map["image"] = imageFile;
+      }
 
-      FormData data = FormData.fromMap({
-        "name": name?.toString().trim(),
-
-        if (avatarFile != null) "avatar": avatarFile,
-
-      });
+      FormData data = FormData.fromMap(map);
 
       Response response = await postHttp(Endpoints.postEditProfileApiLink(), data);
 

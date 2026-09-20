@@ -12,6 +12,7 @@ import 'package:ktmtommy_apps/common_widgets/custom_button.dart';
 import 'package:ktmtommy_apps/constants/app_constants.dart';
 import 'package:ktmtommy_apps/helpers/di.dart';
 import 'package:ktmtommy_apps/helpers/ui_helpers.dart';
+import 'package:ktmtommy_apps/networks/api_acess.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -21,6 +22,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  bool _isLoading = false;
   // Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController(text: appData.read(kKeyuserEmail));
@@ -236,12 +238,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ///================ Update Button=============================
                     CustomButton(
                       context: context,
-                      name: "Update",
-                      onCallBack: () {
-                        debugPrint("===============>>> Update Clicked");
-                        debugPrint("Name: ${_nameController.text}");
-                        debugPrint("Email: ${_emailController.text}");
-                        debugPrint("Image: ${_selectedImage?.path ?? 'No change'}");
+                      name: _isLoading ? "Updating..." : "Update",
+                      onCallBack: () async {
+                        if (_isLoading) return;
+                        setState(() => _isLoading = true);
+                        final success = await editProfileApiRx.editProfileInfo(
+                          name: _nameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          image: _selectedImage,
+                        );
+                        if (mounted) {
+                          setState(() => _isLoading = false);
+                          if (success) {
+                            Navigator.pop(context);
+                          }
+                        }
                       },
                       borderColor: AppColors.c87B842,
                       color: AppColors.c87B842,

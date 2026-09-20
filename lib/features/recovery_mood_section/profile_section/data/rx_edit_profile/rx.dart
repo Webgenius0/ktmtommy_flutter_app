@@ -15,15 +15,17 @@ final class EditProfileApiRx extends RxResponseInt<Map<String, dynamic>> {
   ValueStream<Map<String, dynamic>> get getFileData => dataFetcher.stream;
 
   Future<bool> editProfileInfo({
-
-    XFile? avatar,
     String? name,
+    String? email,
+    XFile? image,
+    XFile? avatar,
   }) async {
     try {
       Map data = await api.editProfileApi(
         name: name,
+        email: email,
+        image: image,
         avatar: avatar,
-
       );
       handleSuccessWithReturn(data);
       return true;

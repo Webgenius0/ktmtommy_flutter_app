@@ -33,7 +33,7 @@ class Endpoints {
       week != null ? "/api/athlete/weekly-progress?week=$week" : "/api/athlete/weekly-progress";
   static String onboardingRecoverySignUpApiLink() => "/api/onboarding/recovery";
   static String changePasswordScreenApi() => "/api/password/update";
-  static String postEditProfileApiLink() => "/api/onboarding/recovery";
+  static String postEditProfileApiLink() => "/api/profile/update";
   static String socialLogin() => "/api/social-login";
 
   ///========================Profile Section====================================

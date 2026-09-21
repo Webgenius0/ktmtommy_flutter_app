@@ -11,7 +11,9 @@ class ScheduleModel {
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) => ScheduleModel(
         success: json["success"],
-        data: json["data"] == null ? null : ScheduleData.fromJson(json["data"]),
+        data: (json["data"] == null || json["data"] is! Map)
+            ? null
+            : ScheduleData.fromJson(json["data"]),
         message: json["message"],
       );
 
